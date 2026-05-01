@@ -1,14 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Menu, X, Instagram, Facebook } from 'lucide-react';
 import { navigationConfig } from '../config';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
+      const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > 100);
+      if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -31,7 +40,7 @@ export default function Navigation() {
           isScrolled
             ? 'bg-[#1a0033]/80 backdrop-blur-xl border-b border-white/10'
             : 'bg-transparent'
-        }`}
+        } ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
       >
         <div className="w-full px-6 lg:px-12">
           <div className="flex items-center justify-between h-16 lg:h-20">

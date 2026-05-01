@@ -280,14 +280,6 @@ export default function Hero() {
 
       </div>
 
-      {/* Decorative neon dots */}
-      {!isMobile && (
-        <>
-          <div className="absolute top-[15vh] right-[20vw] w-3 h-3 rounded-full bg-[#ff00aa] animate-pulse-glow z-10" />
-          <div className="absolute top-[25vh] right-[15vw] w-2 h-2 rounded-full bg-[#00e5cc] animate-pulse-glow z-10" style={{ animationDelay: '1s' }} />
-          <div className="absolute bottom-[30vh] left-[8vw] w-2 h-2 rounded-full bg-[#c800ff] animate-pulse-glow z-10" style={{ animationDelay: '0.5s' }} />
-        </>
-      )}
     </section>
   );
 }

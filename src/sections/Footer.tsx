@@ -54,9 +54,11 @@ export default function Footer() {
         <div className="flex flex-col lg:flex-row justify-between gap-8 sm:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
           <div className="max-w-sm">
-            <h3 className="font-display text-xl sm:text-3xl lg:text-4xl text-white mb-4">
-              {footerConfig.brandName}
-            </h3>
+            <img
+              src="/images/Copie de Asset 1-8.png"
+              alt="Dance Affinity Logo"
+              className="h-20 sm:h-24 lg:h-28 w-auto mb-4"
+            />
             <p className="text-xs sm:text-sm text-white/60 leading-relaxed">
               {footerConfig.tagline}
             </p>

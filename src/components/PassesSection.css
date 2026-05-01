@@ -1,0 +1,411 @@
+/* ─── PassesSection.css ───────────────────────────────────────────────────────
+   Prefix: "ps-" — no collisions with other sections.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/* ── Section shell ────────────────────────────────────────────────────────── */
+
+.ps-section {
+  position: relative;
+  background: #060a10;
+  padding: 140px 0 120px;
+  overflow: hidden;
+}
+
+/* Ghost watermark "79" */
+.ps-watermark {
+  position: absolute;
+  right: -5%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(300px, 40vw, 600px);
+  color: rgba(255, 255, 255, 0.02);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* ── Container ────────────────────────────────────────────────────────────── */
+
+.ps-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 48px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Section header ───────────────────────────────────────────────────────── */
+
+.ps-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  gap: 24px;
+}
+
+.ps-header-main {
+  flex: 1;
+}
+
+.ps-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #00e5cc;
+  margin: 0 0 16px;
+  line-height: 1;
+}
+
+.ps-heading {
+  margin: 0;
+  line-height: 1;
+}
+
+.ps-heading-serif {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(22px, 2.5vw, 34px);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.2;
+}
+
+.ps-heading-bold {
+  display: block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  font-size: clamp(64px, 10vw, 120px);
+  color: white;
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+}
+
+.ps-header-sub {
+  flex-shrink: 0;
+  align-self: flex-end;
+  padding-bottom: 8px;
+}
+
+.ps-refund-note {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  white-space: nowrap;
+}
+
+/* Divider below header */
+.ps-rule {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 56px;
+}
+
+/* ── Card grid ────────────────────────────────────────────────────────────── */
+
+/* align-items: end makes the taller center card rise naturally above the others */
+.ps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 48px;
+}
+
+/* ── Card wrapper (controls height) ──────────────────────────────────────── */
+
+.ps-card-wrapper {
+  height: 480px;
+}
+
+.ps-card-wrapper--featured {
+  height: 540px;
+}
+
+/* ── Individual pass card ─────────────────────────────────────────────────── */
+
+.ps-card {
+  position: relative;
+  height: 100%;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.4s ease, transform 0.4s ease;
+  cursor: default;
+  overflow: hidden;
+}
+
+.ps-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px);
+}
+
+/* Top accent line — grows on hover */
+.ps-accent-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.ps-card:hover .ps-accent-line,
+.ps-card:active .ps-accent-line {
+  width: 100%;
+}
+
+/* "RECOMMENDED" tag */
+.ps-tag {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 6px 12px;
+  border-radius: 2px;
+  line-height: 1;
+}
+
+/* Pass name */
+.ps-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin: 0 0 32px;
+  line-height: 1;
+}
+
+/* Price block */
+.ps-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  margin-bottom: 32px;
+  line-height: 1;
+}
+
+.ps-currency {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.5);
+  vertical-align: top;
+  margin-top: 8px;
+  margin-right: 2px;
+  line-height: 1;
+}
+
+.ps-amount {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(64px, 6vw, 80px);
+  color: white;
+  line-height: 1.0;
+}
+
+.ps-period {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.3);
+  margin-left: 6px;
+  align-self: flex-end;
+  margin-bottom: 6px;
+}
+
+/* Thin divider */
+.ps-divider {
+  width: 40px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 32px;
+  flex-shrink: 0;
+}
+
+/* Items list — editorial dashes, NOT checkmarks */
+.ps-items {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  flex: 1;
+}
+
+.ps-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 2.2;
+}
+
+.ps-item-dash {
+  color: rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+/* CTA button */
+.ps-btn {
+  width: 100%;
+  height: 52px;
+  border-radius: 2px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease,
+              box-shadow 0.3s ease, transform 0.3s ease;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.ps-btn--outlined {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+.ps-btn--outlined:hover,
+.ps-btn--outlined:active {
+  background: var(--accent);
+  color: #060a10;
+  transform: scale(1.02);
+}
+
+.ps-btn--solid {
+  background: white;
+  border: 1px solid white;
+  color: #060a10;
+  font-weight: 600;
+}
+
+.ps-btn--solid:hover,
+.ps-btn--solid:active {
+  box-shadow: 0 0 32px rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
+}
+
+/* ── Urgency strip ────────────────────────────────────────────────────────── */
+
+.ps-urgency {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+@keyframes ps-dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 229, 204, 0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(0, 229, 204, 0); }
+}
+
+.ps-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00e5cc;
+  flex-shrink: 0;
+  animation: ps-dot-pulse 2s infinite;
+}
+
+.ps-urgency-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+  line-height: 1;
+}
+
+.ps-urgency-text strong {
+  color: white;
+  font-weight: 500;
+}
+
+/* Fine print */
+.ps-fine-print {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+  text-align: center;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — Tablet (≤1024px)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .ps-section             { padding: 100px 0 80px; }
+  .ps-container           { padding: 0 32px; }
+  .ps-card                { padding: 32px; }
+  .ps-card-wrapper        { height: 440px; }
+  .ps-card-wrapper--featured { height: 500px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — Mobile (≤640px)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .ps-section         { padding: 100px 0 80px; }
+  .ps-container       { padding: 0 20px; }
+  .ps-header          { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .ps-header-sub      { align-self: flex-start; }
+  .ps-watermark       { display: none; }
+
+  .ps-grid {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .ps-card-wrapper,
+  .ps-card-wrapper--featured {
+    height: auto;
+  }
+
+  /* Featured card on mobile: teal left border marks it as recommended */
+  .ps-card-wrapper--featured .ps-card {
+    border-left: 3px solid #00e5cc;
+  }
+
+  .ps-amount {
+    font-size: 56px;
+  }
+
+  .ps-btn {
+    height: 56px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .ps-dot         { animation: none; }
+  .ps-accent-line { transition: none; }
+  .ps-card        { transition: border-color 0.2s ease; }
+  .ps-card:hover  { transform: none; }
+  .ps-btn--outlined:hover,
+  .ps-btn--solid:hover { transform: none; }
+}

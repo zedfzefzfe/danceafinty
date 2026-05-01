@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useIsMobile } from '../hooks/use-mobile';
 import './FinalCTASection.css';
 
 const HEADLINE_2 = 'WAITING IN FREIBURG';
@@ -34,8 +33,6 @@ interface FinalCTASectionProps {
 }
 
 export default function FinalCTASection({ videoSrc, imageSrc }: FinalCTASectionProps) {
-  const isMobile = useIsMobile();
-
   const prefersReducedMotion =
     typeof window !== 'undefined'
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches

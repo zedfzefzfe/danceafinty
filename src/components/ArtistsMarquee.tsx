@@ -191,7 +191,7 @@ interface CardProps {
   ariaHidden?: boolean;
 }
 
-function ArtistCard({ artist, gradient, noAnim, ariaHidden }: CardProps) {
+function ArtistCard({ artist, gradient, noAnim: _noAnim, ariaHidden }: CardProps) {
   return (
     <article
       className="am-card"

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useIsMobile } from '../hooks/use-mobile';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Play, Volume2, VolumeX } from 'lucide-react';
+import { Play } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,7 +37,6 @@ export default function WelcomeSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
   const [videoHovered, setVideoHovered] = useState(false);
 
   // Entrance animations
@@ -91,7 +90,6 @@ export default function WelcomeSection() {
       .play()
       .then(() => {
         setIsPlaying(true);
-        setIsMuted(false);
       })
       .catch(() => {
         if (!videoRef.current) return;
@@ -99,16 +97,8 @@ export default function WelcomeSection() {
         videoRef.current.muted = true;
         videoRef.current.play().then(() => {
           setIsPlaying(true);
-          setIsMuted(true);
         });
       });
-  };
-
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    const next = !isMuted;
-    videoRef.current.muted = next;
-    setIsMuted(next);
   };
 
   return (

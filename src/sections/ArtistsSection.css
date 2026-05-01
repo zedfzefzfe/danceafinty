@@ -124,13 +124,19 @@
 
 .af-lb-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* dynamic viewport on mobile, falls back to vh */
   z-index: 9999;
   background: rgba(4, 6, 12, 0.96);
   display: flex;
   align-items: center;
   justify-content: center;
   animation: af-lb-in 0.22s ease;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 @keyframes af-lb-in {
@@ -171,9 +177,9 @@
   line-height: 1;
 }
 
-/* Arrow buttons */
+/* Arrow buttons — fixed to viewport (safe now that overlay is portalled to body) */
 .af-lb-arrow {
-  position: absolute;
+  position: fixed;
   top: 50%;
   transform: translateY(-50%);
   background: rgba(255, 255, 255, 0.07);
@@ -191,7 +197,7 @@
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   padding: 0;
   padding-bottom: 3px;
-  z-index: 2;
+  z-index: 10000;
 }
 
 .af-lb-arrow:hover {
@@ -205,7 +211,7 @@
 
 /* Close button */
 .af-lb-close {
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 24px;
   background: rgba(255, 255, 255, 0.07);
@@ -221,7 +227,7 @@
   justify-content: center;
   transition: background 0.2s ease, color 0.2s ease;
   padding: 0;
-  z-index: 2;
+  z-index: 10000;
 }
 
 .af-lb-close:hover {
@@ -230,12 +236,12 @@
 }
 
 @media (max-width: 640px) {
-  .af-lb-arrow { width: 48px; height: 48px; font-size: 34px; }
-  .af-lb-arrow--left  { left: 12px; }
-  .af-lb-arrow--right { right: 12px; }
-  .af-lb-close { top: 16px; right: 16px; }
+  .af-lb-arrow { width: 52px; height: 52px; font-size: 36px; }
+  .af-lb-arrow--left  { left: 10px; }
+  .af-lb-arrow--right { right: 10px; }
+  .af-lb-close { top: 16px; right: 14px; }
   .af-lb-frame { max-width: 96vw; }
-  .af-lb-img   { max-height: 75vh; }
+  .af-lb-img   { max-height: 74vh; }
 }
 
 /* ── Tablet (≤1024px) ─────────────────────────────────────────────────────── */

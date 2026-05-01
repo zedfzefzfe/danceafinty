@@ -17,11 +17,34 @@ interface TimeLeft {
 export default function Hero() {
   const isMobile = useIsMobile();
   const sectionRef = useRef<HTMLElement>(null);
+  const taglineRef = useRef<HTMLParagraphElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subheadlineRef = useRef<HTMLDivElement>(null);
+  const locationRef = useRef<HTMLParagraphElement>(null);
+  const countdownRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  // Synchronous mobile detection for the video src — set on first render so
+  // the desktop video never even starts loading on mobile devices.
+  // The ?v= query string busts any stale cached copy of the old (non-faststart) files.
+  const VIDEO_VERSION = 'v2';
+  const MOBILE_SRC  = `/videos/mobileversion.mp4?${VIDEO_VERSION}`;
+  const DESKTOP_SRC = `/videos/hero_background.mp4?${VIDEO_VERSION}`;
+
+  const [videoSrc, setVideoSrc] = useState<string>(() => {
+    if (typeof window === 'undefined') return DESKTOP_SRC;
+    return window.matchMedia('(max-width: 767px)').matches ? MOBILE_SRC : DESKTOP_SRC;
+  });
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 767px)');
+    const update = () => setVideoSrc(mql.matches ? MOBILE_SRC : DESKTOP_SRC);
+    update();
+    mql.addEventListener('change', update);
+    return () => mql.removeEventListener('change', update);
+  }, []);
 
   // Countdown timer
   useEffect(() => {
@@ -49,43 +72,54 @@ export default function Hero() {
   // Entrance animation on load
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Set initial states immediately so nothing flashes before the timeline runs
+      gsap.set(taglineRef.current, { opacity: 0, y: 20, letterSpacing: '0.4em' });
+      const words = headlineRef.current?.querySelectorAll('.word');
+      if (words) gsap.set(words, { opacity: 0, y: 80, rotateX: 60 });
+      gsap.set(locationRef.current, { opacity: 0, y: 20 });
+      const nums = countdownRef.current?.querySelectorAll('[data-cd-num]');
+      const labels = countdownRef.current?.querySelectorAll('[data-cd-label]');
+      if (nums)   gsap.set(nums,   { opacity: 0, y: 30, scale: 0.6 });
+      if (labels) gsap.set(labels, { opacity: 0, y: 10 });
+      gsap.set(ctaRef.current?.children || [], { opacity: 0, y: 24 });
+
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      // Background fade in
-      tl.fromTo(
-        bgRef.current,
-        { opacity: 0, scale: 1.1 },
-        { opacity: 1, scale: 1, duration: 1.2 }
-      );
+      // Tagline — letter-spacing tightens as it fades in
+      tl.to(taglineRef.current, {
+        opacity: 1, y: 0, letterSpacing: '0.25em', duration: 0.8,
+      });
 
-      // Headline animation (word by word)
-      if (headlineRef.current) {
-        const words = headlineRef.current.querySelectorAll('.word');
-        tl.fromTo(
-          words,
-          { opacity: 0, y: 60, rotateX: 45 },
-          { opacity: 1, y: 0, rotateX: 0, duration: 0.8, stagger: 0.08 },
-          '-=0.6'
-        );
+      // Headline — word-by-word reveal with rotateX flip
+      if (words) {
+        tl.to(words, {
+          opacity: 1, y: 0, rotateX: 0,
+          duration: 0.9, stagger: 0.12, ease: 'expo.out',
+        }, '-=0.4');
       }
 
-      // Subheadline
-      tl.fromTo(
-        subheadlineRef.current,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.6 },
-        '-=0.4'
-      );
+      // Location — soft slide up
+      tl.to(locationRef.current, {
+        opacity: 1, y: 0, duration: 0.6,
+      }, '-=0.5');
 
-      // CTAs
-      tl.fromTo(
-        ctaRef.current?.children || [],
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 },
-        '-=0.3'
-      );
+      // Countdown numbers — pop in with a tiny back overshoot, staggered
+      if (nums) {
+        tl.to(nums, {
+          opacity: 1, y: 0, scale: 1,
+          duration: 0.55, stagger: 0.08, ease: 'back.out(1.6)',
+        }, '-=0.35');
+      }
+      if (labels) {
+        tl.to(labels, {
+          opacity: 1, y: 0, duration: 0.4, stagger: 0.06,
+        }, '-=0.5');
+      }
 
-
+      // CTAs — settled slide up
+      tl.to(ctaRef.current?.children || [], {
+        opacity: 1, y: 0, duration: 0.6, stagger: 0.12,
+      }, '-=0.3');
     }, sectionRef);
 
     return () => ctx.revert();
@@ -161,30 +195,24 @@ export default function Hero() {
     <section
       id="hero"
       ref={sectionRef}
-      className={`${isMobile ? '' : 'section-pinned'} bg-[#1a0033] z-10 overflow-hidden`}
+      className={`${isMobile ? 'relative w-screen h-screen' : 'section-pinned'} bg-[#1a0033] z-10 overflow-hidden`}
     >
       {/* Background Video */}
-      <div ref={bgRef} className="absolute inset-0 z-0 w-full h-full">
-        {/* Mobile video */}
+      <div ref={bgRef} className="absolute inset-0 z-0 w-full h-full" style={{ opacity: 1 }}>
         <video
-          className="absolute inset-0 w-full h-full object-cover block md:hidden"
+          key={videoSrc}
+          src={videoSrc}
+          className="absolute inset-0 w-full h-full object-cover"
           autoPlay
           muted
           loop
           playsInline
-        >
-          <source src="/videos/mobileversion.mp4" type="video/mp4" />
-        </video>
-        {/* Desktop video */}
-        <video
-          className="absolute inset-0 w-full h-full object-cover hidden md:block"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
-          <source src="/videos/hero_background.mp4" type="video/mp4" />
-        </video>
+          preload="auto"
+          onLoadedMetadata={(e) => {
+            const v = e.currentTarget;
+            v.play().catch(() => {});
+          }}
+        />
       </div>
 
       {/* Fallback Image (if video fails to load) */}
@@ -213,7 +241,10 @@ export default function Hero() {
         {/* Main Content Block */}
         <div className={isMobile ? 'w-full text-center' : 'max-w-[62vw]'}>
           {/* Tagline */}
-          <p className={`font-mono tracking-[0.25em] text-[#00e5cc] ${isMobile ? 'text-[11px] mb-4' : 'text-xs mb-2 sm:mb-4'}`}>
+          <p
+            ref={taglineRef}
+            className={`font-mono tracking-[0.25em] text-[#00e5cc] ${isMobile ? 'text-[11px] mb-4' : 'text-xs mb-2 sm:mb-4'}`}
+          >
             {heroConfig.tagline}
           </p>
 
@@ -230,12 +261,18 @@ export default function Hero() {
 
           {/* Subheadline */}
           <div ref={subheadlineRef} className="mb-6 sm:mb-8">
-            <p className={`${isMobile ? 'text-sm font-mono tracking-widest text-[#00e5cc]/80' : 'text-lg lg:text-xl text-white/80'} mb-2`}>
+            <p
+              ref={locationRef}
+              className={`${isMobile ? 'text-sm font-mono tracking-widest text-[#00e5cc]/80' : 'text-lg lg:text-xl text-white/80'} mb-2`}
+            >
               {heroConfig.dateLocation}
             </p>
-            
+
             {/* Countdown Timer */}
-            <div className={`flex items-center flex-wrap ${isMobile ? 'justify-center gap-5 mt-5' : 'gap-2 sm:gap-4 mt-6'}`}>
+            <div
+              ref={countdownRef}
+              className={`flex items-center flex-wrap ${isMobile ? 'justify-center gap-5 mt-5' : 'gap-2 sm:gap-4 mt-6'}`}
+            >
               {[
                 { value: timeLeft.days, label: 'DAYS' },
                 { value: timeLeft.hours, label: 'HRS' },
@@ -244,10 +281,16 @@ export default function Hero() {
               ].map((item, index) => (
                 <div key={item.label} className="flex items-center gap-2 sm:gap-4">
                   <div className="text-center">
-                    <div className={`font-display ${isMobile ? 'text-3xl' : 'text-3xl lg:text-5xl'} text-[#00e5cc] neon-text-teal`}>
+                    <div
+                      data-cd-num
+                      className={`font-display ${isMobile ? 'text-3xl' : 'text-3xl lg:text-5xl'} text-[#00e5cc] neon-text-teal`}
+                    >
                       {String(item.value).padStart(2, '0')}
                     </div>
-                    <div className={`font-mono ${isMobile ? 'text-[10px]' : 'text-[10px]'} tracking-[0.15em] text-white/50 mt-1`}>
+                    <div
+                      data-cd-label
+                      className={`font-mono ${isMobile ? 'text-[10px]' : 'text-[10px]'} tracking-[0.15em] text-white/50 mt-1`}
+                    >
                       {item.label}
                     </div>
                   </div>

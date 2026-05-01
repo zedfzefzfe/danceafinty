@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import './ArtistsSection.css';
 
 // ─── EDIT GALLERY PHOTOS HERE ─────────────────────────────────────────────────
@@ -48,7 +49,7 @@ function Lightbox({ index, onClose, onPrev, onNext }: {
     };
   }, [onClose, onPrev, onNext]);
 
-  return (
+  return createPortal(
     <div
       className="af-lb-overlay"
       onClick={onClose}
@@ -64,8 +65,6 @@ function Lightbox({ index, onClose, onPrev, onNext }: {
           alt={photo.alt}
           className="af-lb-img"
         />
-
-        {/* Counter */}
         <p className="af-lb-counter">{index + 1} / {PHOTOS.length}</p>
       </div>
 
@@ -89,7 +88,8 @@ function Lightbox({ index, onClose, onPrev, onNext }: {
       <button className="af-lb-close" onClick={onClose} aria-label="Close">
         ✕
       </button>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -203,6 +203,7 @@ export default function ArtistsSection() {
                 }}
               >
                 <button
+                  type="button"
                   className="af-card"
                   aria-label={`Open photo: ${photo.alt}`}
                   onClick={() => setLightboxIndex(index)}

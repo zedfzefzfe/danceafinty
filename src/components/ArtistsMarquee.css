@@ -75,6 +75,38 @@
   margin: 0 auto;
 }
 
+/* ── Row labels — one above each marquee strip ────────────────────────────── */
+
+.am-row-heading {
+  text-align: center;
+  padding: 0 24px;
+  margin: 0 0 22px;
+}
+
+/* Separates the DJ block from the teachers row above it */
+.am-row-heading--second {
+  margin-top: 40px;
+}
+
+.am-row-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  font-size: clamp(24px, 3vw, 32px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #00e5cc;
+  margin: 0 0 6px;
+  line-height: 1;
+}
+
+.am-row-sub {
+  font-family: 'DM Sans', 'Inter', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.6;
+  margin: 0;
+}
+
 /* ── Marquee wrapper ──────────────────────────────────────────────────────── */
 
 .am-marquee-wrapper {
@@ -123,12 +155,22 @@
   animation: none;
 }
 
+/* Second row (DJs) — identical track, opposite direction, same duration */
+@keyframes am-scroll-reverse {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.am-track--reverse {
+  animation-name: am-scroll-reverse;
+}
+
 /* ── Individual artist card ───────────────────────────────────────────────── */
 
 .am-card {
   position: relative;
   flex-shrink: 0;
-  width: 380px;
+  width: 330px;
   aspect-ratio: 3 / 4;
   border-radius: 4px;
   overflow: hidden;
@@ -256,7 +298,7 @@
 /* ── Tablet (≤1024px) ─────────────────────────────────────────────────────── */
 
 @media (max-width: 1024px) {
-  .am-card  { width: 300px; }
+  .am-card  { width: 260px; }
   .am-track { gap: 20px; }
 }
 
@@ -265,10 +307,14 @@
 @media (max-width: 640px) {
   .am-section        { padding: 80px 0 60px; }
   .am-header         { margin-bottom: 60px; }
-  .am-card           { width: 260px; }
+  .am-card           { width: 225px; }
   .am-track          { gap: 16px; }
   .am-fade-left,
   .am-fade-right     { width: 60px; }
+  .am-row-heading    { margin-bottom: 16px; }
+  .am-row-heading--second { margin-top: 30px; }
+  .am-row-label      { font-size: 22px; letter-spacing: 0.05em; }
+  .am-row-sub        { font-size: 11.5px; }
 }
 
 /* ── Reduced motion ───────────────────────────────────────────────────────── */

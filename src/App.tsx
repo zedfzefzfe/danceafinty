@@ -1,9 +1,10 @@
 import { siteConfig } from './config';
 import Navigation from './sections/Navigation';
 import Hero from './sections/Hero';
-import WelcomeSection from './sections/WelcomeSection';
+import WhyDanceAffinitySection from './sections/WhyDanceAffinitySection';
+import ExperienceSection from './sections/ExperienceSection';
 import ArtistsMarquee from './components/ArtistsMarquee';
-import BootcampsSection from './components/BootcampsSection';
+import PremiumBootcampsSection from './sections/PremiumBootcampsSection';
 import ArtistsSection from './sections/ArtistsSection';
 import Newsletter from './sections/Newsletter';
 import FinalCTASection from './components/FinalCTASection';
@@ -16,9 +17,10 @@ function App() {
       <Navigation />
       <main className="relative">
         <Hero />
-        <WelcomeSection />
+        <WhyDanceAffinitySection />
+        <ExperienceSection />
         <ArtistsMarquee />
-        <BootcampsSection />
+        <PremiumBootcampsSection />
         <ArtistsSection />
         <FinalCTASection imageSrc="/images/60.png" />
         <Newsletter />

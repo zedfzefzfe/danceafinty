@@ -24,6 +24,17 @@ const artists: Artist[] = [
   { id: 7, name: 'Sara Panero',     label: 'Bachata',  style: 'URBAN',       country: 'SPAIN',    image: 'images/57.png' },
   { id: 8, name: 'Flow Brothers',   label: 'Kizomba',  style: 'URBAN KIZ',   country: 'GERMANY',  image: 'images/58.png' },
 ];
+// EDIT DJ DATA HERE ─────────────────────────────────────────────────────────
+// Second marquee row. Same card shape as `artists` — only the content differs.
+const djs: Artist[] = [
+  { id: 101, name: 'DJ Blackpacha', label: 'DJ', style: 'AFRO HOUSE', country: 'ANGOLA', image: 'images/dj-blackpacha.jpg' },
+  // TODO — replace the 5 entries below with the real DJ line-up
+  { id: 102, name: 'TODO — DJ Name', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: 'images/dj-2.jpg' },
+  { id: 103, name: 'TODO — DJ Name', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: 'images/dj-3.jpg' },
+  { id: 104, name: 'TODO — DJ Name', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: 'images/dj-4.jpg' },
+  { id: 105, name: 'TODO — DJ Name', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: 'images/dj-5.jpg' },
+  { id: 106, name: 'TODO — DJ Name', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: 'images/dj-6.jpg' },
+];
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Moody film-still gradients — unique per card, cohesive palette
@@ -36,6 +47,16 @@ const CARD_GRADIENTS: string[] = [
   'linear-gradient(140deg, #1a1d2e 0%, #2e1a1f 55%, #1a2a2e 100%)',   // DJ     — navy to deep rose
   'linear-gradient(170deg, #2a1a2e 0%, #1a2a2e 60%, #2e1a1f 100%)',   // Sara   — violet to teal-shadow
   'linear-gradient(155deg, #1a1a2e 0%, #1f2e2a 65%, #2a1a2e 100%)',   // Flow   — navy to forest
+];
+
+// Same palette, offset so the two rows don't line up gradient-for-gradient
+const DJ_GRADIENTS: string[] = [
+  'linear-gradient(140deg, #1a1d2e 0%, #2e1a1f 55%, #1a2a2e 100%)',
+  'linear-gradient(170deg, #2a1a2e 0%, #1a2a2e 60%, #2e1a1f 100%)',
+  'linear-gradient(155deg, #1a1a2e 0%, #1f2e2a 65%, #2a1a2e 100%)',
+  'linear-gradient(160deg, #1a1d2e 0%, #2a1a2e 60%, #1a1d2e 100%)',
+  'linear-gradient(145deg, #2a1a2e 0%, #1f2e2a 70%, #1a1d2e 100%)',
+  'linear-gradient(155deg, #1a2a2e 0%, #1a1d2e 50%, #2a1a2e 100%)',
 ];
 
 interface VisState {
@@ -128,6 +149,18 @@ export default function ArtistsMarquee() {
 
       </div>
 
+      {/* ── Row label — teachers ── */}
+      <div
+        className="am-row-heading"
+        style={{
+          opacity:    vis.marquee ? 1 : 0,
+          transition: noAnim ? 'none' : 'opacity 0.7s ease',
+        }}
+      >
+        <p className="am-row-label">The Teachers</p>
+        <p className="am-row-sub">World-class artists leading every workshop.</p>
+      </div>
+
       {/* ── Marquee strip ── */}
       <div
         className="am-marquee-wrapper"
@@ -158,6 +191,56 @@ export default function ArtistsMarquee() {
                 key={`dup-${artist.id}`}
                 artist={artist}
                 gradient={CARD_GRADIENTS[i]}
+                noAnim={noAnim}
+                ariaHidden
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Row label — DJs ── */}
+      <div
+        className="am-row-heading am-row-heading--second"
+        style={{
+          opacity:    vis.marquee ? 1 : 0,
+          transition: noAnim ? 'none' : 'opacity 0.7s ease 0.15s',
+        }}
+      >
+        <p className="am-row-label">The DJs</p>
+        <p className="am-row-sub">The beats that keep the floor alive all night.</p>
+      </div>
+
+      {/* ── Second marquee strip — DJs, scrolling the opposite way ── */}
+      <div
+        className="am-marquee-wrapper"
+        style={{
+          opacity:    vis.marquee ? 1 : 0,
+          transform:  vis.marquee ? 'translateY(0)' : 'translateY(60px)',
+          transition: noAnim ? 'none' : 'opacity 0.9s ease 0.15s, transform 0.9s ease 0.15s',
+        }}
+      >
+        {/* Edge fade — hides card overflow at viewport boundaries */}
+        <div aria-hidden="true" className="am-fade-left"  />
+        <div aria-hidden="true" className="am-fade-right" />
+
+        <div className={`am-marquee${noAnim ? ' am-marquee--no-anim' : ''}`}>
+          <div className="am-track am-track--reverse">
+            {/* Primary set — read by screen readers */}
+            {djs.map((dj, i) => (
+              <ArtistCard
+                key={dj.id}
+                artist={dj}
+                gradient={DJ_GRADIENTS[i]}
+                noAnim={noAnim}
+              />
+            ))}
+            {/* Duplicate set — aria-hidden, enables seamless infinite loop */}
+            {djs.map((dj, i) => (
+              <ArtistCard
+                key={`dup-${dj.id}`}
+                artist={dj}
+                gradient={DJ_GRADIENTS[i]}
                 noAnim={noAnim}
                 ariaHidden
               />

@@ -97,6 +97,8 @@ function GalleryCard({
 }) {
   const { icon: Icon, line1, line2, src } = item;
   const isPrimary = copy === 0;
+  // A swipe that starts on a card must scroll the row, not open the lightbox
+  const touch = useRef({ x: 0, y: 0, moved: false });
 
   return (
     <div
@@ -106,7 +108,17 @@ function GalleryCard({
       aria-label={`Open ${line1} ${line2} photo`}
       data-gal={isPrimary ? index : undefined}
       data-gal-clone={copy === 1 ? index : undefined}
-      onClick={() => onOpen(index)}
+      onTouchStart={(e) => {
+        touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, moved: false };
+      }}
+      onTouchMove={(e) => {
+        const dx = Math.abs(e.touches[0].clientX - touch.current.x);
+        const dy = Math.abs(e.touches[0].clientY - touch.current.y);
+        if (dx > 8 || dy > 8) touch.current.moved = true;
+      }}
+      onClick={() => {
+        if (!touch.current.moved) onOpen(index);
+      }}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -165,6 +177,19 @@ export default function ExperienceSection() {
   const hoverRef = useRef(false);
   const lightboxOpenRef = useRef(false);
   const touchStartX = useRef(0);
+  // Timestamp until which the auto-scroll stays out of the way after the user
+  // touches / wheels the row — momentum scrolling needs to finish undisturbed
+  const resumeAtRef = useRef(0);
+
+  // Touch devices fire an emulated mouseenter on tap that never gets a matching
+  // mouseleave, which would pause the marquee forever — so only bind hover
+  // pausing where a real pointer exists.
+  const canHover =
+    typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
+
+  const pauseForUser = useCallback(() => {
+    resumeAtRef.current = performance.now() + 2500;
+  }, []);
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [lightboxVisible, setLightboxVisible] = useState(false);
@@ -199,7 +224,7 @@ export default function ExperienceSection() {
       last = now;
 
       const el = trackRef.current;
-      if (el && !hoverRef.current && !lightboxOpenRef.current) {
+      if (el && !hoverRef.current && !lightboxOpenRef.current && now >= resumeAtRef.current) {
         el.scrollLeft += SPEED * dt;
         const loop = loopWidth();
         // Position `loop` shows the second copy's first card — pixel-identical
@@ -218,6 +243,7 @@ export default function ExperienceSection() {
   const scrollByCard = (direction: 1 | -1) => {
     const el = trackRef.current;
     if (!el) return;
+    pauseForUser();
     const card = el.firstElementChild as HTMLElement | null;
     const step = card ? card.offsetWidth + 16 : el.clientWidth * 0.8;
     const loop = loopWidth();
@@ -415,10 +441,11 @@ export default function ExperienceSection() {
         {/* ── 4) Gallery carousel ── */}
         <div
           className="relative mt-12 md:mt-16"
-          onMouseEnter={() => { hoverRef.current = true; }}
-          onMouseLeave={() => { hoverRef.current = false; }}
-          onTouchStart={() => { hoverRef.current = true; }}
-          onTouchEnd={() => { hoverRef.current = false; }}
+          onMouseEnter={canHover ? () => { hoverRef.current = true; } : undefined}
+          onMouseLeave={canHover ? () => { hoverRef.current = false; } : undefined}
+          onTouchStart={pauseForUser}
+          onTouchMove={pauseForUser}
+          onWheel={pauseForUser}
         >
 
           {/* Prev */}

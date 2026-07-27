@@ -157,7 +157,10 @@ export default function ArtistsMarquee() {
           transition: noAnim ? 'none' : 'opacity 0.7s ease',
         }}
       >
-        <p className="am-row-label">The Teachers</p>
+        <div className="am-row-heading-top">
+          <p className="am-row-label">The Teachers</p>
+          <span aria-hidden="true" className="am-row-rule" />
+        </div>
         <p className="am-row-sub">World-class artists leading every workshop.</p>
       </div>
 
@@ -207,7 +210,10 @@ export default function ArtistsMarquee() {
           transition: noAnim ? 'none' : 'opacity 0.7s ease 0.15s',
         }}
       >
-        <p className="am-row-label">The DJs</p>
+        <div className="am-row-heading-top">
+          <p className="am-row-label">The DJs</p>
+          <span aria-hidden="true" className="am-row-rule" />
+        </div>
         <p className="am-row-sub">The beats that keep the floor alive all night.</p>
       </div>
 

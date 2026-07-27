@@ -77,35 +77,59 @@
 
 /* ── Row labels — one above each marquee strip ────────────────────────────── */
 
+/* Left-aligned to the same container edge as the rest of the site's sections */
 .am-row-heading {
-  text-align: center;
+  max-width: 1280px;
+  margin: 0 auto 26px;
   padding: 0 24px;
-  margin: 0 0 22px;
+  text-align: left;
 }
 
 /* Separates the DJ block from the teachers row above it */
 .am-row-heading--second {
-  margin-top: 40px;
+  margin-top: 52px;
+}
+
+/* Label sits on a rule that runs out to the edge, tying it to the row below */
+.am-row-heading-top {
+  display: flex;
+  align-items: center;
+  gap: 22px;
 }
 
 .am-row-label {
   font-family: 'Bebas Neue', sans-serif;
   font-weight: 400;
-  font-size: clamp(24px, 3vw, 32px);
-  letter-spacing: 0.06em;
+  font-size: clamp(26px, 2.6vw, 36px);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #00e5cc;
-  margin: 0 0 6px;
+  color: #ffffff;
+  margin: 0;
   line-height: 1;
+  white-space: nowrap;
+}
+
+.am-row-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 229, 204, 0.55) 0%,
+    rgba(0, 229, 204, 0.15) 35%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
 }
 
 .am-row-sub {
   font-family: 'DM Sans', 'Inter', sans-serif;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.45);
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.42);
   line-height: 1.6;
-  margin: 0;
+  margin: 10px 0 0;
 }
+
+@media (min-width: 641px)  { .am-row-heading { padding: 0 40px; } }
+@media (min-width: 1025px) { .am-row-heading { padding: 0 64px; } }
 
 /* ── Marquee wrapper ──────────────────────────────────────────────────────── */
 
@@ -311,10 +335,11 @@
   .am-track          { gap: 16px; }
   .am-fade-left,
   .am-fade-right     { width: 60px; }
-  .am-row-heading    { margin-bottom: 16px; }
-  .am-row-heading--second { margin-top: 30px; }
-  .am-row-label      { font-size: 22px; letter-spacing: 0.05em; }
-  .am-row-sub        { font-size: 11.5px; }
+  .am-row-heading    { margin-bottom: 18px; }
+  .am-row-heading--second { margin-top: 36px; }
+  .am-row-heading-top { gap: 14px; }
+  .am-row-label      { font-size: 24px; letter-spacing: 0.05em; }
+  .am-row-sub        { font-size: 12px; margin-top: 8px; }
 }
 
 /* ── Reduced motion ───────────────────────────────────────────────────────── */

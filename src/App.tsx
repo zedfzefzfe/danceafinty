@@ -5,7 +5,8 @@ import WhyDanceAffinitySection from './sections/WhyDanceAffinitySection';
 import ExperienceSection from './sections/ExperienceSection';
 import ArtistsMarquee from './components/ArtistsMarquee';
 import PremiumBootcampsSection from './sections/PremiumBootcampsSection';
-import ArtistsSection from './sections/ArtistsSection';
+import FestivalExperienceSection from './sections/FestivalExperienceSection';
+import PracticalInfoSection from './sections/PracticalInfoSection';
 import Newsletter from './sections/Newsletter';
 import FinalCTASection from './components/FinalCTASection';
 import Footer from './sections/Footer';
@@ -21,7 +22,8 @@ function App() {
         <ExperienceSection />
         <ArtistsMarquee />
         <PremiumBootcampsSection />
-        <ArtistsSection />
+        <FestivalExperienceSection />
+        <PracticalInfoSection />
         <FinalCTASection imageSrc="/images/60.png" />
         <Newsletter />
 

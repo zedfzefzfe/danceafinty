@@ -160,7 +160,6 @@ const BOOTCAMPS: Bootcamp[] = [
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
 const COPY = {
-  badgeNumber: '04',
   badgeLabel: 'PREMIUM BOOTCAMPS',
   headingLine1: 'LEVEL UP YOUR DANCE',
   headingLine2: '7 PREMIUM BOOTCAMPS',
@@ -618,13 +617,7 @@ export default function PremiumBootcampsSection() {
         <div ref={headerRef} className="text-center">
 
           {/* Badge */}
-          <div className="flex items-center justify-center gap-3 mb-7 md:mb-9">
-            <span
-              className="flex items-center justify-center w-8 h-7 border border-[#00e5cc]/40 rounded-[2px] font-mono text-[12px] text-[#00e5cc]"
-              aria-hidden="true"
-            >
-              {COPY.badgeNumber}
-            </span>
+          <div className="mb-7 md:mb-9">
             <span className="font-mono text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-[#00e5cc]">
               {COPY.badgeLabel}
             </span>

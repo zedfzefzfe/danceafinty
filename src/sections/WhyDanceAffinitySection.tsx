@@ -8,7 +8,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
 const COPY = {
-  badgeNumber: '2',
   badgeLabel: 'WHY DANCE AFFINITY?',
   headingLine1a: 'MORE THAN',
   headingLine1b: 'A FESTIVAL.',
@@ -174,13 +173,7 @@ export default function WhyDanceAffinitySection() {
         <div ref={textRef} className="md:max-w-[56%] lg:max-w-[620px]">
 
           {/* 1) Section badge */}
-          <div className="flex items-center gap-3 mb-7 md:mb-9">
-            <span
-              className="flex items-center justify-center w-7 h-7 border border-[#00e5cc]/40 rounded-[2px] font-mono text-[12px] text-[#00e5cc]"
-              aria-hidden="true"
-            >
-              {COPY.badgeNumber}
-            </span>
+          <div className="mb-7 md:mb-9">
             <span className="font-mono text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-[#00e5cc]">
               {COPY.badgeLabel}
             </span>

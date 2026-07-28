@@ -2,13 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { revealOnView } from '../lib/reveal';
 import {
   Users,
-  Clock,
   Zap,
   MessageSquare,
   Globe,
   Bell,
-  Check,
-  Undo2,
   MousePointerClick,
   PersonStanding,
   Heart,
@@ -27,7 +24,9 @@ type Bootcamp = {
   hours: number;
   image: string;
   comingSoon?: boolean;
-  // Back (flip) details
+  // Set this to show a poster on the flip side instead of the text details.
+  backImage?: string;
+  // Back (flip) details — ignored when `backImage` is set
   whatToExpect: string[];
   whoIsItFor: string;
   level: string;
@@ -44,7 +43,8 @@ const BOOTCAMPS: Bootcamp[] = [
     teacherNames: ['Martina & Lea', 'Daniel & Elina', 'Loyal - Vanildo Eyk & Mara'],
     teacherCount: 6,
     hours: 3,
-    image: '/images/bootcamp-evokeez.jpg',
+    image: '/images/bootcamps/Evokeeez_bootcamp_1.png',
+    backImage: '/images/bootcamps/evokeez_evokeez_2.png',
     whatToExpect: [
       'Lightness in your movements',
       'Creative & inspired transitions',
@@ -66,7 +66,8 @@ const BOOTCAMPS: Bootcamp[] = [
     teacherNames: ['Antho & Caro'],
     teacherCount: 3,
     hours: 3,
-    image: '/images/bootcamp-urban-groundedness.jpg',
+    image: '/images/bootcamps/bootcamp_Urban groundness_sLide 1.png',
+    backImage: '/images/bootcamps/bootcamps_groundedness_slide2.png',
     // TODO — back details to be filled in
     whatToExpect: ['TODO — add what to expect'],
     whoIsItFor: 'TODO — describe who this bootcamp is for.',
@@ -82,7 +83,8 @@ const BOOTCAMPS: Bootcamp[] = [
     teacherNames: ['Vanildo Eyk & Mara'],
     teacherCount: 2,
     hours: 3,
-    image: '/images/bootcamp-genkiz.jpg',
+    image: '/images/bootcamps/bootcamp_genkiz_slide 1.2.png',
+    backImage: '/images/bootcamps/genkiz bootcamp_slide 2.png',
     // TODO — back details to be filled in
     whatToExpect: ['TODO — add what to expect'],
     whoIsItFor: 'TODO — describe who this bootcamp is for.',
@@ -98,7 +100,8 @@ const BOOTCAMPS: Bootcamp[] = [
     teacherNames: ['Loyal & Vanildo Eyk'],
     teacherCount: 5,
     hours: 3,
-    image: '/images/bootcamp-loyal-musicality-secrets.jpg',
+    image: '/images/bootcamps/bootcamp_musicality secrets_slide 1.png',
+    backImage: '/images/bootcamps/musicality bootcamp_slide2.png',
     // TODO — back details to be filled in
     whatToExpect: ['TODO — add what to expect'],
     whoIsItFor: 'TODO — describe who this bootcamp is for.',
@@ -114,7 +117,8 @@ const BOOTCAMPS: Bootcamp[] = [
     teacherNames: ['Selim & Anastasia'],
     teacherCount: 2,
     hours: 3,
-    image: '/images/bootcamp-foundation-evolution.jpg',
+    image: '/images/bootcamps/bootcamp_foundation & evolution4.png',
+    backImage: '/images/bootcamps/foundation & evolution bootcamp_2slide.png',
     // TODO — back details to be filled in
     whatToExpect: ['TODO — add what to expect'],
     whoIsItFor: 'TODO — describe who this bootcamp is for.',
@@ -180,17 +184,6 @@ const FEATURES = [
 ];
 
 const BODY_FONT = "'DM Sans', sans-serif";
-const LEVEL_SEGMENTS = 6;
-
-// Rough fill for the segmented level indicator — TODO levels land mid-scale.
-function levelFill(level: string): number {
-  const l = level.toLowerCase();
-  if (l.includes('advanced')) return l.includes('intermediate') ? 5 : 6;
-  if (l.includes('intermediate')) return 4;
-  if (l.includes('improver')) return 3;
-  if (l.includes('beginner')) return 2;
-  return 3;
-}
 
 // ─── Flip card ───────────────────────────────────────────────────────────────
 function BootcampCard({
@@ -250,75 +243,11 @@ function BootcampCard({
       >
         {/* ── FRONT ── */}
         <div className={faceBase} style={faceStyle(false)}>
-          <div
-            aria-hidden="true"
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(145deg, #14384a 0%, #0d1a2e 100%)' }}
-          />
           <img
-            src={bootcamp.image}
+            src={encodeURI(bootcamp.image)}
             alt=""
             className="absolute inset-0 w-full h-full object-cover"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
           />
-
-          {/* Teal / cyan gradient wash rising from the bottom */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(to top, rgba(0,110,110,0.92) 0%, rgba(0,90,110,0.6) 32%, rgba(10,16,32,0.15) 62%, transparent 100%)',
-            }}
-          />
-
-          {/* Intensity badge */}
-          <span className="absolute top-3 left-3 px-2 py-1 rounded-[3px] bg-[#0a1020]/75 border border-[#00e5cc]/30 font-mono text-[8px] tracking-[0.18em] uppercase text-[#00e5cc]">
-            {bootcamp.intensity}
-          </span>
-
-          {/* Bottom content */}
-          <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 text-center">
-            <h3
-              className="font-display text-white uppercase leading-[0.95] tracking-[0.02em]"
-              style={{ fontSize: 'clamp(1.5rem, 2.4vw, 2rem)' }}
-            >
-              {bootcamp.name}
-            </h3>
-            <p className="font-display uppercase text-[#00e5cc] tracking-[0.22em] text-[13px] md:text-[14px] leading-none mt-1">
-              BOOTCAMP
-            </p>
-
-            <div className="mt-3 space-y-0.5">
-              {bootcamp.teacherNames.map((t) => (
-                <p
-                  key={t}
-                  className="uppercase tracking-[0.06em]"
-                  style={{
-                    fontFamily: BODY_FONT,
-                    fontSize: '10px',
-                    color: 'rgba(255,255,255,0.72)',
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {t}
-                </p>
-              ))}
-            </div>
-
-            <div className="mt-3 pt-3 border-t border-white/15 flex items-center justify-center gap-4 text-white/75">
-              <span className="flex items-center gap-1.5 font-mono text-[9px] tracking-[0.1em] uppercase">
-                <Users className="w-3.5 h-3.5 text-[#00e5cc]" strokeWidth={1.6} aria-hidden="true" />
-                {bootcamp.teacherCount} teachers
-              </span>
-              <span className="flex items-center gap-1.5 font-mono text-[9px] tracking-[0.1em] uppercase">
-                <Clock className="w-3.5 h-3.5 text-[#00e5cc]" strokeWidth={1.6} aria-hidden="true" />
-                {bootcamp.hours} hours
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* ── BACK ── */}
@@ -326,111 +255,13 @@ function BootcampCard({
           className={`${faceBase} bg-[#0b1626]`}
           style={faceStyle(true)}
         >
-          <div className="h-full overflow-y-auto scrollbar-hide p-4 md:p-5">
-            <h3 className="font-display uppercase leading-none tracking-[0.02em] text-[17px] md:text-[19px]">
-              <span className="text-[#00e5cc]">{bootcamp.name}</span>{' '}
-              <span className="text-white">BOOTCAMP</span>
-            </h3>
-
-            {/* What to expect */}
-            <p className="font-mono text-[8px] tracking-[0.2em] uppercase text-[#00e5cc] mt-4 mb-2">
-              What to expect
-            </p>
-            <ul className="space-y-1">
-              {bootcamp.whatToExpect.map((item) => (
-                <li key={item} className="flex items-start gap-1.5">
-                  <Check className="w-3 h-3 mt-[3px] shrink-0 text-[#00e5cc]" strokeWidth={2.5} aria-hidden="true" />
-                  <span
-                    style={{
-                      fontFamily: BODY_FONT,
-                      fontSize: '10.5px',
-                      color: 'rgba(255,255,255,0.7)',
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            {/* Who is it for */}
-            <p className="font-mono text-[8px] tracking-[0.2em] uppercase text-[#00e5cc] mt-4 mb-2">
-              Who is it for?
-            </p>
-            <p
-              style={{
-                fontFamily: BODY_FONT,
-                fontSize: '10.5px',
-                color: 'rgba(255,255,255,0.6)',
-                lineHeight: 1.55,
-              }}
-            >
-              {bootcamp.whoIsItFor}
-            </p>
-
-            {/* Details block */}
-            <div className="mt-4 rounded-lg border border-white/10 bg-white/[0.03] p-3">
-              {/* Level */}
-              <p className="font-mono text-[8px] tracking-[0.2em] uppercase text-white/40">Level</p>
-              <div className="flex items-center gap-2 mt-1.5">
-                <div className="flex gap-1">
-                  {Array.from({ length: LEVEL_SEGMENTS }).map((_, i) => (
-                    <span
-                      key={i}
-                      aria-hidden="true"
-                      className={`block w-3.5 h-1 rounded-full ${
-                        i < levelFill(bootcamp.level) ? 'bg-[#00e5cc]' : 'bg-white/15'
-                      }`}
-                    />
-                  ))}
-                </div>
-                <span
-                  className="uppercase tracking-[0.06em]"
-                  style={{ fontFamily: BODY_FONT, fontSize: '9px', color: 'rgba(255,255,255,0.7)' }}
-                >
-                  {bootcamp.level}
-                </span>
-              </div>
-
-              {/* Focus */}
-              <p className="font-mono text-[8px] tracking-[0.2em] uppercase text-white/40 mt-3">Focus</p>
-              <div className="flex flex-wrap gap-1.5 mt-1.5">
-                {bootcamp.focus.map((f) => (
-                  <span
-                    key={f}
-                    className="px-2 py-0.5 rounded-full border border-[#00e5cc]/35 text-[#00e5cc] uppercase tracking-[0.08em]"
-                    style={{ fontFamily: BODY_FONT, fontSize: '8.5px' }}
-                  >
-                    {f}
-                  </span>
-                ))}
-              </div>
-
-              {/* Details */}
-              <p className="font-mono text-[8px] tracking-[0.2em] uppercase text-white/40 mt-3">Details</p>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-white/70">
-                <span className="flex items-center gap-1 font-mono text-[8.5px] tracking-[0.08em] uppercase">
-                  <Users className="w-3 h-3 text-[#00e5cc]" strokeWidth={1.6} aria-hidden="true" />
-                  {bootcamp.teacherCount} teachers
-                </span>
-                <span className="flex items-center gap-1 font-mono text-[8.5px] tracking-[0.08em] uppercase">
-                  <Clock className="w-3 h-3 text-[#00e5cc]" strokeWidth={1.6} aria-hidden="true" />
-                  {bootcamp.hours} hours
-                </span>
-                <span className="flex items-center gap-1 font-mono text-[8.5px] tracking-[0.08em] uppercase">
-                  <Users className="w-3 h-3 text-[#00e5cc]" strokeWidth={1.6} aria-hidden="true" />
-                  max {bootcamp.maxParticipants} participants
-                </span>
-              </div>
-            </div>
-
-            {/* Flip back affordance */}
-            <p className="flex items-center justify-center gap-1.5 mt-4 font-mono text-[8px] tracking-[0.18em] uppercase text-white/40">
-              <Undo2 className="w-3 h-3" strokeWidth={1.8} aria-hidden="true" />
-              back
-            </p>
-          </div>
+          {bootcamp.backImage && (
+            <img
+              src={encodeURI(bootcamp.backImage)}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
         </div>
       </div>
     </div>

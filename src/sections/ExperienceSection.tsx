@@ -30,11 +30,11 @@ const COPY = {
 
 // ─── Swap these to use real photo assets ─────────────────────────────────────
 const GALLERY = [
-  { icon: GraduationCap, line1: 'INSPIRING', line2: 'WORKSHOPS', src: '/images/exp-1.jpg' },
-  { icon: Users, line1: 'SOCIAL', line2: 'DANCING', src: '/images/exp-2.jpg' },
-  { icon: Heart, line1: 'REAL', line2: 'CONNECTIONS', src: '/images/exp-3.jpg' },
-  { icon: Music, line1: 'EPIC', line2: 'PARTIES', src: '/images/exp-4.jpg' },
-  { icon: Users, line1: 'LIFELONG', line2: 'FRIENDSHIPS', src: '/images/exp-5.jpg' },
+  { icon: GraduationCap, line1: 'INSPIRING', line2: 'WORKSHOPS', src: '/images/20 (1).png' },
+  { icon: Users, line1: 'SOCIAL', line2: 'DANCING', src: '/images/19 (1).png' },
+  { icon: Heart, line1: 'REAL', line2: 'CONNECTIONS', src: '/images/18 (1).png' },
+  { icon: Music, line1: 'EPIC', line2: 'PARTIES', src: '/images/16 (1).png' },
+  { icon: Users, line1: 'LIFELONG', line2: 'FRIENDSHIPS', src: '/images/8 (1).png' },
 ];
 
 const TESTIMONIALS = [

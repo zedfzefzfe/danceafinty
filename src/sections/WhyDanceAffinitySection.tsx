@@ -38,8 +38,8 @@ const FEATURES = [
 
 // ─── Swap these to use real photo assets ─────────────────────────────────────
 const PHOTOS = {
-  hug: { src: '/images/why-hug.jpg', alt: 'Dancers embracing at the festival' },
-  crowd: { src: '/images/why-crowd.jpg', alt: 'A circle of dancers celebrating under stage lights' },
+  hug: { src: '/images/4 (1).png', alt: 'Dancers embracing at the festival' },
+  crowd: { src: '/images/60.png', alt: 'A circle of dancers celebrating under stage lights' },
 };
 
 const BODY_FONT = "'DM Sans', sans-serif";

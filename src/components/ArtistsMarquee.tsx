@@ -15,25 +15,24 @@ interface Artist {
 }
 
 const artists: Artist[] = [
-  { id: 1, name: 'Carlos Espinosa', label: 'Kizomba', style: 'URBAN KIZ',   country: 'PORTUGAL', image: 'images/51.png' },
-  { id: 2, name: 'Andrea Vital',    label: 'Bachata',  style: 'SENSUAL',     country: 'SPAIN',    image: 'images/50.png' },
-  { id: 3, name: 'Marco Ferreira',  label: 'Kizomba',  style: 'FUSION',      country: 'FRANCE',   image: 'images/53.png' },
-  { id: 4, name: 'Inès Pereira',    label: 'Bachata',  style: 'MODERNA',     country: 'PORTUGAL', image: 'images/54.png' },
-  { id: 5, name: 'Tony & Maya',     label: 'Bachata',  style: 'SENSUAL DUO', country: 'FRANCE',   image: 'images/55.png' },
-  { id: 6, name: 'DJ Blackpacha',   label: 'DJ',       style: 'AFRO HOUSE',  country: 'ANGOLA',   image: 'images/56.png' },
-  { id: 7, name: 'Sara Panero',     label: 'Bachata',  style: 'URBAN',       country: 'SPAIN',    image: 'images/57.png' },
-  { id: 8, name: 'Flow Brothers',   label: 'Kizomba',  style: 'URBAN KIZ',   country: 'GERMANY',  image: 'images/58.png' },
+  { id: 1, name: 'Carlos Espinosa', label: 'Kizomba', style: 'URBAN KIZ',   country: 'PORTUGAL', image: '/images/artiste/VAnildo & Mara.png' },
+  { id: 2, name: 'Andrea Vital',    label: 'Bachata',  style: 'SENSUAL',     country: 'SPAIN',    image: '/images/artiste/loyal.png' },
+  { id: 3, name: 'Marco Ferreira',  label: 'Kizomba',  style: 'FUSION',      country: 'FRANCE',   image: '/images/artiste/Daniel.png' },
+  { id: 4, name: 'Inès Pereira',    label: 'Bachata',  style: 'MODERNA',     country: 'PORTUGAL', image: '/images/artiste/Antho & Caro.png' },
+  { id: 5, name: 'Tony & Maya',     label: 'Bachata',  style: 'SENSUAL DUO', country: 'FRANCE',   image: '/images/artiste/Andrea.png' },
+  { id: 6, name: 'DJ Blackpacha',   label: 'DJ',       style: 'AFRO HOUSE',  country: 'ANGOLA',   image: '/images/artiste/Selim.png' },
+  { id: 7, name: 'Sara Panero',     label: 'Bachata',  style: 'URBAN',       country: 'SPAIN',    image: '/images/artiste/martina.png' },
+  { id: 8, name: 'Flow Brothers',   label: 'Kizomba',  style: 'URBAN KIZ',   country: 'GERMANY',  image: '/images/artiste/ledoux.png' },
 ];
 // EDIT DJ DATA HERE ─────────────────────────────────────────────────────────
 // Second marquee row. Same card shape as `artists` — only the content differs.
+// TODO — `style` and `country` below are still placeholders; fill in the real ones.
 const djs: Artist[] = [
-  { id: 101, name: 'DJ Blackpacha', label: 'DJ', style: 'AFRO HOUSE', country: 'ANGOLA', image: 'images/dj-blackpacha.jpg' },
-  // TODO — replace the 5 entries below with the real DJ line-up
-  { id: 102, name: 'TODO — DJ Name', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: 'images/dj-2.jpg' },
-  { id: 103, name: 'TODO — DJ Name', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: 'images/dj-3.jpg' },
-  { id: 104, name: 'TODO — DJ Name', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: 'images/dj-4.jpg' },
-  { id: 105, name: 'TODO — DJ Name', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: 'images/dj-5.jpg' },
-  { id: 106, name: 'TODO — DJ Name', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: 'images/dj-6.jpg' },
+  { id: 101, name: 'DJ David Ruela', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: '/images/artiste/DJ David Ruela.png' },
+  { id: 102, name: 'DJ Galaxy',      label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: '/images/artiste/DJ Galaxy.png' },
+  { id: 103, name: 'DJ Stompy',      label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: '/images/artiste/Dj Stompy.png' },
+  { id: 104, name: 'Tiwosh',         label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: '/images/artiste/Tiwosh.png' },
+  { id: 105, name: 'Timeline',       label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: '/images/artiste/timeline.png' },
 ];
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -365,7 +364,7 @@ function ArtistCard({ artist, gradient, noAnim: _noAnim, ariaHidden }: CardProps
         className="am-card-bg"
         style={{
           background: artist.image
-            ? `url(${artist.image}) center top / cover no-repeat`
+            ? `url("${encodeURI(artist.image)}") center top / cover no-repeat`
             : gradient,
         }}
       />

@@ -1,9 +1,6 @@
 import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { revealOnView } from '../lib/reveal';
 import { Calendar, MapPin, Users, Globe, Sparkles, Star } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
 const COPY = {
@@ -70,66 +67,41 @@ export default function FestivalExperienceSection() {
 
   // Entrance animations
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      const heroTrigger = {
-        trigger: sectionRef.current,
-        start: 'top 78%',
-        toggleActions: 'play none none none',
-      };
+    const heroTrigger = sectionRef.current;
 
-      gsap.fromTo(
-        heroTextRef.current,
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 1, ease: 'power3.out', scrollTrigger: heroTrigger }
-      );
+    const cleanups = [
+      revealOnView({
+        trigger: heroTrigger,
+        targets: heroTextRef.current,
+        from: { opacity: 0, y: 50 },
+        to: { opacity: 1, y: 0, duration: 1, ease: 'power3.out' },
+      }),
+      revealOnView({
+        trigger: heroTrigger,
+        targets: logoRef.current,
+        from: { opacity: 0, scale: 0.92 },
+        to: { opacity: 1, scale: 1, duration: 1.1, delay: 0.15, ease: 'power3.out' },
+      }),
+      revealOnView({
+        trigger: heroTrigger,
+        targets: infoRef.current,
+        from: { opacity: 0, y: 30 },
+        to: { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: 'power3.out' },
+      }),
+      revealOnView({
+        trigger: cardsRef.current,
+        targets: cardsRef.current?.children,
+        from: { opacity: 0, y: 40 },
+        to: { opacity: 1, y: 0, duration: 0.8, stagger: 0.09, ease: 'power3.out' },
+      }),
+      revealOnView({
+        targets: statsRef.current,
+        from: { opacity: 0, y: 25 },
+        to: { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+      }),
+    ];
 
-      gsap.fromTo(
-        logoRef.current,
-        { opacity: 0, scale: 0.92 },
-        { opacity: 1, scale: 1, duration: 1.1, delay: 0.15, ease: 'power3.out', scrollTrigger: heroTrigger }
-      );
-
-      gsap.fromTo(
-        infoRef.current,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: 'power3.out', scrollTrigger: heroTrigger }
-      );
-
-      gsap.fromTo(
-        cardsRef.current?.children || [],
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.09,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: cardsRef.current,
-            start: 'top 88%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      gsap.fromTo(
-        statsRef.current,
-        { opacity: 0, y: 25 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: statsRef.current,
-            start: 'top 92%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
+    return () => cleanups.forEach((cleanup) => cleanup());
   }, []);
 
   return (

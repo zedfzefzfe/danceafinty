@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { revealOnView } from '../lib/reveal';
 import {
   GraduationCap,
   Users,
@@ -19,7 +18,6 @@ import {
   X,
 } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
 const COPY = {
@@ -125,7 +123,7 @@ function GalleryCard({
           onOpen(index);
         }
       }}
-      className="relative flex-none w-[72%] sm:w-[46%] md:w-[calc((100%-4rem)/5)] aspect-[3/4] rounded-lg overflow-hidden border border-white/10 group cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#00e5cc]/60"
+      className="relative flex-none w-[80%] sm:w-[52%] md:w-[calc((100%-4rem)/4.2)] aspect-[3/4] rounded-lg overflow-hidden border border-white/10 group cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#00e5cc]/60"
     >
       <div
         aria-hidden="true"
@@ -317,60 +315,29 @@ export default function ExperienceSection() {
 
   // Entrance animations
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        headerRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 78%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
+    const cleanups = [
+      revealOnView({
+        trigger: sectionRef.current,
+        targets: headerRef.current,
+        from: { opacity: 0, y: 50 },
+        to: { opacity: 1, y: 0, duration: 1, ease: 'power3.out' },
+      }),
+      revealOnView({
+        trigger: trackRef.current,
+        targets: trackRef.current?.children,
+        from: { opacity: 0, y: 40 },
+        to: { opacity: 1, y: 0, duration: 0.8, stagger: 0.09, ease: 'power3.out' },
+      }),
+      ...[testimonialsRef, statsRef, expectRef].map((ref) =>
+        revealOnView({
+          targets: ref.current,
+          from: { opacity: 0, y: 30 },
+          to: { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+        })
+      ),
+    ];
 
-      gsap.fromTo(
-        trackRef.current?.children || [],
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.09,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: trackRef.current,
-            start: 'top 88%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      [testimonialsRef, statsRef, expectRef].forEach((ref) => {
-        gsap.fromTo(
-          ref.current,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: ref.current,
-              start: 'top 90%',
-              toggleActions: 'play none none none',
-            },
-          }
-        );
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
+    return () => cleanups.forEach((cleanup) => cleanup());
   }, []);
 
   return (

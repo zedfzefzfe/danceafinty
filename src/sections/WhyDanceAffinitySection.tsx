@@ -1,10 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useIsMobile } from '../hooks/use-mobile';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { revealOnView } from '../lib/reveal';
 import { Users, GraduationCap, Globe, Camera } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
 const COPY = {
@@ -57,66 +54,39 @@ export default function WhyDanceAffinitySection() {
 
   // Entrance animations
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      const triggerConfig = {
+    const cleanups = [
+      revealOnView({
         trigger: sectionRef.current,
-        start: 'top 78%',
-        toggleActions: 'play none none none',
-      };
-
-      gsap.fromTo(
-        textRef.current,
-        { opacity: 0, y: 60 },
-        { opacity: 1, y: 0, duration: 1, ease: 'power3.out', scrollTrigger: triggerConfig }
-      );
-
-      gsap.fromTo(
-        hugRef.current,
-        { opacity: 0, y: 40 },
-        {
+        targets: textRef.current,
+        from: { opacity: 0, y: 60 },
+        to: { opacity: 1, y: 0, duration: 1, ease: 'power3.out' },
+      }),
+      revealOnView({
+        trigger: sectionRef.current,
+        targets: hugRef.current,
+        from: { opacity: 0, y: 40 },
+        to: {
           opacity: 1,
           y: 0,
           duration: 1,
           ease: 'power3.out',
           delay: isMobile ? 0 : 0.18,
-          scrollTrigger: triggerConfig,
-        }
-      );
+        },
+      }),
+      revealOnView({
+        trigger: cardsRef.current,
+        targets: cardsRef.current?.children,
+        from: { opacity: 0, y: 30 },
+        to: { opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out' },
+      }),
+      revealOnView({
+        targets: bandRef.current,
+        from: { opacity: 0 },
+        to: { opacity: 1, duration: 1.1, ease: 'power2.out' },
+      }),
+    ];
 
-      gsap.fromTo(
-        cardsRef.current?.children || [],
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: cardsRef.current,
-            start: 'top 88%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      gsap.fromTo(
-        bandRef.current,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 1.1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: bandRef.current,
-            start: 'top 95%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
+    return () => cleanups.forEach((cleanup) => cleanup());
   }, [isMobile]);
 
   return (

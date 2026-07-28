@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { revealOnView } from '../lib/reveal';
 import {
   Users,
   Clock,
@@ -16,7 +15,6 @@ import {
   ArrowRight,
 } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
 
 // ─── Data model ──────────────────────────────────────────────────────────────
 type Bootcamp = {
@@ -529,60 +527,29 @@ export default function PremiumBootcampsSection() {
 
   // Entrance animations
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        headerRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 78%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
+    const cleanups = [
+      revealOnView({
+        trigger: sectionRef.current,
+        targets: headerRef.current,
+        from: { opacity: 0, y: 50 },
+        to: { opacity: 1, y: 0, duration: 1, ease: 'power3.out' },
+      }),
+      revealOnView({
+        trigger: gridRef.current,
+        targets: gridRef.current?.children,
+        from: { opacity: 0, y: 40 },
+        to: { opacity: 1, y: 0, duration: 0.8, stagger: 0.08, ease: 'power3.out' },
+      }),
+      ...[featuresRef, ctaRef].map((ref) =>
+        revealOnView({
+          targets: ref.current,
+          from: { opacity: 0, y: 30 },
+          to: { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+        })
+      ),
+    ];
 
-      gsap.fromTo(
-        gridRef.current?.children || [],
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.08,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: 'top 88%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      [featuresRef, ctaRef].forEach((ref) => {
-        gsap.fromTo(
-          ref.current,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: ref.current,
-              start: 'top 90%',
-              toggleActions: 'play none none none',
-            },
-          }
-        );
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
+    return () => cleanups.forEach((cleanup) => cleanup());
   }, []);
 
   const tabs = [

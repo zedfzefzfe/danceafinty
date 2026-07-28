@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { revealOnView } from '../lib/reveal';
 import {
   MapPin,
   Navigation,
@@ -20,7 +19,6 @@ import {
   PersonStanding,
 } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
 const COPY = {
@@ -141,58 +139,27 @@ export default function PracticalInfoSection() {
 
   // Entrance animations
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        headerRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 78%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
+    const cleanups = [
+      revealOnView({
+        trigger: sectionRef.current,
+        targets: headerRef.current,
+        from: { opacity: 0, y: 50 },
+        to: { opacity: 1, y: 0, duration: 1, ease: 'power3.out' },
+      }),
+      revealOnView({
+        trigger: bodyRef.current,
+        targets: bodyRef.current?.children,
+        from: { opacity: 0, y: 40 },
+        to: { opacity: 1, y: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out' },
+      }),
+      revealOnView({
+        targets: statsRef.current,
+        from: { opacity: 0, y: 25 },
+        to: { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+      }),
+    ];
 
-      gsap.fromTo(
-        bodyRef.current?.children || [],
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          stagger: 0.12,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: bodyRef.current,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      gsap.fromTo(
-        statsRef.current,
-        { opacity: 0, y: 25 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: statsRef.current,
-            start: 'top 92%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
+    return () => cleanups.forEach((cleanup) => cleanup());
   }, []);
 
   return (

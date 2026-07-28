@@ -2,14 +2,10 @@
    All class names prefixed "am-" — no collisions with other sections.
    ──────────────────────────────────────────────────────────────────────────── */
 
-/* ── Custom property for animation duration (overridden per breakpoint) ───── */
+/* ── Shared background colour (edge fades match it) ───────────────────────── */
 :root {
   --am-bg: #0b0b1a;
-  --am-duration: 60s;
 }
-
-@media (max-width: 1024px) { :root { --am-duration: 50s; } }
-@media (max-width: 640px)  { :root { --am-duration: 40s; } }
 
 /* ── Section shell ────────────────────────────────────────────────────────── */
 
@@ -153,14 +149,23 @@
 
 /* ── Scrolling track ──────────────────────────────────────────────────────── */
 
-@keyframes am-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+/* Scrolling is driven by scrollLeft in JS so the auto-scroll and the user's
+   own swipe / drag share one mechanism instead of fighting each other. */
+.am-marquee {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
 }
 
-.am-marquee {
-  overflow: hidden;
-  width: 100%;
+.am-marquee::-webkit-scrollbar {
+  display: none;
+}
+
+.am-marquee--dragging {
+  cursor: grabbing;
 }
 
 .am-track {
@@ -168,25 +173,6 @@
   gap: 24px;
   width: max-content;
   padding: 20px 0;
-  animation: am-scroll var(--am-duration) linear infinite;
-}
-
-.am-marquee:hover .am-track {
-  animation-play-state: paused;
-}
-
-.am-marquee--no-anim .am-track {
-  animation: none;
-}
-
-/* Second row (DJs) — identical track, opposite direction, same duration */
-@keyframes am-scroll-reverse {
-  0%   { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
-}
-
-.am-track--reverse {
-  animation-name: am-scroll-reverse;
 }
 
 /* ── Individual artist card ───────────────────────────────────────────────── */
@@ -345,7 +331,6 @@
 /* ── Reduced motion ───────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .am-track                   { animation: none !important; }
   .am-card-bg                 { transition: filter 0.3s ease !important; transform: none !important; }
   .am-card:hover .am-card-bg  { transform: none !important; }
   .am-accent-line             { transition: width 0.3s ease; }

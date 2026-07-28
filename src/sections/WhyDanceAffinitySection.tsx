@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useIsMobile } from '../hooks/use-mobile';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Users, GraduationCap, Globe, Camera, ChevronDown } from 'lucide-react';
+import { Users, GraduationCap, Globe, Camera } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -173,7 +173,7 @@ export default function WhyDanceAffinitySection() {
         <div ref={textRef} className="md:max-w-[56%] lg:max-w-[620px]">
 
           {/* 1) Section badge */}
-          <div className="mb-7 md:mb-9">
+          <div className="mb-7 md:mb-9 text-center md:text-left">
             <span className="font-mono text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-[#00e5cc]">
               {COPY.badgeLabel}
             </span>
@@ -291,14 +291,6 @@ export default function WhyDanceAffinitySection() {
                 'linear-gradient(to bottom, rgba(13,13,43,0.85) 0%, rgba(13,13,43,0.25) 35%, transparent 70%)',
             }}
           />
-        </div>
-
-        {/* Mobile scroll indicator */}
-        <div
-          aria-hidden="true"
-          className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-[2]"
-        >
-          <ChevronDown className="w-6 h-6 text-[#00e5cc] animate-bounce" strokeWidth={1.5} />
         </div>
       </div>
     </section>

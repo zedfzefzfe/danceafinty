@@ -191,6 +191,23 @@ export default function ExperienceSection() {
     resumeAtRef.current = performance.now() + 2500;
   }, []);
 
+  // Only a sideways drag should pause the row. Pausing on every touchmove meant
+  // scrolling the page with a finger over the gallery kept stalling it.
+  const trackTouch = useRef({ x: 0, y: 0 });
+
+  const onTouchStartTrack = useCallback((e: React.TouchEvent) => {
+    trackTouch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, []);
+
+  const onTouchMoveTrack = useCallback(
+    (e: React.TouchEvent) => {
+      const dx = Math.abs(e.touches[0].clientX - trackTouch.current.x);
+      const dy = Math.abs(e.touches[0].clientY - trackTouch.current.y);
+      if (dx > dy) pauseForUser();
+    },
+    [pauseForUser]
+  );
+
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [lightboxVisible, setLightboxVisible] = useState(false);
 
@@ -213,11 +230,11 @@ export default function ExperienceSection() {
   // Continuous auto-scroll. Driven by scrollLeft rather than a CSS keyframe so
   // the arrows, swipe and drag all keep working on the same element.
   useEffect(() => {
-    if (reduceMotion) return;
-
     let raf = 0;
     let last = performance.now();
-    const SPEED = 38; // px per second
+    // Reduce Motion is on by default for a lot of phone users — bailing out
+    // entirely there left the marquee dead on real devices, so it just eases off.
+    const SPEED = reduceMotion ? 14 : 38; // px per second
 
     const step = (now: number) => {
       const dt = Math.min((now - last) / 1000, 0.05);
@@ -443,8 +460,8 @@ export default function ExperienceSection() {
           className="relative mt-12 md:mt-16"
           onMouseEnter={canHover ? () => { hoverRef.current = true; } : undefined}
           onMouseLeave={canHover ? () => { hoverRef.current = false; } : undefined}
-          onTouchStart={pauseForUser}
-          onTouchMove={pauseForUser}
+          onTouchStart={onTouchStartTrack}
+          onTouchMove={onTouchMoveTrack}
           onWheel={pauseForUser}
         >
 

@@ -165,42 +165,16 @@ export default function ArtistsMarquee() {
       </div>
 
       {/* ── Marquee strip ── */}
-      <div
-        className="am-marquee-wrapper"
+      <MarqueeRow
+        items={artists}
+        gradients={CARD_GRADIENTS}
+        noAnim={noAnim}
         style={{
           opacity:    vis.marquee ? 1 : 0,
           transform:  vis.marquee ? 'translateY(0)' : 'translateY(60px)',
           transition: noAnim ? 'none' : 'opacity 0.9s ease, transform 0.9s ease',
         }}
-      >
-        {/* Edge fade — hides card overflow at viewport boundaries */}
-        <div aria-hidden="true" className="am-fade-left"  />
-        <div aria-hidden="true" className="am-fade-right" />
-
-        <div className={`am-marquee${noAnim ? ' am-marquee--no-anim' : ''}`}>
-          <div className="am-track">
-            {/* Primary set — read by screen readers */}
-            {artists.map((artist, i) => (
-              <ArtistCard
-                key={artist.id}
-                artist={artist}
-                gradient={CARD_GRADIENTS[i]}
-                noAnim={noAnim}
-              />
-            ))}
-            {/* Duplicate set — aria-hidden, enables seamless infinite loop */}
-            {artists.map((artist, i) => (
-              <ArtistCard
-                key={`dup-${artist.id}`}
-                artist={artist}
-                gradient={CARD_GRADIENTS[i]}
-                noAnim={noAnim}
-                ariaHidden
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+      />
 
       {/* ── Row label — DJs ── */}
       <div
@@ -218,42 +192,17 @@ export default function ArtistsMarquee() {
       </div>
 
       {/* ── Second marquee strip — DJs, scrolling the opposite way ── */}
-      <div
-        className="am-marquee-wrapper"
+      <MarqueeRow
+        items={djs}
+        gradients={DJ_GRADIENTS}
+        noAnim={noAnim}
+        reverse
         style={{
           opacity:    vis.marquee ? 1 : 0,
           transform:  vis.marquee ? 'translateY(0)' : 'translateY(60px)',
           transition: noAnim ? 'none' : 'opacity 0.9s ease 0.15s, transform 0.9s ease 0.15s',
         }}
-      >
-        {/* Edge fade — hides card overflow at viewport boundaries */}
-        <div aria-hidden="true" className="am-fade-left"  />
-        <div aria-hidden="true" className="am-fade-right" />
-
-        <div className={`am-marquee${noAnim ? ' am-marquee--no-anim' : ''}`}>
-          <div className="am-track am-track--reverse">
-            {/* Primary set — read by screen readers */}
-            {djs.map((dj, i) => (
-              <ArtistCard
-                key={dj.id}
-                artist={dj}
-                gradient={DJ_GRADIENTS[i]}
-                noAnim={noAnim}
-              />
-            ))}
-            {/* Duplicate set — aria-hidden, enables seamless infinite loop */}
-            {djs.map((dj, i) => (
-              <ArtistCard
-                key={`dup-${dj.id}`}
-                artist={dj}
-                gradient={DJ_GRADIENTS[i]}
-                noAnim={noAnim}
-                ariaHidden
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+      />
 
       {/* ── Footer hint — the kind of detail that proves a human designed this ── */}
       <p
@@ -268,6 +217,127 @@ export default function ArtistsMarquee() {
           : '— HOVER TO PAUSE · KEEP SCROLLING TO EXPLORE —'}
       </p>
     </section>
+  );
+}
+
+// ── Sub-component: one auto-scrolling, manually scrollable row ────────────────
+//
+// Auto-scroll and manual scroll both drive `scrollLeft` on the same element, so
+// they can never fight each other. Three copies of the list give the wrap-around
+// enough headroom to stay seamless in both directions.
+
+interface MarqueeRowProps {
+  items: Artist[];
+  gradients: string[];
+  noAnim: boolean;
+  reverse?: boolean;
+  style?: React.CSSProperties;
+}
+
+function MarqueeRow({ items, gradients, noAnim, reverse, style }: MarqueeRowProps) {
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const draggingRef = useRef(false);
+  const resumeAtRef = useRef(0);
+  const dragStart = useRef({ x: 0, scroll: 0 });
+  const [dragging, setDragging] = useState(false);
+
+  const loopWidth = () => {
+    const el = marqueeRef.current;
+    return el ? el.scrollWidth / 3 : 0;
+  };
+
+  // Start one copy in so there is content to reveal when scrolling backwards
+  useEffect(() => {
+    const el = marqueeRef.current;
+    if (!el) return;
+    const id = window.setTimeout(() => {
+      el.scrollLeft = el.scrollWidth / 3;
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  useEffect(() => {
+    let raf = 0;
+    let last = performance.now();
+    // Reduce Motion eases the pace instead of freezing the row — a stopped
+    // marquee reads as broken on the phones that default that setting on.
+    const speed = noAnim ? 12 : 34; // px per second
+
+    const step = (now: number) => {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+
+      const el = marqueeRef.current;
+      if (el && !draggingRef.current) {
+        if (now >= resumeAtRef.current) {
+          el.scrollLeft += (reverse ? -1 : 1) * speed * dt;
+        }
+        const loop = loopWidth();
+        if (loop > 0) {
+          if (el.scrollLeft >= loop * 2) el.scrollLeft -= loop;
+          else if (el.scrollLeft <= 0) el.scrollLeft += loop;
+        }
+      }
+
+      raf = requestAnimationFrame(step);
+    };
+
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [noAnim, reverse]);
+
+  const endDrag = () => {
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
+    setDragging(false);
+    // Let any touch momentum play out before the marquee takes over again
+    resumeAtRef.current = performance.now() + 1500;
+  };
+
+  return (
+    <div className="am-marquee-wrapper" style={style}>
+      {/* Edge fade — hides card overflow at viewport boundaries */}
+      <div aria-hidden="true" className="am-fade-left"  />
+      <div aria-hidden="true" className="am-fade-right" />
+
+      <div
+        ref={marqueeRef}
+        className={`am-marquee${dragging ? ' am-marquee--dragging' : ''}`}
+        onPointerDown={(e) => {
+          if (e.pointerType === 'mouse' && e.button !== 0) return;
+          const el = marqueeRef.current;
+          if (!el) return;
+          draggingRef.current = true;
+          setDragging(true);
+          dragStart.current = { x: e.clientX, scroll: el.scrollLeft };
+          // Touch keeps the browser's native panning; only the mouse needs capture
+          if (e.pointerType === 'mouse') el.setPointerCapture(e.pointerId);
+        }}
+        onPointerMove={(e) => {
+          if (!draggingRef.current || e.pointerType !== 'mouse') return;
+          const el = marqueeRef.current;
+          if (!el) return;
+          el.scrollLeft = dragStart.current.scroll - (e.clientX - dragStart.current.x);
+        }}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onPointerLeave={endDrag}
+      >
+        <div className="am-track">
+          {[0, 1, 2].map((copy) =>
+            items.map((item, i) => (
+              <ArtistCard
+                key={`c${copy}-${item.id}`}
+                artist={item}
+                gradient={gradients[i]}
+                noAnim={noAnim}
+                ariaHidden={copy !== 0}
+              />
+            ))
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 

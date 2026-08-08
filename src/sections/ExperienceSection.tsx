@@ -7,7 +7,7 @@ import {
   Heart,
   Music,
   Globe,
-  Star,
+  Scale,
   Disc3,
   HeartHandshake,
   Camera,
@@ -65,7 +65,7 @@ const STATS = [
   { icon: Heart, value: '400+', label: 'DANCERS' },
   { icon: Globe, value: '20+', label: 'COUNTRIES' },
   { icon: Users, value: '50+', label: 'GUESTS DANCERS' },
-  { icon: Star, value: '100%', label: 'GOOD VIBES' },
+  { icon: Scale, value: '100%', label: 'BALANCED RATIO MEN / WOMEN' },
 ];
 
 const EXPECT = [
@@ -123,7 +123,7 @@ function GalleryCard({
           onOpen(index);
         }
       }}
-      className="relative flex-none w-[80%] sm:w-[52%] md:w-[calc((100%-4rem)/4.2)] aspect-[3/4] rounded-lg overflow-hidden border border-white/10 group cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#00e5cc]/60"
+      className="relative flex-none w-[86%] sm:w-[60%] md:w-[calc((100%-3rem)/3.2)] aspect-[3/4] rounded-lg overflow-hidden border border-white/10 group cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#00e5cc]/60"
     >
       <div
         aria-hidden="true"
@@ -226,10 +226,11 @@ export default function ExperienceSection() {
   }, []);
 
   // Continuous auto-scroll. Driven by scrollLeft rather than a CSS keyframe so
-  // the arrows, swipe and drag all keep working on the same element.
+  // dragging, swiping and the wheel all keep working on the same element.
   useEffect(() => {
     let raf = 0;
     let last = performance.now();
+    let centred = false;
     // Reduce Motion is on by default for a lot of phone users — bailing out
     // entirely there left the marquee dead on real devices, so it just eases off.
     const SPEED = reduceMotion ? 14 : 38; // px per second
@@ -239,12 +240,24 @@ export default function ExperienceSection() {
       last = now;
 
       const el = trackRef.current;
-      if (el && !hoverRef.current && !lightboxOpenRef.current && now >= resumeAtRef.current) {
-        el.scrollLeft += SPEED * dt;
-        const loop = loopWidth();
-        // Position `loop` shows the second copy's first card — pixel-identical
-        // to position 0, so resetting there is invisible.
-        if (loop > 0 && el.scrollLeft >= loop) el.scrollLeft -= loop;
+      const loop = loopWidth();
+
+      if (el && loop > 0) {
+        // Park on the middle copy so a manual drag has a full copy of runway on
+        // either side before it needs to wrap.
+        if (!centred) {
+          el.scrollLeft = loop;
+          centred = true;
+        }
+
+        if (!hoverRef.current && !lightboxOpenRef.current && now >= resumeAtRef.current) {
+          el.scrollLeft += SPEED * dt;
+        }
+
+        // Every position is pixel-identical to the one a `loop` away, so these
+        // corrections are invisible — they just keep us on the middle copy.
+        if (el.scrollLeft >= loop * 2) el.scrollLeft -= loop;
+        else if (el.scrollLeft < loop * 0.5) el.scrollLeft += loop;
       }
 
       raf = requestAnimationFrame(step);
@@ -254,23 +267,43 @@ export default function ExperienceSection() {
     return () => cancelAnimationFrame(raf);
   }, [reduceMotion, loopWidth]);
 
-  // Manual nudge — wraps around so neither end is ever a dead stop
-  const scrollByCard = (direction: 1 | -1) => {
-    const el = trackRef.current;
-    if (!el) return;
-    pauseForUser();
-    const card = el.firstElementChild as HTMLElement | null;
-    const step = card ? card.offsetWidth + 16 : el.clientWidth * 0.8;
-    const loop = loopWidth();
+  // ── Drag to scroll (mouse / pen) ──────────────────────────────────────────
+  // Touch is left to the browser's own momentum scrolling.
+  const dragging = useRef(false);
+  const lastPointerX = useRef(0);
+  // A drag that moved must not also open the lightbox on release.
+  const dragMoved = useRef(false);
 
-    if (direction === -1 && loop > 0 && el.scrollLeft < step) {
-      el.scrollLeft += loop;
-    } else if (direction === 1 && loop > 0 && el.scrollLeft >= loop) {
-      el.scrollLeft -= loop;
-    }
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      if (e.pointerType === 'touch') return;
+      dragging.current = true;
+      dragMoved.current = false;
+      lastPointerX.current = e.clientX;
+      pauseForUser();
+    },
+    [pauseForUser]
+  );
 
-    el.scrollBy({ left: direction * step, behavior: 'smooth' });
-  };
+  const onPointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      if (!dragging.current) return;
+      const el = trackRef.current;
+      if (!el) return;
+      const dx = e.clientX - lastPointerX.current;
+      lastPointerX.current = e.clientX;
+      if (Math.abs(dx) > 0) dragMoved.current = true;
+      // Applied as a delta rather than an absolute offset so the loop
+      // corrections above can't fight the drag.
+      el.scrollLeft -= dx;
+      pauseForUser();
+    },
+    [pauseForUser]
+  );
+
+  const endDrag = useCallback(() => {
+    dragging.current = false;
+  }, []);
 
   // ── Lightbox ──────────────────────────────────────────────────────────────
   const openLightbox = useCallback((index: number) => {
@@ -431,28 +464,23 @@ export default function ExperienceSection() {
           onTouchMove={onTouchMoveTrack}
           onWheel={pauseForUser}
         >
-
-          {/* Prev */}
-          <button
-            type="button"
-            onClick={() => scrollByCard(-1)}
-            aria-label="Previous photos"
-            className="hidden md:flex absolute top-1/2 -translate-y-1/2 -left-8 lg:-left-14 z-20 w-10 h-10 items-center justify-center rounded-full border border-[#00e5cc]/40 bg-[#0a1020]/80 text-[#00e5cc] transition-all duration-300 hover:bg-[#00e5cc] hover:text-[#0a1020]"
+          <div
+            ref={trackRef}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={endDrag}
+            onPointerCancel={endDrag}
+            onPointerLeave={endDrag}
+            // Capture phase, so a drag that ends on a card never opens the lightbox
+            onClickCapture={(e) => {
+              if (dragMoved.current) {
+                e.preventDefault();
+                e.stopPropagation();
+                dragMoved.current = false;
+              }
+            }}
+            className="flex gap-4 overflow-x-auto scrollbar-hide select-none cursor-grab active:cursor-grabbing"
           >
-            <ChevronLeft className="w-5 h-5" strokeWidth={1.75} />
-          </button>
-
-          {/* Next */}
-          <button
-            type="button"
-            onClick={() => scrollByCard(1)}
-            aria-label="Next photos"
-            className="hidden md:flex absolute top-1/2 -translate-y-1/2 -right-8 lg:-right-14 z-20 w-10 h-10 items-center justify-center rounded-full border border-[#00e5cc]/40 bg-[#0a1020]/80 text-[#00e5cc] transition-all duration-300 hover:bg-[#00e5cc] hover:text-[#0a1020]"
-          >
-            <ChevronRight className="w-5 h-5" strokeWidth={1.75} />
-          </button>
-
-          <div ref={trackRef} className="flex gap-4 overflow-x-auto scrollbar-hide">
             {/* Three copies — the primary set is the accessible one, the rest
                 exist purely so the loop never shows a gap or a reset */}
             {[0, 1, 2].map((copy) =>

@@ -15,24 +15,29 @@ interface Artist {
 }
 
 const artists: Artist[] = [
-  { id: 1, name: 'Carlos Espinosa', label: 'Kizomba', style: 'URBAN KIZ',   country: 'PORTUGAL', image: '/images/artiste/VAnildo & Mara.png' },
-  { id: 2, name: 'Andrea Vital',    label: 'Bachata',  style: 'SENSUAL',     country: 'SPAIN',    image: '/images/artiste/loyal.png' },
-  { id: 3, name: 'Marco Ferreira',  label: 'Kizomba',  style: 'FUSION',      country: 'FRANCE',   image: '/images/artiste/Daniel.png' },
-  { id: 4, name: 'Inès Pereira',    label: 'Bachata',  style: 'MODERNA',     country: 'PORTUGAL', image: '/images/artiste/Antho & Caro.png' },
-  { id: 5, name: 'Tony & Maya',     label: 'Bachata',  style: 'SENSUAL DUO', country: 'FRANCE',   image: '/images/artiste/Andrea.png' },
-  { id: 6, name: 'DJ Blackpacha',   label: 'DJ',       style: 'AFRO HOUSE',  country: 'ANGOLA',   image: '/images/artiste/Selim.png' },
-  { id: 7, name: 'Sara Panero',     label: 'Bachata',  style: 'URBAN',       country: 'SPAIN',    image: '/images/artiste/martina.png' },
-  { id: 8, name: 'Flow Brothers',   label: 'Kizomba',  style: 'URBAN KIZ',   country: 'GERMANY',  image: '/images/artiste/ledoux.png' },
+  { id: 1,  name: 'Vanildo & Mara',    label: 'Kizomba', style: 'URBAN KIZ',   country: 'NETHERLANDS',          image: '/images/artiste/VAnildo & Mara.png' },
+  { id: 2,  name: 'Loyal',             label: 'Kizomba', style: 'MUSICALITY',  country: 'DUBAI',                image: '/images/artiste/loyal.png' },
+  { id: 3,  name: 'Daniel & Elina',    label: 'Kizomba', style: 'FUSION',      country: 'GERMANY / CZECH REP.', image: '/images/artiste/Daniel.png' },
+  { id: 4,  name: 'Antho & Caro',      label: 'Kizomba', style: 'SENSUAL',     country: 'FRANCE',               image: '/images/artiste/Antho & Caro.png' },
+  { id: 5,  name: 'Andrea & Aurélie',  label: 'Bachata', style: 'SENSUAL',     country: 'FRANCE',               image: '/images/artiste/Andrea.png' },
+  { id: 6,  name: 'Selim & Anastasia', label: 'Kizomba', style: 'EMOTIONAL',   country: 'FRANCE / UKRAINE',     image: '/images/artiste/Selim.png' },
+  { id: 7,  name: 'Martina',           label: 'Kizomba', style: 'SENSUAL',     country: 'GERMANY',              image: '/images/artiste/martina.png' },
+  { id: 8,  name: 'Ledoux Kingsman',   label: 'Bachata', style: 'URBAN',       country: 'FRANCE',               image: '/images/artiste/ledoux.png' },
+  { id: 9,  name: 'Kalypso & Ade',     label: 'Kizomba', style: 'URBAN KIZ',   country: 'SWITZERLAND',          image: '/images/artiste/Kalypso & Ade.png' },
+  { id: 10, name: 'Joey & Shadia',     label: 'Bachata', style: 'SENSUAL',     country: 'NETHERLANDS',          image: '/images/artiste/Joey & Sha.png' },
+  { id: 11, name: 'Evokeez Team',      label: 'Kizomba', style: 'EMOTIONAL',   country: 'FRANCE',               image: '/images/artiste/EVOKEEZ.png' },
+  { id: 12, name: 'Donald & Barbara',  label: 'Kizomba', style: 'SENSUAL',     country: 'SWITZERLAND',          image: '/images/artiste/Donald & Barbara.png' },
+  { id: 13, name: 'Bilal',             label: 'Kizomba', style: 'URBAN KIZ',   country: 'SWEDEN',               image: '/images/artiste/bilal.png' },
 ];
 // EDIT DJ DATA HERE ─────────────────────────────────────────────────────────
 // Second marquee row. Same card shape as `artists` — only the content differs.
 // TODO — `style` and `country` below are still placeholders; fill in the real ones.
 const djs: Artist[] = [
-  { id: 101, name: 'DJ David Ruela', label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: '/images/artiste/DJ David Ruela.png' },
-  { id: 102, name: 'DJ Galaxy',      label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: '/images/artiste/DJ Galaxy.png' },
-  { id: 103, name: 'DJ Stompy',      label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: '/images/artiste/Dj Stompy.png' },
-  { id: 104, name: 'Tiwosh',         label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: '/images/artiste/Tiwosh.png' },
-  { id: 105, name: 'Timeline',       label: 'DJ', style: 'TODO STYLE', country: 'TODO COUNTRY', image: '/images/artiste/timeline.png' },
+  { id: 101, name: 'DJ Le Grand Tiwosh', label: 'DJ', style: 'KIZOMBA / AFRO', country: 'FRANCE',       image: '/images/artiste/Tiwosh.png' },
+  { id: 102, name: 'DJ Timeline',        label: 'DJ', style: 'BACHATA / SALSA', country: 'GERMANY',      image: '/images/artiste/timeline.png' },
+  { id: 103, name: 'DJ Stompy',          label: 'DJ', style: 'KIZOMBA',         country: 'FRANCE',       image: '/images/artiste/Dj Stompy.png' },
+  { id: 104, name: 'DJ Galaxy',          label: 'DJ', style: 'BACHATA',         country: 'GERMANY',      image: '/images/artiste/DJ Galaxy.png' },
+  { id: 105, name: 'DJ David Ruela',     label: 'DJ', style: 'KIZOMBA / AFRO', country: 'NETHERLANDS',  image: '/images/artiste/DJ David Ruela.png' },
 ];
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -112,7 +117,7 @@ export default function ArtistsMarquee() {
 
   return (
     <section
-      id="artists-marquee"
+      id="artists"
       ref={sectionRef}
       className="am-section"
       aria-label="Festival Artists Lineup"

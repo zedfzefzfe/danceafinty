@@ -38,7 +38,7 @@ const FEATURES = [
 
 // ─── Swap these to use real photo assets ─────────────────────────────────────
 const PHOTOS = {
-  hug: { src: '/images/4 (1).png', alt: 'Dancers embracing at the festival' },
+  hug: { src: '/images/why dance affinity.png', alt: 'Dancers embracing at the festival' },
   crowd: { src: '/images/60.png', alt: 'A circle of dancers celebrating under stage lights' },
 };
 

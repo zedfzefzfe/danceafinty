@@ -27,7 +27,7 @@ const COPY = {
   intro:
     'Dance Affinity Festival takes place in the vibrant heart of Freiburg im Breisgau. Centrally located. Perfectly connected. Easy to reach from anywhere.',
   venueLabel: 'OUR VENUE',
-  venueName: 'MAXX STUDIO',
+  venueName: 'MAK STUDIOS',
   venueAddress: 'Schnewlinstraße 1, 79098 Freiburg im Breisgau, Germany',
   venueBlurb:
     'Modern studio in the city center with the perfect atmosphere to dance, connect and enjoy.',
@@ -49,7 +49,7 @@ const LOGO = '/images/Copie de Asset 1-8.png';
 const MAP_PINS = [
   { label: 'Freiburg\nCentral Station', top: '16%', left: '30%', highlight: false, icon: TrainFront },
   { label: 'City Center\n(Altstadt)', top: '38%', left: '70%', highlight: false },
-  { label: 'MAXX STUDIO', top: '52%', left: '34%', highlight: true },
+  { label: 'MAK STUDIOS', top: '52%', left: '34%', highlight: true },
   { label: 'Bertoldsbrunnen', top: '47%', left: '62%', highlight: false },
   { label: 'Martinstor', top: '72%', left: '56%', highlight: false },
 ];
@@ -164,7 +164,7 @@ export default function PracticalInfoSection() {
 
   return (
     <section
-      id="practical"
+      id="location"
       ref={sectionRef}
       aria-label="Practical Information"
       className="relative w-full overflow-hidden py-20 md:py-32"

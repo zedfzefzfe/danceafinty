@@ -40,7 +40,7 @@ export const navigationConfig: NavigationConfig = {
     { label: "Bootcamps", href: "#bootcamps" },
     { label: "Passes", href: "#passes" },
     { label: "Location", href: "#location" },
-    { label: "Gallery", href: "#gallery" },
+    { label: "Gallery", href: "#festival" },
     { label: "FAQ", href: "#faq" },
   ],
   socialLinks: [
@@ -69,7 +69,7 @@ export const heroConfig: HeroConfig = {
   tagline: "OCTOBER 30 – NOVEMBER 2, 2026",
   title: "DANCE AFFINITY FESTIVAL",
   dateLocation: "Freiburg im Breisgau, Germany",
-  ctaPrimaryText: "Get your pass – 79€",
+  ctaPrimaryText: "Get your pass",
   ctaPrimaryTarget: "#passes",
   ctaSecondaryText: "See the lineup",
   ctaSecondaryTarget: "#artists",

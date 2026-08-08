@@ -2,13 +2,10 @@ import { useEffect, useRef } from 'react';
 import { revealOnView } from '../lib/reveal';
 import {
   MapPin,
-  Navigation,
   TrainFront,
   Plane,
   TramFront,
   Car,
-  BedDouble,
-  UtensilsCrossed,
   Heart,
   ChevronRight,
   Footprints,
@@ -44,15 +41,6 @@ const PHOTOS = {
 };
 // Reuses the same logo asset as the navbar
 const LOGO = '/images/Copie de Asset 1-8.png';
-
-// Map pins — positions are % of the map card, tweak alongside the real map image
-const MAP_PINS = [
-  { label: 'Freiburg\nCentral Station', top: '16%', left: '30%', highlight: false, icon: TrainFront },
-  { label: 'City Center\n(Altstadt)', top: '38%', left: '70%', highlight: false },
-  { label: 'MAK STUDIOS', top: '52%', left: '34%', highlight: true },
-  { label: 'Bertoldsbrunnen', top: '47%', left: '62%', highlight: false },
-  { label: 'Martinstor', top: '72%', left: '56%', highlight: false },
-];
 
 const TRAVEL = [
   {
@@ -102,21 +90,6 @@ const ROUTES = [
       'Parkhaus City (7 min walk)',
     ],
     footnote: 'Park & Ride available on the outskirts.',
-  },
-];
-
-const EXTRAS = [
-  {
-    icon: BedDouble,
-    title: 'STAY',
-    text: 'Many hotels within walking distance. Options for every budget:',
-    list: ['Budget', 'Comfort', 'Premium'],
-  },
-  {
-    icon: UtensilsCrossed,
-    title: 'EAT & ENJOY',
-    text: 'Bars, cafés and restaurants all around. Perfect for your weekend vibes!',
-    list: [],
   },
 ];
 

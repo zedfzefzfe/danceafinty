@@ -49,7 +49,7 @@ export default function FAQ() {
     <section
       id="faq"
       ref={sectionRef}
-      className="relative bg-[#0d0d2b] py-12 lg:py-24 xl:py-32 z-[80]"
+      className="relative bg-[#0d0d2b] pt-8 pb-12 lg:pt-10 lg:pb-24 xl:pb-28 z-[80]"
     >
       {/* Light leak effect */}
       <div className="light-leak" />

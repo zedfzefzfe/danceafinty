@@ -38,8 +38,8 @@ const COPY = {
 
 // ─── Swap these to use real photo assets ─────────────────────────────────────
 const PHOTOS = {
-  city: '/images/freiburg-city.jpg',
-  venue: '/images/maxx-studio.jpg',
+  city: '/images/666.png',
+  venue: '/images/5555.png',
   map: '/images/freiburg-map.jpg',
 };
 // Reuses the same logo asset as the navbar
@@ -226,7 +226,7 @@ export default function PracticalInfoSection() {
             {/* Cityscape + venue details — one continuous card */}
             <div className={`${CARD} mt-5 overflow-hidden`}>
 
-              {/* Cityscape with a pin marker */}
+              {/* Venue hero — the real MAK Studios dance hall */}
               <div className="relative h-[260px] md:h-[320px]">
                 <div
                   aria-hidden="true"
@@ -235,7 +235,7 @@ export default function PracticalInfoSection() {
                 />
                 <img
                   src={PHOTOS.city}
-                  alt="Freiburg im Breisgau city center"
+                  alt="MAK Studios main dance hall in Freiburg"
                   className="absolute inset-0 w-full h-full object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
@@ -247,20 +247,9 @@ export default function PracticalInfoSection() {
                   className="absolute inset-0"
                   style={{
                     background:
-                      'linear-gradient(to top, rgba(9,14,26,1) 0%, rgba(9,14,26,0.75) 22%, rgba(6,10,20,0.15) 60%, transparent 100%)',
+                      'linear-gradient(to top, rgba(9,14,26,1) 0%, rgba(9,14,26,0.65) 22%, rgba(6,10,20,0.1) 55%, transparent 100%)',
                   }}
                 />
-                {/* Teal location marker */}
-                <span
-                  aria-hidden="true"
-                  className="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full"
-                  style={{
-                    background: 'rgba(0,229,204,0.18)',
-                    boxShadow: '0 0 0 6px rgba(0,229,204,0.10), 0 0 30px rgba(0,229,204,0.45)',
-                  }}
-                >
-                  <MapPin className="h-6 w-6 text-[#00e5cc]" strokeWidth={2} fill="rgba(0,229,204,0.25)" />
-                </span>
               </div>
 
               {/* Venue details — pulled up over the faded base of the photo */}
@@ -298,8 +287,8 @@ export default function PracticalInfoSection() {
                 {COPY.venueBlurb}
               </p>
 
-                {/* Venue photo */}
-                <div className="relative mt-4 h-[120px] rounded-lg overflow-hidden border border-white/10">
+                {/* Venue photo — the MAK Studios lounge */}
+                <div className="relative mt-4 h-[150px] rounded-lg overflow-hidden border border-white/10">
                   <div
                     aria-hidden="true"
                     className="absolute inset-0"
@@ -307,7 +296,7 @@ export default function PracticalInfoSection() {
                   />
                   <img
                     src={PHOTOS.venue}
-                    alt="Maxx Studio"
+                    alt="MAK Studios lounge and event space"
                     className="absolute inset-0 w-full h-full object-cover"
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';
@@ -322,87 +311,14 @@ export default function PracticalInfoSection() {
           <div>
             <div className={`${CARD} overflow-hidden`}>
             <div className="relative h-[380px] md:h-[440px]">
-              <div
-                aria-hidden="true"
-                className="absolute inset-0"
-                style={{ background: '#0b1422' }}
+              <iframe
+                title="MAK Studios location"
+                src="https://www.google.com/maps?q=MAK+Studios+Schnewlinstraße+1+79098+Freiburg+im+Breisgau&output=embed&z=16"
+                className="absolute inset-0 w-full h-full border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
               />
-              <img
-                src={PHOTOS.map}
-                alt="Map of central Freiburg showing the festival venue"
-                className="absolute inset-0 w-full h-full object-cover opacity-90"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-
-              {/* Dotted connector from the station to the venue */}
-              <svg
-                aria-hidden="true"
-                className="absolute inset-0 w-full h-full pointer-events-none"
-                preserveAspectRatio="none"
-                viewBox="0 0 100 100"
-              >
-                <line
-                  x1="31" y1="24" x2="35" y2="50"
-                  stroke="#00e5cc"
-                  strokeWidth="0.5"
-                  strokeDasharray="2 2"
-                  opacity="0.6"
-                />
-              </svg>
-
-              {/* Compass */}
-              <div className="absolute top-4 left-4 flex flex-col items-center gap-1 text-white/45">
-                <span className="font-mono text-[9px] tracking-[0.15em]">N</span>
-                <Navigation className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" />
-              </div>
-
-              {/* Pins */}
-              {MAP_PINS.map(({ label, top, left, highlight, icon: PinIcon }) => (
-                <div
-                  key={label}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 text-center"
-                  style={{ top, left }}
-                >
-                  {highlight ? (
-                    <span
-                      aria-hidden="true"
-                      className="flex h-8 w-8 items-center justify-center rounded-full"
-                      style={{
-                        background: 'rgba(0,229,204,0.2)',
-                        boxShadow: '0 0 0 5px rgba(0,229,204,0.10), 0 0 20px rgba(0,229,204,0.5)',
-                      }}
-                    >
-                      <MapPin className="h-4 w-4 text-[#00e5cc]" strokeWidth={2.2} fill="rgba(0,229,204,0.3)" />
-                    </span>
-                  ) : PinIcon ? (
-                    <span
-                      aria-hidden="true"
-                      className="flex h-6 w-6 items-center justify-center rounded-full border border-white/20 bg-[#0b1422]/80"
-                    >
-                      <PinIcon className="h-3 w-3 text-white/60" strokeWidth={1.6} />
-                    </span>
-                  ) : (
-                    <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-white/40" />
-                  )}
-
-                  <span
-                    className={`whitespace-pre-line leading-tight ${
-                      highlight
-                        ? 'font-display uppercase text-[#00e5cc] text-[13px] tracking-[0.1em]'
-                        : 'text-white/55'
-                    }`}
-                    style={
-                      highlight
-                        ? undefined
-                        : { fontFamily: BODY_FONT, fontSize: '9.5px', lineHeight: 1.35 }
-                    }
-                  >
-                    {label}
-                  </span>
-                </div>
-              ))}
             </div>
 
             {/* Travel-time chips — same card as the map, divided */}
@@ -521,51 +437,6 @@ export default function PracticalInfoSection() {
               </div>
             ))}
 
-            {/* Two-up: stay / eat */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {EXTRAS.map(({ icon: Icon, title, text, list }) => (
-                <div key={title} className={`${CARD} p-4`}>
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#00e5cc]/15 border border-[#00e5cc]/35">
-                    <Icon className="h-4 w-4 text-[#00e5cc]" strokeWidth={1.6} aria-hidden="true" />
-                  </span>
-
-                  <h3 className="font-display uppercase text-[#00e5cc] text-[14px] tracking-[0.08em] leading-none mt-3">
-                    {title}
-                  </h3>
-                  <p
-                    className="mt-2"
-                    style={{
-                      fontFamily: BODY_FONT,
-                      fontSize: '10.5px',
-                      color: 'rgba(255,255,255,0.55)',
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    {text}
-                  </p>
-
-                  {list.length > 0 && (
-                    <ul className="mt-1.5 space-y-0.5">
-                      {list.map((item) => (
-                        <li
-                          key={item}
-                          className="flex items-start gap-1.5"
-                          style={{
-                            fontFamily: BODY_FONT,
-                            fontSize: '10.5px',
-                            color: 'rgba(255,255,255,0.45)',
-                            lineHeight: 1.6,
-                          }}
-                        >
-                          <span aria-hidden="true" className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[#00e5cc]/70" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 

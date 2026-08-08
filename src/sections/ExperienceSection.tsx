@@ -29,13 +29,89 @@ const COPY = {
 };
 
 // ─── Swap these to use real photo assets ─────────────────────────────────────
-const GALLERY = [
-  { icon: GraduationCap, line1: 'INSPIRING', line2: 'WORKSHOPS', src: '/images/20 (1).png' },
-  { icon: Users, line1: 'SOCIAL', line2: 'DANCING', src: '/images/19 (1).png' },
-  { icon: Heart, line1: 'REAL', line2: 'CONNECTIONS', src: '/images/18 (1).png' },
-  { icon: Music, line1: 'EPIC', line2: 'PARTIES', src: '/images/16 (1).png' },
-  { icon: Users, line1: 'LIFELONG', line2: 'FRIENDSHIPS', src: '/images/8 (1).png' },
+// Each category keeps the original photo (first) plus the real festival photos.
+// They're round-robin interleaved into GALLERY below so the carousel alternates
+// categories instead of showing a run of the same one.
+const GALLERY_CATEGORIES = [
+  {
+    icon: Users,
+    line1: 'SOCIAL',
+    line2: 'DANCING',
+    images: [
+      '/images/19 (1).png',
+      '/images/exp-social-1.jpg',
+      '/images/exp-social-2.jpg',
+      '/images/exp-social-3.jpg',
+      '/images/exp-social-4.jpg',
+      '/images/exp-social-5.jpg',
+      '/images/exp-social-6.jpg',
+      '/images/exp-social-7.jpg',
+    ],
+  },
+  {
+    icon: Heart,
+    line1: 'REAL',
+    line2: 'CONNECTIONS',
+    images: [
+      '/images/18 (1).png',
+      '/images/exp-connection-1.jpg',
+      '/images/exp-connection-2.jpg',
+      '/images/exp-connection-3.jpg',
+      '/images/exp-connection-4.jpg',
+    ],
+  },
+  {
+    icon: Music,
+    line1: 'EPIC',
+    line2: 'PARTIES',
+    images: [
+      '/images/16 (1).png',
+      '/images/exp-parties-1.jpg',
+      '/images/exp-parties-2.jpg',
+      '/images/exp-parties-3.jpg',
+      '/images/exp-parties-4.jpg',
+      '/images/exp-parties-5.jpg',
+    ],
+  },
+  {
+    icon: GraduationCap,
+    line1: 'INSPIRING',
+    line2: 'WORKSHOPS',
+    images: [
+      '/images/20 (1).png',
+      '/images/exp-workshop-1.jpg',
+      '/images/exp-workshop-2.jpg',
+      '/images/exp-workshop-3.jpg',
+      '/images/exp-workshop-4.jpg',
+      '/images/exp-workshop-5.jpg',
+    ],
+  },
+  {
+    icon: Users,
+    line1: 'LIFELONG',
+    line2: 'FRIENDSHIPS',
+    images: [
+      '/images/8 (1).png',
+      '/images/exp-friendship-1.jpg',
+      '/images/exp-friendship-2.jpg',
+      '/images/exp-friendship-3.jpg',
+    ],
+  },
 ];
+
+// Round-robin flatten: one image from each category per pass, mixing old & new.
+const GALLERY = (() => {
+  const out: { icon: typeof GALLERY_CATEGORIES[number]['icon']; line1: string; line2: string; src: string }[] = [];
+  const maxLen = Math.max(...GALLERY_CATEGORIES.map((c) => c.images.length));
+  for (let i = 0; i < maxLen; i++) {
+    for (const cat of GALLERY_CATEGORIES) {
+      if (i < cat.images.length) {
+        out.push({ icon: cat.icon, line1: cat.line1, line2: cat.line2, src: cat.images[i] });
+      }
+    }
+  }
+  return out;
+})();
 
 const TESTIMONIALS = [
   {
@@ -497,56 +573,7 @@ export default function ExperienceSection() {
           </div>
         </div>
 
-        {/* ── 5) Testimonials ── */}
-        <div
-          ref={testimonialsRef}
-          className="mt-14 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 md:divide-x md:divide-white/10"
-        >
-          {TESTIMONIALS.map((t) => (
-            <div key={t.name} className="flex gap-3 md:px-7 lg:px-9 first:md:pl-0 last:md:pr-0">
-              <Quote
-                className="w-6 h-6 shrink-0 text-[#00e5cc] rotate-180"
-                fill="currentColor"
-                strokeWidth={0}
-                aria-hidden="true"
-              />
-
-              <div>
-                <p
-                  style={{
-                    fontFamily: BODY_FONT,
-                    fontSize: '13.5px',
-                    color: 'rgba(255,255,255,0.62)',
-                    lineHeight: 1.7,
-                  }}
-                >
-                  {t.quote}
-                </p>
-
-                <div className="mt-4 flex items-center gap-3">
-                  <img
-                    src={t.avatar}
-                    alt=""
-                    className="w-9 h-9 rounded-full object-cover ring-1 ring-white/15 bg-white/5"
-                    onError={(e) => {
-                      e.currentTarget.style.visibility = 'hidden';
-                    }}
-                  />
-                  <div>
-                    <p className="font-display text-[13px] tracking-[0.1em] uppercase text-[#00e5cc] leading-tight">
-                      {t.name}
-                    </p>
-                    <p className="font-mono text-[9px] tracking-[0.15em] uppercase text-white/40 mt-0.5">
-                      {t.country}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* ── 6) Stats bar ── */}
+        {/* ── 5) Stats bar ── */}
         <div
           ref={statsRef}
           className="mt-14 md:mt-20 rounded-2xl p-px"
@@ -576,6 +603,51 @@ export default function ExperienceSection() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* ── 6) Testimonials ── */}
+        <div
+          ref={testimonialsRef}
+          className="mt-14 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 md:divide-x md:divide-white/10"
+        >
+          {TESTIMONIALS.map((t) => (
+            <div key={t.name} className="flex gap-3 md:px-7 lg:px-9 first:md:pl-0 last:md:pr-0">
+              <Quote
+                className="w-6 h-6 shrink-0 text-[#00e5cc] rotate-180"
+                fill="currentColor"
+                strokeWidth={0}
+                aria-hidden="true"
+              />
+              <div>
+                <p
+                  style={{
+                    fontFamily: BODY_FONT,
+                    fontSize: '13.5px',
+                    color: 'rgba(255,255,255,0.62)',
+                    lineHeight: 1.7,
+                  }}
+                >
+                  {t.quote}
+                </p>
+                <div className="mt-4 flex items-center gap-3">
+                  <img
+                    src={t.avatar}
+                    alt=""
+                    className="w-9 h-9 rounded-full object-cover ring-1 ring-white/15 bg-white/5"
+                    onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }}
+                  />
+                  <div>
+                    <p className="font-display text-[13px] tracking-[0.1em] uppercase text-[#00e5cc] leading-tight">
+                      {t.name}
+                    </p>
+                    <p className="font-mono text-[9px] tracking-[0.15em] uppercase text-white/40 mt-0.5">
+                      {t.country}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* ── 7) What to expect ── */}

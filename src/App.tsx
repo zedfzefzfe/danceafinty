@@ -10,7 +10,6 @@ import InTheMomentSection from './sections/InTheMomentSection';
 import FestivalExperienceSection from './sections/FestivalExperienceSection';
 import PracticalInfoSection from './sections/PracticalInfoSection';
 import WeezeventSection from './sections/WeezeventSection';
-import FAQ from './sections/FAQ';
 import Newsletter from './sections/Newsletter';
 import FinalCTASection from './components/FinalCTASection';
 import Footer from './sections/Footer';
@@ -26,15 +25,14 @@ function App() {
         <Hero />
         <WhyDanceAffinitySection />
         <ExperienceSection />
-        <PremiumBootcampsSection />
         <InTheMomentSection />
         <ArtistsMarquee />
+        <PremiumBootcampsSection />
         <FestivalExperienceSection />
-        <PracticalInfoSection />
         <WeezeventSection />
+        <PracticalInfoSection />
         <FinalCTASection imageSrc="/images/60.png" />
         <Newsletter />
-        <FAQ />
 
       </main>
       <Footer />

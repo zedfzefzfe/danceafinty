@@ -1,26 +1,36 @@
 import { useEffect, useRef } from 'react';
 import { revealOnView } from '../lib/reveal';
+import { Check, ShieldCheck, Zap, Ticket } from 'lucide-react';
 
 const BODY_FONT = "'DM Sans', sans-serif";
 
+const INCLUDED = [
+  'Full 4-day festival access',
+  '3 epic night parties',
+  '2 afternoon socials',
+  '7 intensive bootcamps',
+  'Pre-party workshops',
+  'Social dancing day & night',
+];
+
 export default function WeezeventSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const headerRef  = useRef<HTMLDivElement>(null);
-  const cardRef    = useRef<HTMLDivElement>(null);
+  const leftRef  = useRef<HTMLDivElement>(null);
+  const cardRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const cleanups = [
       revealOnView({
         trigger: sectionRef.current,
-        targets: headerRef.current,
-        from: { opacity: 0, y: 30 },
-        to:   { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' },
+        targets: leftRef.current,
+        from: { opacity: 0, x: -40 },
+        to:   { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out' },
       }),
       revealOnView({
         trigger: sectionRef.current,
         targets: cardRef.current,
-        from: { opacity: 0, y: 40 },
-        to:   { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: 0.18 },
+        from: { opacity: 0, x: 40 },
+        to:   { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.15 },
       }),
     ];
     return () => cleanups.forEach((c) => c());
@@ -43,14 +53,14 @@ export default function WeezeventSection() {
       className="relative w-full overflow-hidden"
       style={{ background: 'linear-gradient(170deg, #07060f 0%, #0d0d2b 40%, #0a1929 100%)' }}
     >
-      {/* Top ambient glow */}
+      {/* Ambient glow */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 50% -10%, rgba(0,229,204,0.12) 0%, transparent 55%),' +
-            'radial-gradient(ellipse at 90% 90%, rgba(180,0,255,0.06) 0%, transparent 50%)',
+            'radial-gradient(ellipse at 15% -5%, rgba(0,229,204,0.14) 0%, transparent 50%),' +
+            'radial-gradient(ellipse at 95% 100%, rgba(180,0,255,0.08) 0%, transparent 50%)',
         }}
       />
 
@@ -61,101 +71,139 @@ export default function WeezeventSection() {
         style={{ background: 'linear-gradient(to right, transparent 0%, rgba(0,229,204,0.35) 50%, transparent 100%)' }}
       />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 lg:px-16 py-20 md:py-28">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 py-20 md:py-28">
+        {/* items-start (not center) so the left column never re-centers when the
+            widget iframe grows/shrinks as the buyer moves through the steps */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.05fr] gap-12 lg:gap-16 items-start">
 
-        {/* ── Header ── */}
-        <div ref={headerRef} className="text-center mb-12 md:mb-16">
-          {/* Kicker */}
-          <div className="flex items-center justify-center gap-5 mb-5">
-            <span aria-hidden="true" className="h-px w-12 md:w-20" style={{ background: 'rgba(0,229,204,0.4)' }} />
-            <span className="font-mono text-[10px] md:text-[11px] tracking-[0.25em] uppercase text-[#00e5cc]">
-              GET YOUR PASS
-            </span>
-            <span aria-hidden="true" className="h-px w-12 md:w-20" style={{ background: 'rgba(0,229,204,0.4)' }} />
-          </div>
+          {/* ── LEFT: pitch ── */}
+          <div ref={leftRef} className="text-center lg:text-left">
+            {/* Kicker */}
+            <div className="flex items-center justify-center lg:justify-start gap-4 mb-5">
+              <span aria-hidden="true" className="h-px w-10 md:w-16" style={{ background: 'rgba(0,229,204,0.45)' }} />
+              <span className="font-mono text-[10px] md:text-[11px] tracking-[0.25em] uppercase text-[#00e5cc]">
+                GET YOUR PASS
+              </span>
+            </div>
 
-          {/* Headline */}
-          <h2
-            className="font-display uppercase text-white leading-[0.95]"
-            style={{ fontSize: 'clamp(2.2rem, 5.5vw, 4rem)', letterSpacing: '0.04em' }}
-          >
-            SECURE YOUR <span style={{ color: '#00e5cc' }}>SPOT</span>
-          </h2>
-
-          {/* Sub */}
-          <p
-            className="mt-5 mx-auto max-w-[500px]"
-            style={{
-              fontFamily: BODY_FONT,
-              fontSize: '15px',
-              color: 'rgba(255,255,255,0.5)',
-              lineHeight: 1.8,
-            }}
-          >
-            Limited passes available. Join 400+ dancers from 20+ countries at Dance Affinity Festival 2026.
-          </p>
-        </div>
-
-        {/* ── Widget card ── */}
-        <div ref={cardRef} className="flex justify-center">
-          {/* Outer glow ring */}
-          <div
-            className="relative w-full max-w-[680px]"
-            style={{
-              boxShadow: '0 0 0 1px rgba(0,229,204,0.18), 0 32px 80px rgba(0,0,0,0.55)',
-            }}
-          >
-            {/* Teal top accent bar */}
-            <div
-              className="absolute top-0 left-0 right-0 h-[3px] z-10"
-              aria-hidden="true"
-              style={{ background: 'linear-gradient(to right, transparent, #00e5cc 30%, #22a9f0 70%, transparent)' }}
-            />
-
-            {/* Corner brackets */}
-            {[
-              'top-0 left-0 border-t border-l',
-              'top-0 right-0 border-t border-r',
-              'bottom-0 left-0 border-b border-l',
-              'bottom-0 right-0 border-b border-r',
-            ].map((pos) => (
-              <span
-                key={pos}
-                aria-hidden="true"
-                className={`absolute w-5 h-5 border-[#00e5cc]/50 ${pos}`}
-                style={{ margin: '-8px' }}
-              />
-            ))}
-
-            {/* The actual Weezevent widget */}
-            <a
-              title="Logiciel billetterie en ligne"
-              href="https://weezevent.com/?c=sys_widget"
-              className="weezevent-widget-integration"
-              data-src="https://widget.weezevent.com/ticket/E1921791/?code=33244&locale=fr-FR&width_auto=1&color_primary=00AEEF"
-              data-width="650"
-              data-height="600"
-              data-id="1921791"
-              data-resize="1"
-              data-width_auto="1"
-              data-noscroll="0"
-              data-use-container="yes"
-              data-type="neo"
-              target="_blank"
-              rel="noopener noreferrer"
+            {/* Headline */}
+            <h2
+              className="font-display uppercase text-white leading-[0.95]"
+              style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', letterSpacing: '0.03em' }}
             >
-              Billetterie Weezevent
-            </a>
-          </div>
-        </div>
+              SECURE YOUR <span style={{ color: '#00e5cc' }}>SPOT</span>
+            </h2>
 
-        {/* ── Bottom note ── */}
-        <p
-          className="mt-8 text-center"
-          style={{ fontFamily: BODY_FONT, fontSize: '12px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.05em' }}
-        >
-          Secure checkout · Powered by Weezevent
-        </p>
+            {/* Sub */}
+            <p
+              className="mt-5 mx-auto lg:mx-0 max-w-[440px]"
+              style={{ fontFamily: BODY_FONT, fontSize: '15px', color: 'rgba(255,255,255,0.55)', lineHeight: 1.8 }}
+            >
+              Limited passes available. Join 400+ dancers from 20+ countries for four unforgettable days in Freiburg.
+            </p>
+
+            {/* What's included */}
+            <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 max-w-[440px] mx-auto lg:mx-0">
+              {INCLUDED.map((item) => (
+                <li key={item} className="flex items-center gap-2.5 text-left">
+                  <span
+                    aria-hidden="true"
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+                    style={{ background: 'rgba(0,229,204,0.14)', border: '1px solid rgba(0,229,204,0.35)' }}
+                  >
+                    <Check className="h-3 w-3 text-[#00e5cc]" strokeWidth={2.5} />
+                  </span>
+                  <span style={{ fontFamily: BODY_FONT, fontSize: '13px', color: 'rgba(255,255,255,0.72)' }}>
+                    {item}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            {/* Trust row */}
+            <div className="mt-8 flex items-center justify-center lg:justify-start gap-6">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-[#00e5cc]" strokeWidth={1.8} aria-hidden="true" />
+                <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-white/45">Secure checkout</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-[#00e5cc]" strokeWidth={1.8} aria-hidden="true" />
+                <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-white/45">Instant e-ticket</span>
+              </div>
+            </div>
+
+            {/* Real festival moment — shown full, never cropped */}
+            <div className="mt-9 overflow-hidden rounded-xl border border-white/10">
+              <img
+                src="/images/why dance affinity.png"
+                alt="The Dance Affinity Festival community together at MAK Studios"
+                className="w-full h-auto block"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          {/* ── RIGHT: ticket panel ── */}
+          <div ref={cardRef}>
+            {/* Gradient border wrapper */}
+            <div
+              className="rounded-2xl p-px"
+              style={{
+                background: 'linear-gradient(140deg, rgba(0,229,204,0.6) 0%, rgba(34,169,240,0.35) 45%, rgba(0,229,204,0.15) 100%)',
+                boxShadow: '0 30px 80px rgba(0,0,0,0.55), 0 0 60px rgba(0,229,204,0.08)',
+              }}
+            >
+              <div className="rounded-[15px] overflow-hidden bg-[#0a1020]">
+                {/* Themed header strip */}
+                <div
+                  className="flex items-center justify-between px-5 py-3.5"
+                  style={{ background: 'linear-gradient(90deg, rgba(0,229,204,0.12) 0%, rgba(10,16,32,0) 100%)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Ticket className="h-4 w-4 text-[#00e5cc]" strokeWidth={1.8} aria-hidden="true" />
+                    <span className="font-display uppercase text-white text-[13px] tracking-[0.1em]">
+                      Official Tickets
+                    </span>
+                  </div>
+                  <span className="font-mono text-[9px] tracking-[0.18em] uppercase text-white/35">
+                    Weezevent
+                  </span>
+                </div>
+
+                {/* White widget body */}
+                <div className="bg-white p-2 sm:p-3">
+                  <a
+                    title="Logiciel billetterie en ligne"
+                    href="https://weezevent.com/?c=sys_widget"
+                    className="weezevent-widget-integration"
+                    data-src="https://widget.weezevent.com/ticket/E1921791/?code=33244&locale=fr-FR&width_auto=1&color_primary=00E5CC"
+                    data-width="650"
+                    data-height="600"
+                    data-id="1921791"
+                    data-resize="1"
+                    data-width_auto="1"
+                    data-noscroll="0"
+                    data-use-container="yes"
+                    data-type="neo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Billetterie Weezevent
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Footnote */}
+            <p
+              className="mt-4 text-center"
+              style={{ fontFamily: BODY_FONT, fontSize: '11px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.05em' }}
+            >
+              Secure payment · Instant confirmation by email
+            </p>
+          </div>
+
+        </div>
       </div>
     </section>
   );

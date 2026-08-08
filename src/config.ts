@@ -41,7 +41,6 @@ export const navigationConfig: NavigationConfig = {
     { label: "Passes", href: "#passes" },
     { label: "Location", href: "#location" },
     { label: "Gallery", href: "#festival" },
-    { label: "FAQ", href: "#faq" },
   ],
   socialLinks: [
     { icon: "Instagram", label: "Instagram", href: "https://instagram.com" },

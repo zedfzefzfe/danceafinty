@@ -24,22 +24,22 @@ const EXPECT = [
   {
     title: '3 EPIC PARTIES',
     text: 'Three unforgettable nights of music, energy and non-stop dancing until the early morning.',
-    image: '/images/14.png',
+    image: '/images/expect-parties.jpg',
   },
   {
     title: '2 SOCIALS',
     text: 'Two afternoon socials to practice, connect and enjoy good vibes in a relaxed atmosphere.',
-    image: '/images/15.png',
+    image: '/images/expect-socials.jpg',
   },
   {
     title: '7 BOOTCAMPS',
     text: 'Level up in intensive training by international teachers and take your dance to the next level.',
-    image: '/images/17.png',
+    image: '/images/expect-bootcamps.jpg',
   },
   {
     title: 'WORKSHOPS',
     text: 'Pre-party workshops to get inspired, refine your skills and prepare for an amazing night.',
-    image: '/images/9.png',
+    image: '/images/expect-workshops.jpg',
   },
   {
     title: 'A UNIQUE COMMUNITY',

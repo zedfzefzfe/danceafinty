@@ -382,9 +382,8 @@ function ArtistCard({ artist, gradient, noAnim: _noAnim, ariaHidden }: CardProps
 
       {/* Card text — always visible, not hidden until hover */}
       <div className="am-card-text">
-        <p className="am-card-label">— {artist.label}</p>
         <h3 className="am-card-name">{artist.name}</h3>
-        <p className="am-card-tag">{artist.style} · {artist.country}</p>
+        <p className="am-card-tag">{artist.country}</p>
       </div>
     </article>
   );

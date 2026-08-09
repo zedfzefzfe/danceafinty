@@ -1,6 +1,38 @@
 import { useEffect, useRef, useState } from 'react';
 import { useIsMobile } from '../hooks/use-mobile';
+import { useCopy, type Lang } from '../i18n/LanguageContext';
 import './ArtistsMarquee.css';
+
+const MARQUEE_COPY: Record<Lang, {
+  headingSerif: string; headingBold: string; tagline: string;
+  teachersLabel: string; teachersSub: string; djsLabel: string; djsSub: string;
+  hintHover: string; hintTouch: string;
+}> = {
+  en: {
+    headingSerif: 'The Artists', headingBold: 'BEHIND THE MAGIC',
+    tagline: 'Internationally acclaimed Kizomba and Bachata artists, curated to elevate every moment of your festival journey.',
+    teachersLabel: 'The Teachers', teachersSub: 'World-class artists leading every workshop.',
+    djsLabel: 'The DJs', djsSub: 'The beats that keep the floor alive all night.',
+    hintHover: '— HOVER TO PAUSE · KEEP SCROLLING TO EXPLORE —',
+    hintTouch: '— TOUCH TO PAUSE · KEEP SCROLLING TO EXPLORE —',
+  },
+  de: {
+    headingSerif: 'Die Artists', headingBold: 'HINTER DER MAGIE',
+    tagline: 'International gefeierte Kizomba- und Bachata-Artists, kuratiert, um jeden Moment deiner Festivalreise zu bereichern.',
+    teachersLabel: 'Die Teacher', teachersSub: 'Weltklasse-Artists, die jeden Workshop leiten.',
+    djsLabel: 'Die DJs', djsSub: 'Die Beats, die den Floor die ganze Nacht am Leben halten.',
+    hintHover: '— ZUM PAUSIEREN HOVERN · WEITER SCROLLEN ZUM ENTDECKEN —',
+    hintTouch: '— ZUM PAUSIEREN TIPPEN · WEITER SCROLLEN ZUM ENTDECKEN —',
+  },
+  fr: {
+    headingSerif: 'Les Artistes', headingBold: 'DERRIÈRE LA MAGIE',
+    tagline: 'Des artistes de Kizomba et Bachata reconnus mondialement, sélectionnés pour sublimer chaque instant de ton festival.',
+    teachersLabel: 'Les Professeurs', teachersSub: 'Des artistes de classe mondiale à chaque atelier.',
+    djsLabel: 'Les DJs', djsSub: 'Les beats qui font vivre le dancefloor toute la nuit.',
+    hintHover: '— SURVOLE POUR METTRE EN PAUSE · CONTINUE À FAIRE DÉFILER —',
+    hintTouch: '— TOUCHE POUR METTRE EN PAUSE · CONTINUE À FAIRE DÉFILER —',
+  },
+};
 
 // EDIT ARTIST DATA HERE ─────────────────────────────────────────────────────
 // Swap `image` from '' to a public path (e.g. '/images/artist_carlos.jpg')
@@ -73,6 +105,7 @@ interface VisState {
 export default function ArtistsMarquee() {
   const sectionRef = useRef<HTMLElement>(null);
   const isMobile   = useIsMobile();
+  const t          = useCopy(MARQUEE_COPY);
 
   const prefersReducedMotion =
     typeof window !== 'undefined'
@@ -135,9 +168,9 @@ export default function ArtistsMarquee() {
             transition: noAnim ? 'none' : 'opacity 0.8s ease, transform 0.8s ease',
           }}
         >
-          <span className="am-heading-serif">The Artists</span>
+          <span className="am-heading-serif">{t.headingSerif}</span>
           <br />
-          <span className="am-heading-bold">BEHIND THE MAGIC</span>
+          <span className="am-heading-bold">{t.headingBold}</span>
         </h2>
 
         <p
@@ -147,8 +180,7 @@ export default function ArtistsMarquee() {
             transition: noAnim ? 'none' : 'opacity 0.6s ease',
           }}
         >
-          Internationally acclaimed Kizomba and Bachata artists, curated to
-          elevate every moment of your festival journey.
+          {t.tagline}
         </p>
 
       </div>
@@ -162,10 +194,10 @@ export default function ArtistsMarquee() {
         }}
       >
         <div className="am-row-heading-top">
-          <p className="am-row-label">The Teachers</p>
+          <p className="am-row-label">{t.teachersLabel}</p>
           <span aria-hidden="true" className="am-row-rule" />
         </div>
-        <p className="am-row-sub">World-class artists leading every workshop.</p>
+        <p className="am-row-sub">{t.teachersSub}</p>
       </div>
 
       {/* ── Marquee strip ── */}
@@ -189,10 +221,10 @@ export default function ArtistsMarquee() {
         }}
       >
         <div className="am-row-heading-top">
-          <p className="am-row-label">The DJs</p>
+          <p className="am-row-label">{t.djsLabel}</p>
           <span aria-hidden="true" className="am-row-rule" />
         </div>
-        <p className="am-row-sub">The beats that keep the floor alive all night.</p>
+        <p className="am-row-sub">{t.djsSub}</p>
       </div>
 
       {/* ── Second marquee strip — DJs, scrolling the opposite way ── */}
@@ -216,9 +248,7 @@ export default function ArtistsMarquee() {
           transition: noAnim ? 'none' : 'opacity 0.6s ease 0.8s',
         }}
       >
-        {isMobile
-          ? '— TOUCH TO PAUSE · KEEP SCROLLING TO EXPLORE —'
-          : '— HOVER TO PAUSE · KEEP SCROLLING TO EXPLORE —'}
+        {isMobile ? t.hintTouch : t.hintHover}
       </p>
     </section>
   );

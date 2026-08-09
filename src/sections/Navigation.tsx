@@ -1,12 +1,29 @@
 import { useState, useEffect, useRef } from 'react';
-import { Menu, X, Instagram, Facebook } from 'lucide-react';
+import { Menu, X, Instagram, Facebook, Globe, Check } from 'lucide-react';
 import { navigationConfig } from '../config';
+import { useLang, LANGS, LANG_LABELS, LANG_NAMES } from '../i18n/LanguageContext';
+import { navLabels, navUI } from '../i18n/copy';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
   const lastScrollY = useRef(0);
+  const langRef = useRef<HTMLDivElement>(null);
+  const { lang, setLang } = useLang();
+
+  const tLabel = (label: string) => navLabels[label]?.[lang] ?? label;
+
+  // Close the language dropdown on outside click
+  useEffect(() => {
+    if (!isLangOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) setIsLangOpen(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, [isLangOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,13 +89,43 @@ export default function Navigation() {
                   }}
                   className="text-xs tracking-[0.12em] uppercase text-white/70 hover:text-[#00e5cc] transition-colors"
                 >
-                  {link.label}
+                  {tLabel(link.label)}
                 </a>
               ))}
             </div>
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-4">
+              {/* Language switcher */}
+              <div ref={langRef} className="relative">
+                <button
+                  onClick={() => setIsLangOpen((o) => !o)}
+                  className="flex items-center gap-1.5 text-white/70 hover:text-[#00e5cc] transition-colors"
+                  aria-label="Change language"
+                  aria-expanded={isLangOpen}
+                >
+                  <Globe className="w-4 h-4" />
+                  <span className="text-xs tracking-[0.12em] uppercase font-mono">{LANG_LABELS[lang]}</span>
+                </button>
+
+                {isLangOpen && (
+                  <div className="absolute right-0 mt-3 w-40 rounded-lg border border-white/10 bg-[#12122e]/95 backdrop-blur-xl shadow-xl overflow-hidden">
+                    {LANGS.map((l) => (
+                      <button
+                        key={l}
+                        onClick={() => { setLang(l); setIsLangOpen(false); }}
+                        className={`w-full flex items-center justify-between px-4 py-2.5 text-left text-xs tracking-[0.08em] uppercase transition-colors ${
+                          l === lang ? 'text-[#00e5cc]' : 'text-white/70 hover:text-white hover:bg-white/5'
+                        }`}
+                      >
+                        <span>{LANG_NAMES[l]}</span>
+                        {l === lang && <Check className="w-3.5 h-3.5" />}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* Buy Pass Button (Desktop) */}
               <a
                 href="#passes"
@@ -88,7 +135,7 @@ export default function Navigation() {
                 }}
                 className="hidden lg:block px-5 py-2 border border-[#00e5cc] text-[#00e5cc] text-xs tracking-[0.12em] uppercase hover:bg-[#00e5cc] hover:text-[#1a0033] transition-all duration-300"
               >
-                Buy Pass
+                {navUI.buyPass[lang]}
               </a>
 
               {/* Menu Button */}
@@ -96,7 +143,7 @@ export default function Navigation() {
                 onClick={() => setIsMenuOpen(true)}
                 className="lg:hidden flex items-center gap-2 text-white hover:text-[#00e5cc] transition-colors"
               >
-                <span className="hidden sm:block text-xs tracking-[0.12em] uppercase">Menu</span>
+                <span className="hidden sm:block text-xs tracking-[0.12em] uppercase">{navUI.menu[lang]}</span>
                 <Menu className="w-6 h-6" />
               </button>
             </div>
@@ -146,9 +193,26 @@ export default function Navigation() {
                   animationDelay: `${index * 0.05}s`,
                 }}
               >
-                {link.label}
+                {tLabel(link.label)}
               </a>
             ))}
+
+            {/* Language switcher (mobile) */}
+            <div className="mt-6 flex items-center gap-3">
+              {LANGS.map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  className={`px-4 py-2 rounded-full border text-xs tracking-[0.12em] uppercase transition-colors ${
+                    l === lang
+                      ? 'border-[#00e5cc] text-[#00e5cc]'
+                      : 'border-white/20 text-white/60 hover:text-white'
+                  }`}
+                >
+                  {LANG_NAMES[l]}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Footer */}

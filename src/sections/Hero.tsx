@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { heroConfig, festivalDate } from '../config';
 import { useIsMobile } from '../hooks/use-mobile';
+import { useCopy } from '../i18n/LanguageContext';
+import { heroCopy, countdownCopy } from '../i18n/copy';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight } from 'lucide-react';
@@ -16,6 +18,8 @@ interface TimeLeft {
 
 export default function Hero() {
   const isMobile = useIsMobile();
+  const hero = useCopy(heroCopy);
+  const cd = useCopy(countdownCopy);
   const sectionRef = useRef<HTMLElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -245,7 +249,7 @@ export default function Hero() {
             ref={taglineRef}
             className={`font-mono tracking-[0.25em] text-[#00e5cc] ${isMobile ? 'text-[11px] mb-4' : 'text-xs mb-2 sm:mb-4'}`}
           >
-            {heroConfig.tagline}
+            {hero.tagline}
           </p>
 
           {/* Headline */}
@@ -265,7 +269,7 @@ export default function Hero() {
               ref={locationRef}
               className={`${isMobile ? 'text-sm font-mono tracking-widest text-[#00e5cc]/80' : 'text-lg lg:text-xl text-white/80'} mb-2`}
             >
-              {heroConfig.dateLocation}
+              {hero.dateLocation}
             </p>
 
             {/* Countdown Timer */}
@@ -274,10 +278,10 @@ export default function Hero() {
               className={`flex items-center flex-wrap ${isMobile ? 'justify-center gap-5 mt-5' : 'gap-2 sm:gap-4 mt-6'}`}
             >
               {[
-                { value: timeLeft.days, label: 'DAYS' },
-                { value: timeLeft.hours, label: 'HRS' },
-                { value: timeLeft.minutes, label: 'MIN' },
-                { value: timeLeft.seconds, label: 'SEC' },
+                { value: timeLeft.days, label: cd.days },
+                { value: timeLeft.hours, label: cd.hrs },
+                { value: timeLeft.minutes, label: cd.min },
+                { value: timeLeft.seconds, label: cd.sec },
               ].map((item, index) => (
                 <div key={item.label} className="flex items-center gap-2 sm:gap-4">
                   <div className="text-center">
@@ -308,14 +312,14 @@ export default function Hero() {
               onClick={() => scrollToSection(heroConfig.ctaPrimaryTarget)}
               className={`btn-primary flex items-center justify-center gap-2 ${isMobile ? 'w-full' : ''}`}
             >
-              {heroConfig.ctaPrimaryText}
+              {hero.ctaPrimary}
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => scrollToSection(heroConfig.ctaSecondaryTarget)}
               className={`btn-outline ${isMobile ? 'w-full' : ''}`}
             >
-              {heroConfig.ctaSecondaryText}
+              {hero.ctaSecondary}
             </button>
           </div>
         </div>

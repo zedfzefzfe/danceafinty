@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { revealOnView } from '../lib/reveal';
+import { useCopy, type Lang } from '../i18n/LanguageContext';
 import {
   MapPin,
   TrainFront,
@@ -9,7 +10,6 @@ import {
   Heart,
   ChevronRight,
   Footprints,
-  Calendar,
   Users,
   Music,
   GraduationCap,
@@ -18,19 +18,43 @@ import {
 
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
-const COPY = {
-  heading: 'EASY TO REACH',
-  subtitle: 'EVERYTHING YOU NEED, RIGHT IN THE HEART OF FREIBURG',
-  intro:
-    'Dance Affinity Festival takes place in the vibrant heart of Freiburg im Breisgau. Centrally located. Perfectly connected. Easy to reach from anywhere.',
-  venueLabel: 'OUR VENUE',
-  venueName: 'MAK STUDIOS',
-  venueAddress: 'Schnewlinstraße 1, 79098 Freiburg im Breisgau, Germany',
-  venueBlurb:
-    'Modern studio in the city center with the perfect atmosphere to dance, connect and enjoy.',
-  walkingBanner:
-    'You are already in the heart of the festival. Everything is within walking distance!',
-  closing: 'All you need is here. Just arrive and let the magic happen.',
+const COPY_I18N: Record<Lang, {
+  heading: string; subtitle: string; intro: string; venueLabel: string;
+  venueName: string; venueAddress: string; venueBlurb: string; walkingBanner: string; closing: string;
+}> = {
+  en: {
+    heading: 'EASY TO REACH',
+    subtitle: 'EVERYTHING YOU NEED, RIGHT IN THE HEART OF FREIBURG',
+    intro: 'Dance Affinity Festival takes place in the vibrant heart of Freiburg im Breisgau. Centrally located. Perfectly connected. Easy to reach from anywhere.',
+    venueLabel: 'OUR VENUE',
+    venueName: 'MAK STUDIOS',
+    venueAddress: 'Schnewlinstraße 1, 79098 Freiburg im Breisgau, Germany',
+    venueBlurb: 'Modern studio in the city center with the perfect atmosphere to dance, connect and enjoy.',
+    walkingBanner: 'You are already in the heart of the festival. Everything is within walking distance!',
+    closing: 'All you need is here. Just arrive and let the magic happen.',
+  },
+  de: {
+    heading: 'EINFACH ZU ERREICHEN',
+    subtitle: 'ALLES, WAS DU BRAUCHST — MITTEN IM HERZEN VON FREIBURG',
+    intro: 'Das Dance Affinity Festival findet im lebendigen Herzen von Freiburg im Breisgau statt. Zentral gelegen. Perfekt angebunden. Von überall leicht zu erreichen.',
+    venueLabel: 'UNSERE LOCATION',
+    venueName: 'MAK STUDIOS',
+    venueAddress: 'Schnewlinstraße 1, 79098 Freiburg im Breisgau, Deutschland',
+    venueBlurb: 'Modernes Studio im Stadtzentrum mit der perfekten Atmosphäre zum Tanzen, Verbinden und Genießen.',
+    walkingBanner: 'Du bist bereits mitten im Festival. Alles ist bequem zu Fuß erreichbar!',
+    closing: 'Alles, was du brauchst, ist hier. Komm einfach vorbei und lass die Magie geschehen.',
+  },
+  fr: {
+    heading: 'FACILE D’ACCÈS',
+    subtitle: 'TOUT CE QU’IL VOUS FAUT, AU CŒUR DE FRIBOURG',
+    intro: 'Le Dance Affinity Festival se déroule au cœur vibrant de Fribourg-en-Brisgau. Idéalement situé. Parfaitement connecté. Facile d’accès depuis partout.',
+    venueLabel: 'NOTRE LIEU',
+    venueName: 'MAK STUDIOS',
+    venueAddress: 'Schnewlinstraße 1, 79098 Freiburg im Breisgau, Allemagne',
+    venueBlurb: 'Un studio moderne en centre-ville, avec l’atmosphère parfaite pour danser, échanger et profiter.',
+    walkingBanner: 'Vous êtes déjà au cœur du festival. Tout est accessible à pied !',
+    closing: 'Tout ce qu’il vous faut est ici. Venez simplement et laissez la magie opérer.',
+  },
 };
 
 // ─── Swap these to use real photo assets ─────────────────────────────────────
@@ -42,69 +66,75 @@ const PHOTOS = {
 // Reuses the same logo asset as the navbar
 const LOGO = '/images/Copie de Asset 1-8.png';
 
-const TRAVEL = [
-  {
-    icon: Footprints,
-    label: 'FROM CENTRAL STATION',
-    times: [
-      { value: '10 MIN', mode: 'by tram' },
-      { value: '15 MIN', mode: 'on foot' },
-    ],
-  },
-  {
-    icon: MapPin,
-    label: 'FROM CITY CENTER',
-    times: [{ value: '5 MIN', mode: 'on foot' }],
-  },
-];
+const TRAVEL_ICONS = [Footprints, MapPin];
+const TRAVEL_I18N: Record<Lang, { label: string; times: { value: string; mode: string }[] }[]> = {
+  en: [
+    { label: 'FROM CENTRAL STATION', times: [{ value: '10 MIN', mode: 'by tram' }, { value: '15 MIN', mode: 'on foot' }] },
+    { label: 'FROM CITY CENTER', times: [{ value: '5 MIN', mode: 'on foot' }] },
+  ],
+  de: [
+    { label: 'AB HAUPTBAHNHOF', times: [{ value: '10 MIN', mode: 'mit der Tram' }, { value: '15 MIN', mode: 'zu Fuß' }] },
+    { label: 'AB STADTZENTRUM', times: [{ value: '5 MIN', mode: 'zu Fuß' }] },
+  ],
+  fr: [
+    { label: 'DEPUIS LA GARE CENTRALE', times: [{ value: '10 MIN', mode: 'en tram' }, { value: '15 MIN', mode: 'à pied' }] },
+    { label: 'DEPUIS LE CENTRE-VILLE', times: [{ value: '5 MIN', mode: 'à pied' }] },
+  ],
+};
 
-const ROUTES = [
-  {
-    icon: TrainFront,
-    title: 'BY TRAIN',
-    text: 'Freiburg (Breisgau) Hbf.\nWell connected to major cities:',
-    list: ['Basel ≈ 45 min', 'Stuttgart ≈ 2 h', 'Frankfurt ≈ 3 h', 'Zürich ≈ 1 h 40'],
-    footnote: '',
-  },
-  {
-    icon: Plane,
-    title: 'BY PLANE',
-    text: 'EuroAirport Basel-Mulhouse-Freiburg ≈ 50 min by car / train.\nZurich Airport ≈ 1 h 40 by train.\nStrasbourg Airport ≈ 1 h by train.',
-    list: [],
-    footnote: '',
-  },
-  {
-    icon: TramFront,
-    title: 'BY TRAM',
-    text: 'Direct connection from the central station to the city center.\nTram lines: 1, 2, 3, 4, 5.',
-    list: [],
-    footnote: '',
-  },
-  {
-    icon: Car,
-    title: 'BY CAR & PARKING',
-    text: 'Easy access via A5 motorway.\nSeveral parking garages nearby:',
-    list: [
-      'Parkhaus Bertoldsbrunnen (3 min walk)',
-      'Parkhaus Karlsbau (5 min walk)',
-      'Parkhaus City (7 min walk)',
-    ],
-    footnote: 'Park & Ride available on the outskirts.',
-  },
-];
+const ROUTE_ICONS = [TrainFront, Plane, TramFront, Car];
+const ROUTES_I18N: Record<Lang, { title: string; text: string; list: string[]; footnote: string }[]> = {
+  en: [
+    { title: 'BY TRAIN', text: 'Freiburg (Breisgau) Hbf.\nWell connected to major cities:', list: ['Basel ≈ 45 min', 'Stuttgart ≈ 2 h', 'Frankfurt ≈ 3 h', 'Zürich ≈ 1 h 40'], footnote: '' },
+    { title: 'BY PLANE', text: 'EuroAirport Basel-Mulhouse-Freiburg ≈ 50 min by car / train.\nZurich Airport ≈ 1 h 40 by train.\nStrasbourg Airport ≈ 1 h by train.', list: [], footnote: '' },
+    { title: 'BY TRAM', text: 'Direct connection from the central station to the city center.\nTram lines: 1, 2, 3, 4, 5.', list: [], footnote: '' },
+    { title: 'BY CAR & PARKING', text: 'Easy access via A5 motorway.\nSeveral parking garages nearby:', list: ['Parkhaus Bertoldsbrunnen (3 min walk)', 'Parkhaus Karlsbau (5 min walk)', 'Parkhaus City (7 min walk)'], footnote: 'Park & Ride available on the outskirts.' },
+  ],
+  de: [
+    { title: 'MIT DEM ZUG', text: 'Freiburg (Breisgau) Hbf.\nGut angebunden an große Städte:', list: ['Basel ≈ 45 Min.', 'Stuttgart ≈ 2 Std.', 'Frankfurt ≈ 3 Std.', 'Zürich ≈ 1 Std. 40'], footnote: '' },
+    { title: 'MIT DEM FLUGZEUG', text: 'EuroAirport Basel-Mulhouse-Freiburg ≈ 50 Min. mit Auto / Zug.\nFlughafen Zürich ≈ 1 Std. 40 mit dem Zug.\nFlughafen Straßburg ≈ 1 Std. mit dem Zug.', list: [], footnote: '' },
+    { title: 'MIT DER TRAM', text: 'Direkte Verbindung vom Hauptbahnhof ins Stadtzentrum.\nTramlinien: 1, 2, 3, 4, 5.', list: [], footnote: '' },
+    { title: 'MIT DEM AUTO & PARKEN', text: 'Einfache Anfahrt über die Autobahn A5.\nMehrere Parkhäuser in der Nähe:', list: ['Parkhaus Bertoldsbrunnen (3 Min. zu Fuß)', 'Parkhaus Karlsbau (5 Min. zu Fuß)', 'Parkhaus City (7 Min. zu Fuß)'], footnote: 'Park & Ride am Stadtrand verfügbar.' },
+  ],
+  fr: [
+    { title: 'EN TRAIN', text: 'Gare de Freiburg (Breisgau) Hbf.\nBien reliée aux grandes villes :', list: ['Bâle ≈ 45 min', 'Stuttgart ≈ 2 h', 'Francfort ≈ 3 h', 'Zurich ≈ 1 h 40'], footnote: '' },
+    { title: 'EN AVION', text: 'EuroAirport Bâle-Mulhouse-Fribourg ≈ 50 min en voiture / train.\nAéroport de Zurich ≈ 1 h 40 en train.\nAéroport de Strasbourg ≈ 1 h en train.', list: [], footnote: '' },
+    { title: 'EN TRAM', text: 'Liaison directe de la gare centrale au centre-ville.\nLignes de tram : 1, 2, 3, 4, 5.', list: [], footnote: '' },
+    { title: 'EN VOITURE & PARKING', text: 'Accès facile par l’autoroute A5.\nPlusieurs parkings à proximité :', list: ['Parking Bertoldsbrunnen (3 min à pied)', 'Parking Karlsbau (5 min à pied)', 'Parking City (7 min à pied)'], footnote: 'Park & Ride disponible en périphérie.' },
+  ],
+};
 
-const STATS = [
-  { icon: Calendar, primary: '3 NIGHTS', secondary: 'Friday - Saturday - Sunday' },
-  { icon: Users, primary: '2 SOCIALS', secondary: 'Saturday & Sunday' },
-  { icon: Music, primary: '3 NIGHT PARTIES', secondary: 'Unforgettable vibes every night' },
-  { icon: GraduationCap, primary: 'BOOTCAMPS', secondary: 'Intensive training 10:00 – 16:00' },
-  { icon: PersonStanding, primary: 'WORKSHOPS', secondary: 'Pre-party workshops 21:00 – 23:00' },
-];
+const STAT_ICONS = [Users, Music, GraduationCap, PersonStanding];
+const STATS_I18N: Record<Lang, { primary: string; secondary: string }[]> = {
+  en: [
+    { primary: '2 SOCIALS', secondary: 'Saturday & Sunday' },
+    { primary: '3 NIGHT PARTIES', secondary: 'Unforgettable vibes every night' },
+    { primary: 'BOOTCAMPS', secondary: 'Intensive training 10:00 – 16:00' },
+    { primary: 'WORKSHOPS', secondary: 'Pre-party workshops 21:00 – 23:00' },
+  ],
+  de: [
+    { primary: '2 SOCIALS', secondary: 'Samstag & Sonntag' },
+    { primary: '3 NÄCHTE PARTYS', secondary: 'Unvergessliche Vibes jede Nacht' },
+    { primary: 'BOOTCAMPS', secondary: 'Intensives Training 10:00 – 16:00' },
+    { primary: 'WORKSHOPS', secondary: 'Pre-Party-Workshops 21:00 – 23:00' },
+  ],
+  fr: [
+    { primary: '2 SOCIALS', secondary: 'Samedi & Dimanche' },
+    { primary: '3 SOIRÉES', secondary: 'Des vibes inoubliables chaque nuit' },
+    { primary: 'BOOTCAMPS', secondary: 'Entraînement intensif 10:00 – 16:00' },
+    { primary: 'WORKSHOPS', secondary: 'Workshops avant-soirée 21:00 – 23:00' },
+  ],
+};
 
 const BODY_FONT = "'DM Sans', sans-serif";
 const CARD = 'rounded-xl border border-white/10 bg-white/[0.03]';
 
 export default function PracticalInfoSection() {
+  const COPY = useCopy(COPY_I18N);
+  const TRAVEL = useCopy(TRAVEL_I18N).map((t, i) => ({ ...t, icon: TRAVEL_ICONS[i] }));
+  const ROUTES = useCopy(ROUTES_I18N).map((r, i) => ({ ...r, icon: ROUTE_ICONS[i] }));
+  const STATS = useCopy(STATS_I18N).map((s, i) => ({ ...s, icon: STAT_ICONS[i] }));
+
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);

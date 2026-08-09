@@ -36,15 +36,15 @@ export const navigationConfig: NavigationConfig = {
   menuLinks: [
     { label: "Home", href: "#hero" },
     { label: "Artists", href: "#artists" },
-    { label: "Schedule", href: "#schedule" },
+    { label: "Schedule", href: "#location" },
     { label: "Bootcamps", href: "#bootcamps" },
     { label: "Passes", href: "#passes" },
     { label: "Location", href: "#location" },
     { label: "Gallery", href: "#festival" },
   ],
   socialLinks: [
-    { icon: "Instagram", label: "Instagram", href: "https://instagram.com" },
-    { icon: "Facebook", label: "Facebook", href: "https://facebook.com" },
+    { icon: "Instagram", label: "Instagram", href: "https://www.instagram.com/dance.affinity?igsh=aTlva3F0NXJjdjFk" },
+    { icon: "Facebook", label: "Facebook", href: "https://www.facebook.com/share/1Bm2UBucuk/" },
   ],
 };
 
@@ -451,8 +451,8 @@ export const footerConfig: FooterConfig = {
   ],
   copyrightText: "© 2026 Dance Affinity Festival. All rights reserved.",
   socialLinks: [
-    { icon: "Instagram", label: "Instagram", href: "https://instagram.com" },
-    { icon: "Facebook", label: "Facebook", href: "https://facebook.com" },
+    { icon: "Instagram", label: "Instagram", href: "https://www.instagram.com/dance.affinity?igsh=aTlva3F0NXJjdjFk" },
+    { icon: "Facebook", label: "Facebook", href: "https://www.facebook.com/share/1Bm2UBucuk/" },
   ],
 };
 

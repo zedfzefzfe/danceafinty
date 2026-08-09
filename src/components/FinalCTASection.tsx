@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './FinalCTASection.css';
-
-const HEADLINE_2 = 'WAITING IN FREIBURG';
+import { useCopy } from '../i18n/LanguageContext';
+import { finalCtaCopy } from '../i18n/copy';
 
 // ── Animated letter ───────────────────────────────────────────────────────────
 
@@ -38,6 +38,10 @@ export default function FinalCTASection({ videoSrc, imageSrc }: FinalCTASectionP
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false;
   const noAnim = prefersReducedMotion;
+
+  const t = useCopy(finalCtaCopy);
+  const HEADLINE_2 = t.heading;
+  const scriptWords = t.script.split(' ');
 
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -108,7 +112,7 @@ export default function FinalCTASection({ videoSrc, imageSrc }: FinalCTASectionP
               transition: noAnim ? 'none' : 'opacity 0.5s ease',
             }}
           >
-            — ONE LAST THING —
+            — {t.kicker} —
           </p>
 
           {/* Two-line heading */}
@@ -116,22 +120,22 @@ export default function FinalCTASection({ videoSrc, imageSrc }: FinalCTASectionP
 
             {/* Line 1: serif italic */}
             <span className="fc-line1" aria-hidden={noAnim ? undefined : 'true'}>
-              {['Your', 'moment', 'is'].map((word, wi) => (
+              {scriptWords.map((word, wi) => (
                 <span
-                  key={word}
+                  key={`${word}-${wi}`}
                   className={`fc-word${heroVisible ? ' fc-word--in' : ''}`}
                   style={noAnim ? undefined : {
                     transitionDelay: heroVisible ? `${0.15 + wi * 0.12}s` : '0s',
                   }}
                 >
-                  {word}{wi < 2 ? ' ' : ''}
+                  {word}{wi < scriptWords.length - 1 ? ' ' : ''}
                 </span>
               ))}
             </span>
             {/* Screen-reader-only accessible text for line 1 */}
             {!noAnim && (
               <span className="fc-line1" aria-hidden="true" style={{ display: 'none' }}>
-                Your moment is
+                {t.script}
               </span>
             )}
 
@@ -168,7 +172,7 @@ export default function FinalCTASection({ videoSrc, imageSrc }: FinalCTASectionP
               transition: noAnim ? 'none' : 'opacity 0.5s ease 0.7s',
             }}
           >
-            OCTOBER 30 — NOVEMBER 2, 2026
+            {t.dateLine}
           </p>
 
           {/* CTA button */}
@@ -183,11 +187,11 @@ export default function FinalCTASection({ videoSrc, imageSrc }: FinalCTASectionP
             <button
               className="fc-cta-btn"
               onClick={() => scrollToSection('#passes')}
-              aria-label="Get your festival pass starting from 79 euros"
+              aria-label="Get your festival pass"
             >
-              GET YOUR PASS — 79€ →
+              {t.button} →
             </button>
-            <p className="fc-btn-note">100% refundable · Secure checkout</p>
+            <p className="fc-btn-note">{t.note}</p>
           </div>
         </div>
       </div>

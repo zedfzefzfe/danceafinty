@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { revealOnView } from '../lib/reveal';
+import { useCopy, type Lang } from '../i18n/LanguageContext';
 import {
   Users,
   Zap,
@@ -161,27 +162,82 @@ const BOOTCAMPS: Bootcamp[] = [
 ];
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
-const COPY = {
-  badgeLabel: 'PREMIUM BOOTCAMPS',
-  headingLine1: 'LEVEL UP YOUR DANCE',
-  headingLine2: '7 PREMIUM BOOTCAMPS',
-  subtitle1: 'Intensive training. World-class teachers. Real transformation.',
-  subtitle2: 'Choose your experience and take your dance to the next level.',
-  hintFlip: 'CLICK ON A BOOTCAMP TO DISCOVER MORE',
-  hintLimited:
-    'Each bootcamp is limited to ensure quality, personalized feedback and the best experience.',
-  ctaTitle: 'READY TO TRANSFORM YOUR DANCE?',
-  ctaSubtitle: 'Spots are limited. Choose your bootcamps and secure your pass today!',
-  ctaButton: 'GET YOUR PASS',
-  ctaTarget: '#passes',
+const CTA_TARGET = '#passes';
+
+interface BcCopy {
+  badgeLabel: string; headingLine1: string; headingLine2: string;
+  subtitle1: string; subtitle2: string; hintFlip: string; hintLimited: string;
+  ctaTitle: string; ctaSubtitle: string; ctaButton: string;
+  tabKizomba: string; tabBachata: string;
+  comingSoon: string; stayTuned: string; getNotified: string;
+}
+
+const COPY_I18N: Record<Lang, BcCopy> = {
+  en: {
+    badgeLabel: 'PREMIUM BOOTCAMPS',
+    headingLine1: 'LEVEL UP YOUR DANCE',
+    headingLine2: '7 PREMIUM BOOTCAMPS',
+    subtitle1: 'Intensive training. World-class teachers. Real transformation.',
+    subtitle2: 'Choose your experience and take your dance to the next level.',
+    hintFlip: 'CLICK ON A BOOTCAMP TO DISCOVER MORE',
+    hintLimited: 'Each bootcamp is limited to ensure quality, personalized feedback and the best experience.',
+    ctaTitle: 'READY TO TRANSFORM YOUR DANCE?',
+    ctaSubtitle: 'Spots are limited. Choose your bootcamps and secure your pass today!',
+    ctaButton: 'GET YOUR PASS',
+    tabKizomba: 'KIZOMBA BOOTCAMPS', tabBachata: 'BACHATA BOOTCAMPS',
+    comingSoon: 'COMING SOON', stayTuned: 'STAY TUNED', getNotified: 'Get notified',
+  },
+  de: {
+    badgeLabel: 'PREMIUM BOOTCAMPS',
+    headingLine1: 'BRING DEINEN TANZ AUFS NÄCHSTE LEVEL',
+    headingLine2: '7 PREMIUM-BOOTCAMPS',
+    subtitle1: 'Intensives Training. Weltklasse-Lehrer. Echte Weiterentwicklung.',
+    subtitle2: 'Wähle dein Erlebnis und bring deinen Tanz auf das nächste Level.',
+    hintFlip: 'KLICKE AUF EIN BOOTCAMP, UM MEHR ZU ENTDECKEN',
+    hintLimited: 'Jedes Bootcamp ist begrenzt, um Qualität, individuelles Feedback und das beste Erlebnis zu gewährleisten.',
+    ctaTitle: 'BEREIT, DEINEN TANZ ZU VERWANDELN?',
+    ctaSubtitle: 'Die Plätze sind begrenzt. Wähle deine Bootcamps und sichere dir noch heute dein Ticket!',
+    ctaButton: 'TICKETS SICHERN',
+    tabKizomba: 'KIZOMBA BOOTCAMPS', tabBachata: 'BACHATA BOOTCAMPS',
+    comingSoon: 'DEMNÄCHST', stayTuned: 'BLEIB DRAN', getNotified: 'Benachrichtigen',
+  },
+  fr: {
+    badgeLabel: 'BOOTCAMPS PREMIUM',
+    headingLine1: 'FAIS PASSER TA DANSE AU NIVEAU SUPÉRIEUR',
+    headingLine2: '7 BOOTCAMPS PREMIUM',
+    subtitle1: 'Entraînement intensif. Des professeurs de classe mondiale. Une vraie transformation.',
+    subtitle2: 'Choisis ton expérience et fais passer ta danse au niveau supérieur.',
+    hintFlip: 'CLIQUE SUR UN BOOTCAMP POUR EN DÉCOUVRIR PLUS',
+    hintLimited: 'Chaque bootcamp est limité pour garantir la qualité, un feedback personnalisé et la meilleure expérience.',
+    ctaTitle: 'PRÊT À TRANSFORMER TA DANSE ?',
+    ctaSubtitle: 'Les places sont limitées. Choisis tes bootcamps et réserve ta place dès aujourd’hui !',
+    ctaButton: 'RÉSERVE TA PLACE',
+    tabKizomba: 'BOOTCAMPS KIZOMBA', tabBachata: 'BOOTCAMPS BACHATA',
+    comingSoon: 'BIENTÔT', stayTuned: 'RESTE CONNECTÉ', getNotified: 'Être notifié',
+  },
 };
 
-const FEATURES = [
-  { icon: Zap, title: 'INTENSIVE TRAINING', text: 'Maximize your potential in a short time' },
-  { icon: Users, title: 'WORLD-CLASS TEACHERS', text: 'Learn from passionate and experienced artists' },
-  { icon: MessageSquare, title: 'PERSONALIZED FEEDBACK', text: 'Get individual feedback to grow faster' },
-  { icon: Globe, title: 'UNFORGETTABLE EXPERIENCE', text: 'Connect, share and grow with dancers worldwide' },
-];
+const FEATURE_ICONS = [Zap, Users, MessageSquare, Globe];
+const FEATURES_I18N: Record<Lang, { title: string; text: string }[]> = {
+  en: [
+    { title: 'INTENSIVE TRAINING', text: 'Maximize your potential in a short time' },
+    { title: 'WORLD-CLASS TEACHERS', text: 'Learn from passionate and experienced artists' },
+    { title: 'PERSONALIZED FEEDBACK', text: 'Get individual feedback to grow faster' },
+    { title: 'UNFORGETTABLE EXPERIENCE', text: 'Connect, share and grow with dancers worldwide' },
+  ],
+  de: [
+    { title: 'INTENSIVES TRAINING', text: 'Nutze dein Potenzial in kurzer Zeit voll aus' },
+    { title: 'WELTKLASSE-LEHRER', text: 'Lerne von leidenschaftlichen, erfahrenen Artists' },
+    { title: 'INDIVIDUELLES FEEDBACK', text: 'Erhalte persönliches Feedback, um schneller zu wachsen' },
+    { title: 'UNVERGESSLICHES ERLEBNIS', text: 'Verbinde dich, teile und wachse mit Tänzern weltweit' },
+  ],
+  fr: [
+    { title: 'ENTRAÎNEMENT INTENSIF', text: 'Exploite tout ton potentiel en peu de temps' },
+    { title: 'PROFESSEURS DE CLASSE MONDIALE', text: 'Apprends auprès d’artistes passionnés et expérimentés' },
+    { title: 'FEEDBACK PERSONNALISÉ', text: 'Reçois un retour individuel pour progresser plus vite' },
+    { title: 'EXPÉRIENCE INOUBLIABLE', text: 'Connecte-toi, partage et grandis avec des danseurs du monde entier' },
+  ],
+};
 
 const BODY_FONT = "'DM Sans', sans-serif";
 
@@ -271,6 +327,7 @@ function BootcampCard({
 // ─── Coming soon card (does not flip) ────────────────────────────────────────
 // `compact` is the half-height variant used when two of them share one grid cell.
 function ComingSoonCard({ bootcamp, compact = false }: { bootcamp: Bootcamp; compact?: boolean }) {
+  const COPY = useCopy(COPY_I18N);
   return (
     <div
       className={`relative rounded-xl overflow-hidden border border-[#8b5cf6]/25 ${
@@ -304,14 +361,14 @@ function ComingSoonCard({ bootcamp, compact = false }: { bootcamp: Bootcamp; com
             compact ? 'text-[21px] mt-1.5' : 'text-[26px] md:text-[30px] mt-2'
           }`}
         >
-          COMING SOON
+          {COPY.comingSoon}
         </h3>
         <p
           className={`font-mono tracking-[0.22em] uppercase text-white/45 ${
             compact ? 'text-[8px] mt-1.5' : 'text-[9px] mt-2'
           }`}
         >
-          STAY TUNED
+          {COPY.stayTuned}
         </p>
 
         <button
@@ -320,7 +377,7 @@ function ComingSoonCard({ bootcamp, compact = false }: { bootcamp: Bootcamp; com
             compact ? 'mt-3 px-3 py-2 text-[8px]' : 'mt-5 px-4 py-2.5 text-[9px]'
           }`}
         >
-          Get notified
+          {COPY.getNotified}
           <Bell className={compact ? 'w-3 h-3' : 'w-3.5 h-3.5'} strokeWidth={1.6} aria-hidden="true" />
         </button>
       </div>
@@ -330,6 +387,9 @@ function ComingSoonCard({ bootcamp, compact = false }: { bootcamp: Bootcamp; com
 
 // ─── Main component ──────────────────────────────────────────────────────────
 export default function PremiumBootcampsSection() {
+  const COPY = useCopy(COPY_I18N);
+  const FEATURES = useCopy(FEATURES_I18N).map((f, i) => ({ ...f, icon: FEATURE_ICONS[i] }));
+
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -384,8 +444,8 @@ export default function PremiumBootcampsSection() {
   }, []);
 
   const tabs = [
-    { key: 'kizomba' as const, icon: PersonStanding, label: `KIZOMBA BOOTCAMPS (${kizomba.length})`, soon: false },
-    { key: 'bachata' as const, icon: Heart, label: `BACHATA BOOTCAMPS (${bachata.length})`, soon: true },
+    { key: 'kizomba' as const, icon: PersonStanding, label: `${COPY.tabKizomba} (${kizomba.length})`, soon: false },
+    { key: 'bachata' as const, icon: Heart, label: `${COPY.tabBachata} (${bachata.length})`, soon: true },
   ];
 
   return (
@@ -582,7 +642,7 @@ export default function PremiumBootcampsSection() {
 
           <button
             type="button"
-            onClick={() => scrollToSection(COPY.ctaTarget)}
+            onClick={() => scrollToSection(CTA_TARGET)}
             className="btn-primary w-full md:w-auto flex items-center justify-center gap-2 shrink-0"
           >
             {COPY.ctaButton}

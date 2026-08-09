@@ -2,39 +2,60 @@ import { useEffect, useRef } from 'react';
 import { useIsMobile } from '../hooks/use-mobile';
 import { revealOnView } from '../lib/reveal';
 import { Users, GraduationCap, Globe, Camera } from 'lucide-react';
+import { useCopy, type Lang } from '../i18n/LanguageContext';
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
-const COPY = {
-  badgeLabel: 'WHY DANCE AFFINITY?',
-  headingLine1a: 'MORE THAN',
-  headingLine1b: 'A FESTIVAL.',
-  headingLine2: 'A COMMUNITY.',
-  intro:
-    "Dance Affinity is more than dance. It's a place where people from all over the world come together to learn, share, grow and celebrate. A warm atmosphere, high quality bootcamps, amazing parties and a family you'll never forget.",
+const COPY_I18N: Record<Lang, {
+  badgeLabel: string; headingLine1a: string; headingLine1b: string; headingLine2: string; intro: string;
+}> = {
+  en: {
+    badgeLabel: 'WHY DANCE AFFINITY?',
+    headingLine1a: 'MORE THAN',
+    headingLine1b: 'A FESTIVAL.',
+    headingLine2: 'A COMMUNITY.',
+    intro:
+      "Dance Affinity is more than dance. It's a place where people from all over the world come together to learn, share, grow and celebrate. A warm atmosphere, high quality bootcamps, amazing parties and a family you'll never forget.",
+  },
+  de: {
+    badgeLabel: 'WARUM DANCE AFFINITY?',
+    headingLine1a: 'MEHR ALS',
+    headingLine1b: 'EIN FESTIVAL.',
+    headingLine2: 'EINE COMMUNITY.',
+    intro:
+      'Dance Affinity ist mehr als Tanz. Es ist ein Ort, an dem Menschen aus aller Welt zusammenkommen, um zu lernen, zu teilen, zu wachsen und zu feiern. Eine herzliche Atmosphäre, hochwertige Bootcamps, unvergessliche Partys und eine Familie, die du nie vergisst.',
+  },
+  fr: {
+    badgeLabel: 'POURQUOI DANCE AFFINITY ?',
+    headingLine1a: 'PLUS QU’UN',
+    headingLine1b: 'FESTIVAL.',
+    headingLine2: 'UNE COMMUNAUTÉ.',
+    intro:
+      "Dance Affinity, c'est bien plus que la danse. C'est un lieu où des personnes du monde entier se réunissent pour apprendre, partager, grandir et célébrer. Une ambiance chaleureuse, des bootcamps de qualité, des soirées inoubliables et une famille que tu n'oublieras jamais.",
+  },
 };
 
-const FEATURES = [
-  {
-    icon: Users,
-    title: 'WARM COMMUNITY',
-    text: 'A welcoming and inclusive atmosphere where everyone feels at home.',
-  },
-  {
-    icon: GraduationCap,
-    title: 'QUALITY BOOTCAMPS',
-    text: "Premium bootcamps with the world's best teachers to take your skills to the next level.",
-  },
-  {
-    icon: Globe,
-    title: 'WORLDWIDE CONNECTIONS',
-    text: 'Dancers from 25+ countries united by the same passion for dance.',
-  },
-  {
-    icon: Camera,
-    title: 'UNFORGETTABLE MEMORIES',
-    text: 'Unique moments, lifelong friendships and memories that last forever.',
-  },
-];
+const FEATURE_ICONS = [Users, GraduationCap, Globe, Camera];
+
+const FEATURES_I18N: Record<Lang, { title: string; text: string }[]> = {
+  en: [
+    { title: 'WARM COMMUNITY', text: 'A welcoming and inclusive atmosphere where everyone feels at home.' },
+    { title: 'QUALITY BOOTCAMPS', text: "Premium bootcamps with the world's best teachers to take your skills to the next level." },
+    { title: 'WORLDWIDE CONNECTIONS', text: 'Dancers from 25+ countries united by the same passion for dance.' },
+    { title: 'UNFORGETTABLE MEMORIES', text: 'Unique moments, lifelong friendships and memories that last forever.' },
+  ],
+  de: [
+    { title: 'HERZLICHE COMMUNITY', text: 'Eine einladende und inklusive Atmosphäre, in der sich jeder zu Hause fühlt.' },
+    { title: 'HOCHWERTIGE BOOTCAMPS', text: 'Premium-Bootcamps mit den besten Lehrern der Welt, um dein Können auf das nächste Level zu bringen.' },
+    { title: 'WELTWEITE VERBINDUNGEN', text: 'Tänzer aus über 25 Ländern, vereint durch dieselbe Leidenschaft für den Tanz.' },
+    { title: 'UNVERGESSLICHE MOMENTE', text: 'Einzigartige Momente, Freundschaften fürs Leben und Erinnerungen für immer.' },
+  ],
+  fr: [
+    { title: 'COMMUNAUTÉ CHALEUREUSE', text: 'Une ambiance accueillante et inclusive où chacun se sent chez soi.' },
+    { title: 'BOOTCAMPS DE QUALITÉ', text: 'Des bootcamps premium avec les meilleurs professeurs du monde pour passer au niveau supérieur.' },
+    { title: 'CONNEXIONS DU MONDE ENTIER', text: 'Des danseurs de plus de 25 pays réunis par la même passion pour la danse.' },
+    { title: 'SOUVENIRS INOUBLIABLES', text: 'Des moments uniques, des amitiés pour la vie et des souvenirs pour toujours.' },
+  ],
+};
 
 // ─── Swap these to use real photo assets ─────────────────────────────────────
 const PHOTOS = {
@@ -46,6 +67,8 @@ const BODY_FONT = "'DM Sans', sans-serif";
 
 export default function WhyDanceAffinitySection() {
   const isMobile = useIsMobile();
+  const COPY = useCopy(COPY_I18N);
+  const FEATURES = useCopy(FEATURES_I18N).map((f, i) => ({ ...f, icon: FEATURE_ICONS[i] }));
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const hugRef = useRef<HTMLDivElement>(null);

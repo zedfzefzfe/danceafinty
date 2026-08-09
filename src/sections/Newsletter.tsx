@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import { newsletterConfig, footerConfig } from '../config';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Send, Mail, Phone, Instagram, Facebook } from 'lucide-react';
+import { Send, Mail, Instagram, Facebook } from 'lucide-react';
+import { useCopy } from '../i18n/LanguageContext';
+import { newsletterCopy } from '../i18n/copy';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Newsletter() {
+  const t = useCopy(newsletterCopy);
   const sectionRef = useRef<HTMLElement>(null);
   const leftRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
@@ -91,10 +94,10 @@ export default function Newsletter() {
           className="flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-[6vw] py-8 sm:py-12 lg:py-24"
         >
           <h2 className="font-display text-white text-2xl sm:text-4xl lg:text-6xl mb-4">
-            {newsletterConfig.title}
+            {t.title}
           </h2>
           <p className="text-sm sm:text-base text-white/70 mb-6 sm:mb-8 max-w-md">
-            {newsletterConfig.body}
+            {t.body}
           </p>
 
           {/* Newsletter Form */}
@@ -104,7 +107,7 @@ export default function Newsletter() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={newsletterConfig.placeholder}
+                placeholder={t.placeholder}
                 className="flex-1 px-4 py-3 bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-[#00e5cc] transition-colors text-sm"
                 required
               />
@@ -113,7 +116,7 @@ export default function Newsletter() {
                 className="px-4 sm:px-6 py-3 bg-[#00e5cc] text-[#1a0033] font-semibold hover:bg-white transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 <Send className="w-4 h-4" />
-                <span className="hidden sm:inline">{newsletterConfig.buttonText}</span>
+                <span className="hidden sm:inline">{t.button}</span>
               </button>
             </form>
           ) : (
@@ -121,41 +124,26 @@ export default function Newsletter() {
               <div className="w-8 h-8 bg-[#00e5cc]/20 flex items-center justify-center flex-shrink-0">
                 <Send className="w-4 h-4" />
               </div>
-              <span>Thanks for subscribing! We'll keep you updated.</span>
+              <span>{t.success}</span>
             </div>
           )}
 
           {/* Contact Info */}
           <div
             ref={contactRef}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/10"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/10"
           >
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-[#00e5cc]/20 flex items-center justify-center flex-shrink-0">
                 <Mail className="w-5 h-5 text-[#00e5cc]" />
               </div>
               <div>
-                <p className="text-xs text-white/50 mb-1">Email</p>
+                <p className="text-xs text-white/50 mb-1">{t.emailLabel}</p>
                 <a
-                  href="mailto:hello@danceaffinity.de"
-                  className="text-xs sm:text-sm text-white hover:text-[#00e5cc] transition-colors"
+                  href="mailto:contact.danceaffinity@gmail.com"
+                  className="text-xs sm:text-sm text-white hover:text-[#00e5cc] transition-colors break-all"
                 >
-                  hello@danceaffinity.de
-                </a>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-[#00e5cc]/20 flex items-center justify-center flex-shrink-0">
-                <Phone className="w-5 h-5 text-[#00e5cc]" />
-              </div>
-              <div>
-                <p className="text-xs text-white/50 mb-1">Phone</p>
-                <a
-                  href="tel:+49123456789"
-                  className="text-xs sm:text-sm text-white hover:text-[#00e5cc] transition-colors"
-                >
-                  +49 123 456789
+                  contact.danceaffinity@gmail.com
                 </a>
               </div>
             </div>
@@ -165,7 +153,7 @@ export default function Newsletter() {
                 <Instagram className="w-5 h-5 text-[#00e5cc]" />
               </div>
               <div>
-                <p className="text-xs text-white/50 mb-1">Social</p>
+                <p className="text-xs text-white/50 mb-1">{t.socialLabel}</p>
                 <div className="flex items-center gap-3">
                   {footerConfig.socialLinks.map((link) => (
                     <a

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { revealOnView } from '../lib/reveal';
+import { useCopy, useLang, type Lang } from '../i18n/LanguageContext';
 import {
   GraduationCap,
   Users,
@@ -20,12 +21,40 @@ import {
 
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
-const COPY = {
-  badgeLabel: 'THE EXPERIENCE',
-  headingPlain: 'LIVE THE DANCE AFFINITY ',
-  headingAccent: 'EXPERIENCE',
-  subtitle1: 'Four days of connection, learning, partying and unforgettable moments.',
-  expectLabel: 'WHAT TO EXPECT',
+interface ExpCopy {
+  badgeLabel: string;
+  headingPlain: string;
+  headingAccent: string;
+  subtitle1: string;
+  expectLabel: string;
+  p2: { pre: string; w1: string; mid1: string; w2: string; mid2: string; w3: string; post: string };
+}
+
+const COPY_I18N: Record<Lang, ExpCopy> = {
+  en: {
+    badgeLabel: 'THE EXPERIENCE',
+    headingPlain: 'LIVE THE DANCE AFFINITY ',
+    headingAccent: 'EXPERIENCE',
+    subtitle1: 'Four days of connection, learning, partying and unforgettable moments.',
+    expectLabel: 'WHAT TO EXPECT',
+    p2: { pre: "It's not just about dance. It's about the ", w1: 'people', mid1: ', the ', w2: 'energy', mid2: ' and the ', w3: 'memories', post: ' we create together.' },
+  },
+  de: {
+    badgeLabel: 'DAS ERLEBNIS',
+    headingPlain: 'ERLEBE DIE DANCE AFFINITY ',
+    headingAccent: 'EXPERIENCE',
+    subtitle1: 'Vier Tage voller Verbindung, Lernen, Feiern und unvergesslicher Momente.',
+    expectLabel: 'WAS DICH ERWARTET',
+    p2: { pre: 'Es geht nicht nur ums Tanzen. Es geht um die ', w1: 'Menschen', mid1: ', die ', w2: 'Energie', mid2: ' und die ', w3: 'Erinnerungen', post: ', die wir gemeinsam schaffen.' },
+  },
+  fr: {
+    badgeLabel: 'L’EXPÉRIENCE',
+    headingPlain: 'VIVEZ L’EXPÉRIENCE ',
+    headingAccent: 'DANCE AFFINITY',
+    subtitle1: 'Quatre jours de connexion, d’apprentissage, de fête et de moments inoubliables.',
+    expectLabel: 'AU PROGRAMME',
+    p2: { pre: "Ce n'est pas qu'une question de danse. C'est une question de ", w1: 'personnes', mid1: ", d'", w2: 'énergie', mid2: ' et de ', w3: 'souvenirs', post: " que l'on crée ensemble." },
+  },
 };
 
 // ─── Swap these to use real photo assets ─────────────────────────────────────
@@ -113,45 +142,78 @@ const GALLERY = (() => {
   return out;
 })();
 
-const TESTIMONIALS = [
-  {
-    quote:
-      "Dance Affinity is more than a festival, it's a family. I came as a stranger, I left with a heart full of love.",
-    name: 'SARAH',
-    country: 'FRANCE',
-    avatar: '/images/avatar-1.jpg',
-  },
-  {
-    quote:
-      "The energy, the people, the vibes... Everything is just perfect. Can't wait for the next edition!",
-    name: 'MARCO',
-    country: 'ITALY',
-    avatar: '/images/avatar-2.jpg',
-  },
-  {
-    quote:
-      "Best festival I've ever been to! The bootcamps are next level, and the parties are insane.",
-    name: 'JESSICA',
-    country: 'NETHERLANDS',
-    avatar: '/images/avatar-3.jpg',
-  },
+const TESTIMONIAL_META = [
+  { name: 'SARAH',   country: 'FRANCE',      avatar: '/images/avatar-1.jpg' },
+  { name: 'MARCO',   country: 'ITALY',       avatar: '/images/avatar-2.jpg' },
+  { name: 'JESSICA', country: 'NETHERLANDS', avatar: '/images/avatar-3.jpg' },
 ];
 
-const STATS = [
-  { icon: Heart, value: '400+', label: 'DANCERS' },
-  { icon: Globe, value: '20+', label: 'COUNTRIES' },
-  { icon: Users, value: '50+', label: 'GUESTS DANCERS' },
-  { icon: Scale, value: '100%', label: 'BALANCED RATIO MEN / WOMEN' },
-];
+const TESTIMONIAL_QUOTES: Record<Lang, string[]> = {
+  en: [
+    "Dance Affinity is more than a festival, it's a family. I came as a stranger, I left with a heart full of love.",
+    "The energy, the people, the vibes... Everything is just perfect. Can't wait for the next edition!",
+    "Best festival I've ever been to! The bootcamps are next level, and the parties are insane.",
+  ],
+  de: [
+    'Dance Affinity ist mehr als ein Festival, es ist eine Familie. Ich kam als Fremde und ging mit einem Herzen voller Liebe.',
+    'Die Energie, die Menschen, die Stimmung... Einfach perfekt. Ich kann die nächste Ausgabe kaum erwarten!',
+    'Das beste Festival, auf dem ich je war! Die Bootcamps sind nächstes Level und die Partys der Wahnsinn.',
+  ],
+  fr: [
+    "Dance Affinity, c'est plus qu'un festival, c'est une famille. Je suis venue en inconnue, je suis repartie le cœur rempli d'amour.",
+    "L'énergie, les gens, l'ambiance... Tout est simplement parfait. Vivement la prochaine édition !",
+    "Le meilleur festival auquel j'aie participé ! Les bootcamps sont d'un autre niveau et les soirées sont dingues.",
+  ],
+};
 
-const EXPECT = [
-  { icon: GraduationCap, line1: 'TOP QUALITY', line2: 'BOOTCAMPS' },
-  { icon: Music, line1: 'SOCIAL DANCING', line2: 'ALL DAY & NIGHT' },
-  { icon: Disc3, line1: 'WORLD CLASS', line2: 'DJS' },
-  { icon: HeartHandshake, line1: 'A SAFE & INCLUSIVE', line2: 'ENVIRONMENT' },
-  { icon: Camera, line1: 'PROFESSIONAL', line2: 'PHOTOS & VIDEOS' },
-  { icon: PartyPopper, line1: 'SURPRISES', line2: '& MORE' },
-];
+const STAT_ICONS = [Heart, Globe, Users, Scale];
+const STAT_VALUES = ['400+', '20+', '50+', '100%'];
+const STAT_LABELS: Record<Lang, string[]> = {
+  en: ['DANCERS', 'COUNTRIES', 'GUESTS DANCERS', 'BALANCED RATIO MEN / WOMEN'],
+  de: ['TÄNZER', 'LÄNDER', 'GAST-TÄNZER', 'AUSGEWOGENES VERHÄLTNIS M / W'],
+  fr: ['DANSEURS', 'PAYS', 'DANSEURS INVITÉS', 'RATIO ÉQUILIBRÉ H / F'],
+};
+
+const EXPECT_ICONS = [GraduationCap, Music, Disc3, HeartHandshake, Camera, PartyPopper];
+const EXPECT_I18N: Record<Lang, { line1: string; line2: string }[]> = {
+  en: [
+    { line1: 'TOP QUALITY', line2: 'BOOTCAMPS' },
+    { line1: 'SOCIAL DANCING', line2: 'ALL DAY & NIGHT' },
+    { line1: 'WORLD CLASS', line2: 'DJS' },
+    { line1: 'A SAFE & INCLUSIVE', line2: 'ENVIRONMENT' },
+    { line1: 'PROFESSIONAL', line2: 'PHOTOS & VIDEOS' },
+    { line1: 'SURPRISES', line2: '& MORE' },
+  ],
+  de: [
+    { line1: 'TOP-QUALITÄT', line2: 'BOOTCAMPS' },
+    { line1: 'SOCIAL DANCING', line2: 'TAG & NACHT' },
+    { line1: 'WELTKLASSE', line2: 'DJS' },
+    { line1: 'SICHER & INKLUSIV', line2: 'UMFELD' },
+    { line1: 'PROFESSIONELLE', line2: 'FOTOS & VIDEOS' },
+    { line1: 'ÜBERRASCHUNGEN', line2: '& MEHR' },
+  ],
+  fr: [
+    { line1: 'HAUTE QUALITÉ', line2: 'BOOTCAMPS' },
+    { line1: 'SOCIAL DANCING', line2: 'JOUR & NUIT' },
+    { line1: 'DE CLASSE MONDIALE', line2: 'DJS' },
+    { line1: 'UN CADRE SÛR', line2: '& INCLUSIF' },
+    { line1: 'PHOTOS & VIDÉOS', line2: 'PROFESSIONNELLES' },
+    { line1: 'SURPRISES', line2: '& PLUS ENCORE' },
+  ],
+};
+
+// Gallery card labels translated at render time, keyed by the English "line1|line2"
+const GALLERY_LABELS: Record<string, Record<Lang, { line1: string; line2: string }>> = {
+  'SOCIAL|DANCING':        { en: { line1: 'SOCIAL', line2: 'DANCING' },      de: { line1: 'SOCIAL', line2: 'DANCING' },        fr: { line1: 'DANSE', line2: 'SOCIALE' } },
+  'REAL|CONNECTIONS':      { en: { line1: 'REAL', line2: 'CONNECTIONS' },    de: { line1: 'ECHTE', line2: 'VERBINDUNGEN' },    fr: { line1: 'VRAIES', line2: 'CONNEXIONS' } },
+  'EPIC|PARTIES':          { en: { line1: 'EPIC', line2: 'PARTIES' },        de: { line1: 'EPISCHE', line2: 'PARTYS' },        fr: { line1: 'SOIRÉES', line2: 'ÉPIQUES' } },
+  'INSPIRING|WORKSHOPS':   { en: { line1: 'INSPIRING', line2: 'WORKSHOPS' }, de: { line1: 'INSPIRIERENDE', line2: 'WORKSHOPS' }, fr: { line1: 'WORKSHOPS', line2: 'INSPIRANTS' } },
+  'LIFELONG|FRIENDSHIPS':  { en: { line1: 'LIFELONG', line2: 'FRIENDSHIPS' }, de: { line1: 'FREUNDSCHAFTEN', line2: 'FÜRS LEBEN' }, fr: { line1: 'AMITIÉS', line2: 'POUR LA VIE' } },
+};
+
+function tGalleryLabel(lang: Lang, line1: string, line2: string) {
+  return GALLERY_LABELS[`${line1}|${line2}`]?.[lang] ?? { line1, line2 };
+}
 
 const BODY_FONT = "'DM Sans', sans-serif";
 
@@ -169,7 +231,9 @@ function GalleryCard({
   copy: number;
   onOpen: (index: number) => void;
 }) {
-  const { icon: Icon, line1, line2, src } = item;
+  const { icon: Icon, src } = item;
+  const { lang } = useLang();
+  const { line1, line2 } = tGalleryLabel(lang, item.line1, item.line2);
   const isPrimary = copy === 0;
   // A swipe that starts on a card must scroll the row, not open the lightbox
   const touch = useRef({ x: 0, y: 0, moved: false });
@@ -209,6 +273,8 @@ function GalleryCard({
       <img
         src={src}
         alt={`${line1} ${line2}`.toLowerCase()}
+        loading="lazy"
+        decoding="async"
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         onError={(e) => {
           e.currentTarget.style.display = 'none';
@@ -241,6 +307,12 @@ function GalleryCard({
 const MESH_DOTS = 'radial-gradient(rgba(0,229,204,0.55) 1px, transparent 1px)';
 
 export default function ExperienceSection() {
+  const { lang } = useLang();
+  const COPY = useCopy(COPY_I18N);
+  const STATS = STAT_ICONS.map((icon, i) => ({ icon, value: STAT_VALUES[i], label: STAT_LABELS[lang][i] }));
+  const EXPECT = useCopy(EXPECT_I18N).map((e, i) => ({ ...e, icon: EXPECT_ICONS[i] }));
+  const TESTIMONIALS = TESTIMONIAL_META.map((m, i) => ({ ...m, quote: TESTIMONIAL_QUOTES[lang][i] }));
+
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -523,10 +595,10 @@ export default function ExperienceSection() {
           >
             <p>{COPY.subtitle1}</p>
             <p>
-              It's not just about dance. It's about the{' '}
-              <span className="font-script italic text-[#00e5cc] text-[20px] leading-none">people</span>, the{' '}
-              <span className="font-script italic text-[#00e5cc] text-[20px] leading-none">energy</span> and the{' '}
-              <span className="font-script italic text-[#00e5cc] text-[20px] leading-none">memories</span> we create together.
+              {COPY.p2.pre}
+              <span className="font-script italic text-[#00e5cc] text-[20px] leading-none">{COPY.p2.w1}</span>{COPY.p2.mid1}
+              <span className="font-script italic text-[#00e5cc] text-[20px] leading-none">{COPY.p2.w2}</span>{COPY.p2.mid2}
+              <span className="font-script italic text-[#00e5cc] text-[20px] leading-none">{COPY.p2.w3}</span>{COPY.p2.post}
             </p>
           </div>
         </div>
@@ -562,7 +634,7 @@ export default function ExperienceSection() {
             {[0, 1, 2].map((copy) =>
               GALLERY.map((item, index) => (
                 <GalleryCard
-                  key={`c${copy}-${item.line1}-${item.line2}`}
+                  key={`c${copy}-${index}`}
                   item={item}
                   index={index}
                   copy={copy}
@@ -755,7 +827,8 @@ export default function ExperienceSection() {
             {/* Caption */}
             <div className="absolute bottom-7 left-0 right-0 px-16 text-center pointer-events-none">
               <p className="font-display uppercase text-white text-[15px] md:text-[17px] tracking-[0.1em]">
-                {GALLERY[lightboxIndex].line1} {GALLERY[lightboxIndex].line2}
+                {tGalleryLabel(lang, GALLERY[lightboxIndex].line1, GALLERY[lightboxIndex].line2).line1}{' '}
+                {tGalleryLabel(lang, GALLERY[lightboxIndex].line1, GALLERY[lightboxIndex].line2).line2}
               </p>
               <p className="font-mono text-[10px] tracking-[0.2em] text-white/40 mt-1.5">
                 {lightboxIndex + 1} / {GALLERY.length}

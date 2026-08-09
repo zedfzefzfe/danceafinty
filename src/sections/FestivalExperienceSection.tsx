@@ -1,18 +1,41 @@
 import { useEffect, useRef } from 'react';
 import { revealOnView } from '../lib/reveal';
 import { Calendar, MapPin, Users, Globe, Sparkles, Star } from 'lucide-react';
+import { useCopy, type Lang } from '../i18n/LanguageContext';
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
-const COPY = {
-  kicker: 'ABOUT THE',
-  headingLine1: 'FESTIVAL',
-  headingLine2: 'THE EXPERIENCE',
-  subheading: '4 DAYS OF DANCE, CONNECTION & GROWTH',
-  dates: '30 OCTOBER – 02 NOVEMBER',
-  year: '2026',
-  cityLine1: 'FREIBURG IM BREISGAU',
-  cityLine2: 'GERMANY',
-  expectLabel: 'WHAT TO EXPECT',
+interface FestCopy {
+  kicker: string; headingLine1: string; headingLine2: string; subheading: string;
+  dates: string; year: string; cityLine1: string; cityLine2: string; expectLabel: string;
+  p1: { pre: string; accent: string; post: string };
+  p2: { pre: string; accent: string };
+}
+
+const COPY_I18N: Record<Lang, FestCopy> = {
+  en: {
+    kicker: 'ABOUT THE', headingLine1: 'FESTIVAL', headingLine2: 'THE EXPERIENCE',
+    subheading: '4 DAYS OF DANCE, CONNECTION & GROWTH',
+    dates: '30 OCTOBER – 02 NOVEMBER', year: '2026',
+    cityLine1: 'FREIBURG IM BREISGAU', cityLine2: 'GERMANY', expectLabel: 'WHAT TO EXPECT',
+    p1: { pre: 'Dance Affinity Festival is more than an event, ', accent: "it's a journey.", post: ' Dive into a world of rhythm, connection and unforgettable moments.' },
+    p2: { pre: 'Whether you come to learn, to dance, or to connect — ', accent: "you'll leave transformed." },
+  },
+  de: {
+    kicker: 'ÜBER DAS', headingLine1: 'FESTIVAL', headingLine2: 'DAS ERLEBNIS',
+    subheading: '4 TAGE TANZ, VERBINDUNG & WACHSTUM',
+    dates: '30. OKTOBER – 02. NOVEMBER', year: '2026',
+    cityLine1: 'FREIBURG IM BREISGAU', cityLine2: 'DEUTSCHLAND', expectLabel: 'WAS DICH ERWARTET',
+    p1: { pre: 'Dance Affinity Festival ist mehr als ein Event, ', accent: 'es ist eine Reise.', post: ' Tauche ein in eine Welt aus Rhythmus, Verbindung und unvergesslichen Momenten.' },
+    p2: { pre: 'Ob du kommst, um zu lernen, zu tanzen oder dich zu verbinden — ', accent: 'du gehst verwandelt.' },
+  },
+  fr: {
+    kicker: 'À PROPOS DU', headingLine1: 'FESTIVAL', headingLine2: 'L’EXPÉRIENCE',
+    subheading: '4 JOURS DE DANSE, DE CONNEXION & D’ÉVOLUTION',
+    dates: '30 OCTOBRE – 02 NOVEMBRE', year: '2026',
+    cityLine1: 'FRIBOURG-EN-BRISGAU', cityLine2: 'ALLEMAGNE', expectLabel: 'AU PROGRAMME',
+    p1: { pre: 'Le Dance Affinity Festival est bien plus qu’un événement, ', accent: 'c’est un voyage.', post: ' Plonge dans un monde de rythme, de connexion et de moments inoubliables.' },
+    p2: { pre: 'Que tu viennes pour apprendre, danser ou rencontrer — ', accent: 'tu repartiras transformé.' },
+  },
 };
 
 // ─── Swap these to use real photo assets ─────────────────────────────────────
@@ -20,44 +43,67 @@ const HERO_IMAGE = '/images/festival-hero.jpg';
 // Reuses the same logo asset as the navbar
 const LOGO = '/images/Copie de Asset 1-8.png';
 
-const EXPECT = [
-  {
-    title: '3 EPIC PARTIES',
-    text: 'Three unforgettable nights of music, energy and non-stop dancing until the early morning.',
-    image: '/images/expect-parties.jpg',
-  },
-  {
-    title: '2 SOCIALS',
-    text: 'Two afternoon socials to practice, connect and enjoy good vibes in a relaxed atmosphere.',
-    image: '/images/expect-socials.jpg',
-  },
-  {
-    title: '7 BOOTCAMPS',
-    text: 'Level up in intensive training by international teachers and take your dance to the next level.',
-    image: '/images/expect-bootcamps.jpg',
-  },
-  {
-    title: 'WORKSHOPS',
-    text: 'Pre-party workshops to get inspired, refine your skills and prepare for an amazing night.',
-    image: '/images/expect-workshops.jpg',
-  },
-  {
-    title: 'A UNIQUE COMMUNITY',
-    text: "More than a festival, it's a family. Share, grow and create memories that will last a lifetime.",
-    image: '/images/10.png',
-  },
+const EXPECT_IMAGES = [
+  '/images/expect-parties.jpg',
+  '/images/expect-socials.jpg',
+  '/images/expect-bootcamps.jpg',
+  '/images/expect-workshops.jpg',
+  '/images/10.png',
 ];
 
-const STATS = [
-  { icon: Users, primary: '400+ DANCERS', secondary: 'from around the world' },
-  { icon: Globe, primary: '20+ COUNTRIES', secondary: 'one global vibe' },
-  { icon: Sparkles, primary: 'ONE AFFINITY', secondary: 'endless connections' },
-  { icon: Star, primary: 'BE PART OF', secondary: 'something extraordinary' },
-];
+const EXPECT_I18N: Record<Lang, { title: string; text: string }[]> = {
+  en: [
+    { title: '3 EPIC PARTIES', text: 'Three unforgettable nights of music, energy and non-stop dancing until the early morning.' },
+    { title: '2 SOCIALS', text: 'Two afternoon socials to practice, connect and enjoy good vibes in a relaxed atmosphere.' },
+    { title: '7 BOOTCAMPS', text: 'Level up in intensive training by international teachers and take your dance to the next level.' },
+    { title: 'WORKSHOPS', text: 'Pre-party workshops to get inspired, refine your skills and prepare for an amazing night.' },
+    { title: 'A UNIQUE COMMUNITY', text: "More than a festival, it's a family. Share, grow and create memories that will last a lifetime." },
+  ],
+  de: [
+    { title: '3 EPISCHE PARTYS', text: 'Drei unvergessliche Nächte voller Musik, Energie und Tanzen bis in die frühen Morgenstunden.' },
+    { title: '2 SOCIALS', text: 'Zwei Nachmittags-Socials zum Üben, Verbinden und Genießen guter Vibes in entspannter Atmosphäre.' },
+    { title: '7 BOOTCAMPS', text: 'Steig auf in intensivem Training mit internationalen Lehrern und bring deinen Tanz auf das nächste Level.' },
+    { title: 'WORKSHOPS', text: 'Pre-Party-Workshops, um dich inspirieren zu lassen, deine Skills zu verfeinern und dich auf eine großartige Nacht vorzubereiten.' },
+    { title: 'EINE EINZIGARTIGE COMMUNITY', text: 'Mehr als ein Festival — eine Familie. Teile, wachse und schaffe Erinnerungen fürs Leben.' },
+  ],
+  fr: [
+    { title: '3 SOIRÉES ÉPIQUES', text: 'Trois nuits inoubliables de musique, d’énergie et de danse non-stop jusqu’au petit matin.' },
+    { title: '2 SOCIALS', text: 'Deux socials en après-midi pour pratiquer, échanger et profiter d’une bonne ambiance détendue.' },
+    { title: '7 BOOTCAMPS', text: 'Progresse lors d’entraînements intensifs avec des professeurs internationaux et passe au niveau supérieur.' },
+    { title: 'WORKSHOPS', text: 'Des workshops avant les soirées pour t’inspirer, affiner ta technique et te préparer à une nuit exceptionnelle.' },
+    { title: 'UNE COMMUNAUTÉ UNIQUE', text: 'Plus qu’un festival, une famille. Partage, grandis et crée des souvenirs pour la vie.' },
+  ],
+};
+
+const STAT_ICONS = [Users, Globe, Sparkles, Star];
+const STAT_I18N: Record<Lang, { primary: string; secondary: string }[]> = {
+  en: [
+    { primary: '400+ DANCERS', secondary: 'from around the world' },
+    { primary: '20+ COUNTRIES', secondary: 'one global vibe' },
+    { primary: 'ONE AFFINITY', secondary: 'endless connections' },
+    { primary: 'BE PART OF', secondary: 'something extraordinary' },
+  ],
+  de: [
+    { primary: '400+ TÄNZER', secondary: 'aus aller Welt' },
+    { primary: '20+ LÄNDER', secondary: 'ein globaler Vibe' },
+    { primary: 'EINE AFFINITY', secondary: 'grenzenlose Verbindungen' },
+    { primary: 'SEI TEIL VON', secondary: 'etwas Außergewöhnlichem' },
+  ],
+  fr: [
+    { primary: '400+ DANSEURS', secondary: 'venus du monde entier' },
+    { primary: '20+ PAYS', secondary: 'une même vibe' },
+    { primary: 'UNE AFFINITY', secondary: 'des connexions infinies' },
+    { primary: 'FAIS PARTIE DE', secondary: 'quelque chose d’extraordinaire' },
+  ],
+};
 
 const BODY_FONT = "'DM Sans', sans-serif";
 
 export default function FestivalExperienceSection() {
+  const COPY = useCopy(COPY_I18N);
+  const EXPECT = useCopy(EXPECT_I18N).map((e, i) => ({ ...e, image: EXPECT_IMAGES[i] }));
+  const STATS = useCopy(STAT_I18N).map((s, i) => ({ ...s, icon: STAT_ICONS[i] }));
+
   const sectionRef = useRef<HTMLElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
@@ -193,9 +239,8 @@ export default function FestivalExperienceSection() {
                   lineHeight: 1.75,
                 }}
               >
-                Dance Affinity Festival is more than an event,{' '}
-                <span className="text-[#00e5cc]">it's a journey.</span> Dive into a world of rhythm,
-                connection and unforgettable moments.
+                {COPY.p1.pre}
+                <span className="text-[#00e5cc]">{COPY.p1.accent}</span>{COPY.p1.post}
               </p>
 
               <span aria-hidden="true" className="block mt-6 mb-6 h-px w-40 bg-white/15" />
@@ -209,8 +254,8 @@ export default function FestivalExperienceSection() {
                   lineHeight: 1.75,
                 }}
               >
-                Whether you come to learn, to dance, or to connect —{' '}
-                <span className="text-[#00e5cc]">you'll leave transformed.</span>
+                {COPY.p2.pre}
+                <span className="text-[#00e5cc]">{COPY.p2.accent}</span>
               </p>
             </div>
 

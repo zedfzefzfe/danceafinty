@@ -1,18 +1,45 @@
 import { useEffect, useRef, useState } from 'react';
 import { revealOnView } from '../lib/reveal';
 import { ArrowRight, Volume2, VolumeX } from 'lucide-react';
+import { useCopy, type Lang } from '../i18n/LanguageContext';
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
-const COPY = {
-  badgeLabel: 'IN THE MOMENT',
-  headingLine1: "FEEL WHAT IT'S",
-  headingLine2: 'LIKE TO BE THERE',
-  paragraph1:
-    "This isn't just footage — it's four days of connection, sweat and joy compressed into a couple of minutes. The energy of the dancefloor, the community between sessions, the moment you stop thinking and just move.",
-  paragraph2:
-    "Watch it once and you'll understand why people fly across the world to be here every year.",
-  ctaText: 'GET YOUR PASS',
-  ctaTarget: '#passes',
+const CTA_TARGET = '#passes';
+
+const COPY_I18N: Record<Lang, {
+  badgeLabel: string; headingLine1: string; headingLine2: string;
+  paragraph1: string; paragraph2: string; ctaText: string;
+}> = {
+  en: {
+    badgeLabel: 'IN THE MOMENT',
+    headingLine1: "FEEL WHAT IT'S",
+    headingLine2: 'LIKE TO BE THERE',
+    paragraph1:
+      "This isn't just footage — it's four days of connection, sweat and joy compressed into a couple of minutes. The energy of the dancefloor, the community between sessions, the moment you stop thinking and just move.",
+    paragraph2:
+      "Watch it once and you'll understand why people fly across the world to be here every year.",
+    ctaText: 'GET YOUR PASS',
+  },
+  de: {
+    badgeLabel: 'IM MOMENT',
+    headingLine1: 'SPÜRE, WIE ES IST,',
+    headingLine2: 'DABEI ZU SEIN',
+    paragraph1:
+      'Das ist nicht nur ein Video — es sind vier Tage voller Verbindung, Schweiß und Freude, komprimiert auf wenige Minuten. Die Energie auf der Tanzfläche, die Gemeinschaft zwischen den Sessions, der Moment, in dem du aufhörst zu denken und dich einfach bewegst.',
+    paragraph2:
+      'Sieh es dir einmal an und du verstehst, warum Menschen jedes Jahr um die halbe Welt reisen, um dabei zu sein.',
+    ctaText: 'TICKETS SICHERN',
+  },
+  fr: {
+    badgeLabel: 'DANS L’INSTANT',
+    headingLine1: 'RESSENS CE QUE C’EST',
+    headingLine2: 'D’Y ÊTRE',
+    paragraph1:
+      "Ce ne sont pas de simples images — ce sont quatre jours de connexion, de sueur et de joie condensés en quelques minutes. L'énergie de la piste, la communauté entre les sessions, l'instant où tu arrêtes de penser pour simplement danser.",
+    paragraph2:
+      "Regarde-la une fois et tu comprendras pourquoi des gens traversent le monde pour être là chaque année.",
+    ctaText: 'RÉSERVE TA PLACE',
+  },
 };
 
 // Re-encoded to H.264/AAC — the original export was HEVC, which Chrome (and
@@ -28,6 +55,7 @@ export default function InTheMomentSection() {
   const textColRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(false);
+  const COPY = useCopy(COPY_I18N);
 
   // Entrance animations
   useEffect(() => {
@@ -204,7 +232,7 @@ export default function InTheMomentSection() {
 
             <button
               type="button"
-              onClick={() => scrollToSection(COPY.ctaTarget)}
+              onClick={() => scrollToSection(CTA_TARGET)}
               className="btn-primary mt-9 inline-flex items-center justify-center gap-2"
             >
               {COPY.ctaText}

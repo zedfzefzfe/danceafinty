@@ -1,19 +1,50 @@
 import { useEffect, useRef } from 'react';
 import { revealOnView } from '../lib/reveal';
 import { Check, ShieldCheck, Zap, Ticket } from 'lucide-react';
+import { useCopy, type Lang } from '../i18n/LanguageContext';
 
 const BODY_FONT = "'DM Sans', sans-serif";
 
-const INCLUDED = [
-  'Full 4-day festival access',
-  '3 epic night parties',
-  '2 afternoon socials',
-  '7 intensive bootcamps',
-  'Pre-party workshops',
-  'Social dancing day & night',
-];
+const COPY_I18N: Record<Lang, {
+  kicker: string; headPre: string; headAccent: string; subtitle: string;
+  included: string[]; trustSecure: string; trustTicket: string;
+  ticketHeader: string; footnote: string; imageAlt: string;
+}> = {
+  en: {
+    kicker: 'GET YOUR PASS',
+    headPre: 'SECURE YOUR ', headAccent: 'SPOT',
+    subtitle: 'Limited passes available. Join 400+ dancers from 20+ countries for four unforgettable days in Freiburg.',
+    included: ['Full 4-day festival access', '3 epic night parties', '2 afternoon socials', '7 intensive bootcamps', 'Pre-party workshops', 'Social dancing day & night'],
+    trustSecure: 'Secure checkout', trustTicket: 'Instant e-ticket',
+    ticketHeader: 'Official Tickets',
+    footnote: 'Secure payment · Instant confirmation by email',
+    imageAlt: 'The Dance Affinity Festival community together at MAK Studios',
+  },
+  de: {
+    kicker: 'DEINE TICKETS',
+    headPre: 'SICHERE DIR DEINEN ', headAccent: 'PLATZ',
+    subtitle: 'Begrenzte Tickets verfügbar. Sei dabei mit 400+ Tänzern aus 20+ Ländern — vier unvergessliche Tage in Freiburg.',
+    included: ['Voller Festivalzugang (4 Tage)', '3 epische Nacht-Partys', '2 Nachmittags-Socials', '7 intensive Bootcamps', 'Pre-Party-Workshops', 'Social Dancing Tag & Nacht'],
+    trustSecure: 'Sicherer Checkout', trustTicket: 'Sofort-Ticket',
+    ticketHeader: 'Offizielle Tickets',
+    footnote: 'Sichere Zahlung · Sofortige Bestätigung per E-Mail',
+    imageAlt: 'Die Dance Affinity Festival Community gemeinsam im MAK Studios',
+  },
+  fr: {
+    kicker: 'TES BILLETS',
+    headPre: 'RÉSERVE TA ', headAccent: 'PLACE',
+    subtitle: 'Places limitées. Rejoins plus de 400 danseurs venus de 20+ pays pour quatre jours inoubliables à Fribourg.',
+    included: ['Accès complet (4 jours)', '3 soirées épiques', '2 socials en après-midi', '7 bootcamps intensifs', 'Workshops avant-soirée', 'Social dancing jour & nuit'],
+    trustSecure: 'Paiement sécurisé', trustTicket: 'E-billet immédiat',
+    ticketHeader: 'Billets officiels',
+    footnote: 'Paiement sécurisé · Confirmation immédiate par e-mail',
+    imageAlt: 'La communauté du Dance Affinity Festival réunie au MAK Studios',
+  },
+};
 
 export default function WeezeventSection() {
+  const COPY = useCopy(COPY_I18N);
+  const INCLUDED = COPY.included;
   const sectionRef = useRef<HTMLElement>(null);
   const leftRef  = useRef<HTMLDivElement>(null);
   const cardRef  = useRef<HTMLDivElement>(null);
@@ -82,7 +113,7 @@ export default function WeezeventSection() {
             <div className="flex items-center justify-center lg:justify-start gap-4 mb-5">
               <span aria-hidden="true" className="h-px w-10 md:w-16" style={{ background: 'rgba(0,229,204,0.45)' }} />
               <span className="font-mono text-[10px] md:text-[11px] tracking-[0.25em] uppercase text-[#00e5cc]">
-                GET YOUR PASS
+                {COPY.kicker}
               </span>
             </div>
 
@@ -91,7 +122,7 @@ export default function WeezeventSection() {
               className="font-display uppercase text-white leading-[0.95]"
               style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', letterSpacing: '0.03em' }}
             >
-              SECURE YOUR <span style={{ color: '#00e5cc' }}>SPOT</span>
+              {COPY.headPre}<span style={{ color: '#00e5cc' }}>{COPY.headAccent}</span>
             </h2>
 
             {/* Sub */}
@@ -99,7 +130,7 @@ export default function WeezeventSection() {
               className="mt-5 mx-auto lg:mx-0 max-w-[440px]"
               style={{ fontFamily: BODY_FONT, fontSize: '15px', color: 'rgba(255,255,255,0.55)', lineHeight: 1.8 }}
             >
-              Limited passes available. Join 400+ dancers from 20+ countries for four unforgettable days in Freiburg.
+              {COPY.subtitle}
             </p>
 
             {/* What's included */}
@@ -124,11 +155,11 @@ export default function WeezeventSection() {
             <div className="mt-8 flex items-center justify-center lg:justify-start gap-6">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-[#00e5cc]" strokeWidth={1.8} aria-hidden="true" />
-                <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-white/45">Secure checkout</span>
+                <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-white/45">{COPY.trustSecure}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Zap className="h-4 w-4 text-[#00e5cc]" strokeWidth={1.8} aria-hidden="true" />
-                <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-white/45">Instant e-ticket</span>
+                <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-white/45">{COPY.trustTicket}</span>
               </div>
             </div>
 
@@ -136,7 +167,7 @@ export default function WeezeventSection() {
             <div className="mt-9 overflow-hidden rounded-xl border border-white/10">
               <img
                 src="/images/why dance affinity.png"
-                alt="The Dance Affinity Festival community together at MAK Studios"
+                alt={COPY.imageAlt}
                 className="w-full h-auto block"
                 loading="lazy"
               />
@@ -162,7 +193,7 @@ export default function WeezeventSection() {
                   <div className="flex items-center gap-2.5">
                     <Ticket className="h-4 w-4 text-[#00e5cc]" strokeWidth={1.8} aria-hidden="true" />
                     <span className="font-display uppercase text-white text-[13px] tracking-[0.1em]">
-                      Official Tickets
+                      {COPY.ticketHeader}
                     </span>
                   </div>
                   <span className="font-mono text-[9px] tracking-[0.18em] uppercase text-white/35">
@@ -199,7 +230,7 @@ export default function WeezeventSection() {
               className="mt-4 text-center"
               style={{ fontFamily: BODY_FONT, fontSize: '11px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.05em' }}
             >
-              Secure payment · Instant confirmation by email
+              {COPY.footnote}
             </p>
           </div>
 

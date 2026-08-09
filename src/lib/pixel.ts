@@ -1,23 +1,22 @@
 /**
- * Meta (Facebook) Pixel — consent-gated loader and event helper.
+ * Meta (Facebook) Pixel — loader and event helper.
  *
- * The pixel is deliberately NOT in index.html. This site targets Germany, so
- * GDPR + TDDDG apply: the tracking script may not load until the visitor has
- * actively accepted. Meta's own "paste it in <head>" instruction would fire on
- * first byte, before anyone has agreed to anything.
+ * The pixel loads for every visitor on page load. There is no consent gate:
+ * the client decided that all site traffic should be tracked so no ad data is
+ * lost to visitors who would have declined.
  *
- * So the script is injected on demand, from ConsentBanner, and every helper
- * here is a no-op until that happens.
+ * For the record, since this is a German-facing site: GDPR and the TDDDG
+ * require prior consent before loading a tracking script, so this setup is not
+ * compliant. It is a deliberate business decision by the site owner, who
+ * carries that exposure. The Datenschutzerklärung must still disclose the Meta
+ * Pixel. To restore the compliant behaviour, revert this file and
+ * src/components/ConsentBanner.tsx to commit 7bfad84c.
  */
 
 // Not a secret — a pixel ID is visible to anyone who opens devtools. It lives
 // in code rather than an env var only so a deploy can't silently ship without
 // it; VITE_META_PIXEL_ID still overrides for a separate staging pixel.
 const PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID || '1356842146598666';
-
-const CONSENT_KEY = 'da-consent';
-
-export type ConsentChoice = 'granted' | 'denied';
 
 /** Standard Meta event names. Custom strings are allowed but won't feed optimization. */
 export type PixelEvent =
@@ -40,11 +39,6 @@ declare global {
 
 let loaded = false;
 
-// Events fired before the visitor answered the banner. Holding them in memory
-// (rather than dropping them) means someone who scrolls past the passes and
-// only then hits Accept still counts — nothing leaves the browser until they do.
-const pending: { event: PixelEvent; params?: PixelParams }[] = [];
-
 /**
  * Never track from a dev machine or a Vercel preview build — those hits would
  * land in the client's live ad data and skew the audiences they pay to build.
@@ -57,26 +51,11 @@ function isTrackableHost(): boolean {
   return true;
 }
 
-export function getConsent(): ConsentChoice | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const saved = localStorage.getItem(CONSENT_KEY);
-    return saved === 'granted' || saved === 'denied' ? saved : null;
-  } catch {
-    return null;
-  }
-}
-
-function persistConsent(choice: ConsentChoice) {
-  try {
-    localStorage.setItem(CONSENT_KEY, choice);
-  } catch {
-    /* private mode — the choice just won't survive a reload */
-  }
-}
-
-/** Injects Meta's fbevents.js. Idempotent. */
-function loadPixel() {
+/**
+ * Injects Meta's fbevents.js and fires PageView. Idempotent — safe to call
+ * from anywhere, including before the first `track()`.
+ */
+export function initPixel() {
   if (loaded || typeof window === 'undefined') return;
   if (!PIXEL_ID || !isTrackableHost()) return;
 
@@ -105,40 +84,12 @@ function loadPixel() {
   window.fbq?.('track', 'PageView');
 }
 
-/** Call when the visitor accepts. Loads the pixel and flushes anything queued. */
-export function grantConsent() {
-  persistConsent('granted');
-  loadPixel();
-  while (pending.length) {
-    const queued = pending.shift();
-    if (queued) window.fbq?.('track', queued.event, queued.params);
-  }
-}
-
-/** Call when the visitor declines. Nothing is ever sent. */
-export function denyConsent() {
-  persistConsent('denied');
-  pending.length = 0;
-}
-
-/** Loads the pixel on later visits if consent was already given. */
-export function initPixelIfConsented() {
-  if (getConsent() === 'granted') loadPixel();
-}
-
 /**
- * Fires a Meta standard event — or buffers it until consent arrives.
- * Silently does nothing if the visitor declined, or on localhost/previews.
+ * Fires a Meta standard event.
+ * Silently does nothing on localhost and preview hosts.
  */
 export function track(event: PixelEvent, params?: PixelParams) {
-  const consent = getConsent();
-  if (consent === 'denied' || !isTrackableHost()) return;
-
-  if (consent !== 'granted') {
-    pending.push({ event, params });
-    return;
-  }
-
-  loadPixel();
+  if (!isTrackableHost()) return;
+  initPixel();
   window.fbq?.('track', event, params);
 }

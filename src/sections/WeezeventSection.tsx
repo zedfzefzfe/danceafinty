@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { revealOnView } from '../lib/reveal';
 import { Check, ShieldCheck, Zap, Ticket } from 'lucide-react';
 import { useCopy, type Lang } from '../i18n/LanguageContext';
+import { useTrackInView } from '../hooks/use-track-in-view';
 
 const BODY_FONT = "'DM Sans', sans-serif";
 
@@ -48,6 +49,15 @@ export default function WeezeventSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const leftRef  = useRef<HTMLDivElement>(null);
   const cardRef  = useRef<HTMLDivElement>(null);
+
+  // Meta Pixel funnel: saw the passes → reached the ticket widget.
+  const viewContentRef = useTrackInView<HTMLDivElement>('ViewContent', {
+    content_name: 'Festival Passes',
+    content_category: 'passes',
+  });
+  const checkoutRef = useTrackInView<HTMLDivElement>('InitiateCheckout', {
+    content_name: 'Weezevent Ticket Widget',
+  }, 0.3);
 
   useEffect(() => {
     const cleanups = [
@@ -105,7 +115,7 @@ export default function WeezeventSection() {
       <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 py-20 md:py-28">
         {/* items-start (not center) so the left column never re-centers when the
             widget iframe grows/shrinks as the buyer moves through the steps */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.05fr] gap-12 lg:gap-16 items-start">
+        <div ref={viewContentRef} className="grid grid-cols-1 lg:grid-cols-[1fr_1.05fr] gap-12 lg:gap-16 items-start">
 
           {/* ── LEFT: pitch ── */}
           <div ref={leftRef} className="text-center lg:text-left">
@@ -202,7 +212,10 @@ export default function WeezeventSection() {
                 </div>
 
                 {/* White widget body */}
-                <div className="bg-white p-2 sm:p-3">
+                {/* Reaching the widget is the last thing we can see before the
+                    buyer crosses into Weezevent's iframe — Purchase is fired
+                    from their side, keyed to the same Pixel ID. */}
+                <div ref={checkoutRef} className="bg-white p-2 sm:p-3">
                   <a
                     title="Logiciel billetterie en ligne"
                     href="https://weezevent.com/?c=sys_widget"

@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Send, Mail, Instagram, Facebook } from 'lucide-react';
 import { useCopy } from '../i18n/LanguageContext';
 import { newsletterCopy } from '../i18n/copy';
+import { track } from '../lib/pixel';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -76,6 +77,7 @@ export default function Newsletter() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
+      track('Lead', { content_name: 'Newsletter Signup' });
       setSubmitted(true);
       setEmail('');
     }
@@ -141,6 +143,7 @@ export default function Newsletter() {
                 <p className="text-xs text-white/50 mb-1">{t.emailLabel}</p>
                 <a
                   href="mailto:contact.danceaffinity@gmail.com"
+                  onClick={() => track('Contact', { content_name: 'Email Link' })}
                   className="text-xs sm:text-sm text-white hover:text-[#00e5cc] transition-colors break-all"
                 >
                   contact.danceaffinity@gmail.com

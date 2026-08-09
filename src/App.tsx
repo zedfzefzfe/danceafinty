@@ -13,6 +13,7 @@ import WeezeventSection from './sections/WeezeventSection';
 import Newsletter from './sections/Newsletter';
 import FinalCTASection from './components/FinalCTASection';
 import Footer from './sections/Footer';
+import ConsentBanner from './components/ConsentBanner';
 
 function App() {
   // Keeps every section's scroll trigger measured against the real layout
@@ -36,6 +37,7 @@ function App() {
 
       </main>
       <Footer />
+      <ConsentBanner />
     </div>
   );
 }

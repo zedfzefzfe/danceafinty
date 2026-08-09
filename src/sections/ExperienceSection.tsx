@@ -67,7 +67,7 @@ const GALLERY_CATEGORIES = [
     line1: 'SOCIAL',
     line2: 'DANCING',
     images: [
-      '/images/19 (1).png',
+      '/images/exp-cat-19.jpg',
       '/images/exp-social-1.jpg',
       '/images/exp-social-2.jpg',
       '/images/exp-social-3.jpg',
@@ -82,7 +82,7 @@ const GALLERY_CATEGORIES = [
     line1: 'REAL',
     line2: 'CONNECTIONS',
     images: [
-      '/images/18 (1).png',
+      '/images/exp-cat-18.jpg',
       '/images/exp-connection-1.jpg',
       '/images/exp-connection-2.jpg',
       '/images/exp-connection-3.jpg',
@@ -94,7 +94,7 @@ const GALLERY_CATEGORIES = [
     line1: 'EPIC',
     line2: 'PARTIES',
     images: [
-      '/images/16 (1).png',
+      '/images/exp-cat-16.jpg',
       '/images/exp-parties-1.jpg',
       '/images/exp-parties-2.jpg',
       '/images/exp-parties-3.jpg',
@@ -107,7 +107,7 @@ const GALLERY_CATEGORIES = [
     line1: 'INSPIRING',
     line2: 'WORKSHOPS',
     images: [
-      '/images/20 (1).png',
+      '/images/exp-cat-20.jpg',
       '/images/exp-workshop-1.jpg',
       '/images/exp-workshop-2.jpg',
       '/images/exp-workshop-3.jpg',
@@ -120,7 +120,7 @@ const GALLERY_CATEGORIES = [
     line1: 'LIFELONG',
     line2: 'FRIENDSHIPS',
     images: [
-      '/images/8 (1).png',
+      '/images/exp-cat-8.jpg',
       '/images/exp-friendship-1.jpg',
       '/images/exp-friendship-2.jpg',
       '/images/exp-friendship-3.jpg',
@@ -235,6 +235,10 @@ function GalleryCard({
   const { lang } = useLang();
   const { line1, line2 } = tGalleryLabel(lang, item.line1, item.line2);
   const isPrimary = copy === 0;
+  // The track parks itself on the middle copy, so those are the cards actually
+  // on screen when the row first shows — fetch them up front instead of waiting
+  // for the lazy-load observer to catch up.
+  const isFirstVisible = copy === 1 && index < 4;
   // A swipe that starts on a card must scroll the row, not open the lightbox
   const touch = useRef({ x: 0, y: 0, moved: false });
 
@@ -273,7 +277,8 @@ function GalleryCard({
       <img
         src={src}
         alt={`${line1} ${line2}`.toLowerCase()}
-        loading="lazy"
+        loading={isFirstVisible ? 'eager' : 'lazy'}
+        fetchPriority={isFirstVisible ? 'high' : 'auto'}
         decoding="async"
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         onError={(e) => {
@@ -507,7 +512,10 @@ export default function ExperienceSection() {
         trigger: trackRef.current,
         targets: trackRef.current?.children,
         from: { opacity: 0, y: 40 },
-        to: { opacity: 1, y: 0, duration: 0.8, stagger: 0.09, ease: 'power3.out' },
+        // `amount` spreads the whole stagger over a fixed window. A per-card
+        // `each` would scale with the three rendered copies (~84 cards), leaving
+        // the cards that are actually on screen waiting seconds to fade in.
+        to: { opacity: 1, y: 0, duration: 0.6, stagger: { amount: 0.5 }, ease: 'power3.out' },
       }),
       ...[testimonialsRef, statsRef, expectRef].map((ref) =>
         revealOnView({

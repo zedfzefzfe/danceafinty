@@ -28,7 +28,7 @@ const COPY_I18N: Record<Lang, {
     intro: 'Dance Affinity Festival takes place in the vibrant heart of Freiburg im Breisgau. Centrally located. Perfectly connected. Easy to reach from anywhere.',
     venueLabel: 'OUR VENUE',
     venueName: 'MAK STUDIOS',
-    venueAddress: 'Schnewlinstraße 1, 79098 Freiburg im Breisgau, Germany',
+    venueAddress: 'Kaiser-Joseph-Straße 268, 79098 Freiburg im Breisgau, Germany',
     venueBlurb: 'Modern studio in the city center with the perfect atmosphere to dance, connect and enjoy.',
     walkingBanner: 'You are already in the heart of the festival. Everything is within walking distance!',
     closing: 'All you need is here. Just arrive and let the magic happen.',
@@ -39,7 +39,7 @@ const COPY_I18N: Record<Lang, {
     intro: 'Das Dance Affinity Festival findet im lebendigen Herzen von Freiburg im Breisgau statt. Zentral gelegen. Perfekt angebunden. Von überall leicht zu erreichen.',
     venueLabel: 'UNSERE LOCATION',
     venueName: 'MAK STUDIOS',
-    venueAddress: 'Schnewlinstraße 1, 79098 Freiburg im Breisgau, Deutschland',
+    venueAddress: 'Kaiser-Joseph-Straße 268, 79098 Freiburg im Breisgau, Deutschland',
     venueBlurb: 'Modernes Studio im Stadtzentrum mit der perfekten Atmosphäre zum Tanzen, Verbinden und Genießen.',
     walkingBanner: 'Du bist bereits mitten im Festival. Alles ist bequem zu Fuß erreichbar!',
     closing: 'Alles, was du brauchst, ist hier. Komm einfach vorbei und lass die Magie geschehen.',
@@ -50,7 +50,7 @@ const COPY_I18N: Record<Lang, {
     intro: 'Le Dance Affinity Festival se déroule au cœur vibrant de Fribourg-en-Brisgau. Idéalement situé. Parfaitement connecté. Facile d’accès depuis partout.',
     venueLabel: 'NOTRE LIEU',
     venueName: 'MAK STUDIOS',
-    venueAddress: 'Schnewlinstraße 1, 79098 Freiburg im Breisgau, Allemagne',
+    venueAddress: 'Kaiser-Joseph-Straße 268, 79098 Freiburg im Breisgau, Allemagne',
     venueBlurb: 'Un studio moderne en centre-ville, avec l’atmosphère parfaite pour danser, échanger et profiter.',
     walkingBanner: 'Vous êtes déjà au cœur du festival. Tout est accessible à pied !',
     closing: 'Tout ce qu’il vous faut est ici. Venez simplement et laissez la magie opérer.',
@@ -316,7 +316,7 @@ export default function PracticalInfoSection() {
             <div className="relative h-[380px] md:h-[440px]">
               <iframe
                 title="MAK Studios location"
-                src="https://www.google.com/maps?q=MAK+Studios+Schnewlinstraße+1+79098+Freiburg+im+Breisgau&output=embed&z=16"
+                src="https://www.google.com/maps?q=MAK+Studios+Kaiser-Joseph-Straße+268+79098+Freiburg+im+Breisgau&output=embed&z=16"
                 className="absolute inset-0 w-full h-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"

@@ -17,6 +17,8 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  Play,
+  Pause,
 } from 'lucide-react';
 
 
@@ -142,11 +144,19 @@ const GALLERY = (() => {
   return out;
 })();
 
-const TESTIMONIAL_META = [
-  { name: 'SARAH',   country: 'FRANCE',      avatar: '/images/avatar-1.jpg' },
-  { name: 'MARCO',   country: 'ITALY',       avatar: '/images/avatar-2.jpg' },
-  { name: 'JESSICA', country: 'NETHERLANDS', avatar: '/images/avatar-3.jpg' },
+const TESTIMONIAL_META: {
+  name: string; country: string; avatar: string; avatarPos: string; audio?: string;
+}[] = [
+  { name: 'KAHINA', country: 'FRANCE',  avatar: '/images/avatar-1.jpg', avatarPos: '50% 22%' },
+  { name: 'MIZOU',  country: 'MOROCCO', avatar: '/images/avatar-2.jpg', avatarPos: '50% 28%' },
+  { name: 'NICO',   country: 'GERMANY', avatar: '/images/avatar-3.jpg', avatarPos: '50% 12%', audio: '/audio/nico-testimonial.m4a' },
 ];
+
+const TESTIMONIAL_AUDIO_LABEL: Record<Lang, string> = {
+  en: 'PLAY VOICE NOTE',
+  de: 'SPRACHNACHRICHT',
+  fr: 'ÉCOUTER LE MESSAGE',
+};
 
 const TESTIMONIAL_QUOTES: Record<Lang, string[]> = {
   en: [
@@ -218,6 +228,61 @@ function tGalleryLabel(lang: Lang, line1: string, line2: string) {
 const BODY_FONT = "'DM Sans', sans-serif";
 
 type GalleryItem = (typeof GALLERY)[number];
+
+// ─── Audio testimonial — compact custom player, matches the dark UI ──────────
+function AudioTestimonial({ src, label }: { src: string; label: string }) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const toggle = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (a.paused) void a.play();
+    else a.pause();
+  };
+
+  return (
+    <div className="mt-2.5">
+      <audio
+        ref={audioRef}
+        src={src}
+        preload="none"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onEnded={() => { setPlaying(false); setProgress(0); }}
+        onTimeUpdate={(e) => {
+          const a = e.currentTarget;
+          setProgress(a.duration ? (a.currentTime / a.duration) * 100 : 0);
+        }}
+      />
+      <button
+        type="button"
+        onClick={toggle}
+        aria-label={label}
+        aria-pressed={playing}
+        className="group inline-flex items-center gap-2.5 rounded-full border border-[#00e5cc]/35 bg-[#00e5cc]/[0.07] py-1.5 pl-1.5 pr-3.5 transition-colors hover:bg-[#00e5cc]/[0.14]"
+      >
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#00e5cc] text-[#0a1020]">
+          {playing
+            ? <Pause className="h-3 w-3" fill="currentColor" strokeWidth={0} aria-hidden="true" />
+            : <Play className="h-3 w-3 translate-x-[1px]" fill="currentColor" strokeWidth={0} aria-hidden="true" />}
+        </span>
+        <span className="font-mono text-[9px] tracking-[0.18em] uppercase text-white/70">
+          {label}
+        </span>
+      </button>
+      {(playing || progress > 0) && (
+        <div className="mt-1.5 h-[3px] w-full max-w-[190px] overflow-hidden rounded-full bg-white/10">
+          <div
+            className="h-full rounded-full bg-[#00e5cc] transition-[width] duration-150 ease-linear"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ─── Gallery card — design unchanged, now clickable ──────────────────────────
 function GalleryCard({
@@ -709,20 +774,24 @@ export default function ExperienceSection() {
                 >
                   {t.quote}
                 </p>
-                <div className="mt-4 flex items-center gap-3">
+                <div className="mt-5 flex items-center gap-3.5">
                   <img
                     src={t.avatar}
-                    alt=""
-                    className="w-9 h-9 rounded-full object-cover ring-1 ring-white/15 bg-white/5"
+                    alt={t.name}
+                    className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full object-cover ring-2 ring-[#00e5cc]/25 bg-white/5"
+                    style={{ objectPosition: t.avatarPos }}
                     onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }}
                   />
-                  <div>
-                    <p className="font-display text-[13px] tracking-[0.1em] uppercase text-[#00e5cc] leading-tight">
+                  <div className="min-w-0">
+                    <p className="font-display text-[15px] md:text-[16px] tracking-[0.1em] uppercase text-[#00e5cc] leading-tight">
                       {t.name}
                     </p>
-                    <p className="font-mono text-[9px] tracking-[0.15em] uppercase text-white/40 mt-0.5">
+                    <p className="font-mono text-[10px] md:text-[11px] tracking-[0.15em] uppercase text-white/40 mt-1">
                       {t.country}
                     </p>
+                    {t.audio && (
+                      <AudioTestimonial src={t.audio} label={TESTIMONIAL_AUDIO_LABEL[lang]} />
+                    )}
                   </div>
                 </div>
               </div>

@@ -8,6 +8,7 @@ import ArtistsMarquee from './components/ArtistsMarquee';
 import PremiumBootcampsSection from './sections/PremiumBootcampsSection';
 import InTheMomentSection from './sections/InTheMomentSection';
 import FestivalExperienceSection from './sections/FestivalExperienceSection';
+import ProgramSection from './sections/ProgramSection';
 import PracticalInfoSection from './sections/PracticalInfoSection';
 import WeezeventSection from './sections/WeezeventSection';
 import Newsletter from './sections/Newsletter';
@@ -29,6 +30,7 @@ function App() {
         <ArtistsMarquee />
         <PremiumBootcampsSection />
         <FestivalExperienceSection />
+        <ProgramSection />
         <WeezeventSection />
         <PracticalInfoSection />
         <FinalCTASection imageSrc="/images/60.png" />

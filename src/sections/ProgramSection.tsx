@@ -5,24 +5,21 @@ import { useCopy, type Lang } from '../i18n/LanguageContext';
 
 // ─── Edit these constants to update copy ─────────────────────────────────────
 interface ProgramCopy {
-  kicker: string; heading: string; subheading: string; tag: string;
+  kicker: string; heading: string; subheading: string;
 }
 
 const COPY_I18N: Record<Lang, ProgramCopy> = {
   en: {
     kicker: 'THE PROGRAM', heading: 'THE EVENT PROGRAM',
     subheading: 'Every workshop, party and social — laid out so you never miss a beat.',
-    tag: 'DAY',
   },
   de: {
     kicker: 'DAS PROGRAMM', heading: 'DAS EVENT-PROGRAMM',
     subheading: 'Jeder Workshop, jede Party, jeder Social — übersichtlich, damit du nichts verpasst.',
-    tag: 'TAG',
   },
   fr: {
     kicker: 'LE PROGRAMME', heading: 'PROGRAMME DE L’ÉVÉNEMENT',
     subheading: 'Chaque atelier, soirée et social — organisé pour ne rien manquer.',
-    tag: 'JOUR',
   },
 };
 
@@ -165,14 +162,6 @@ export default function ProgramSection() {
                 }}
               />
             ))}
-
-            {/* Day tag, top-left */}
-            <span
-              className="absolute top-4 left-4 font-mono text-[10px] tracking-[0.25em] uppercase px-3 py-1.5 rounded-full"
-              style={{ background: 'rgba(0,229,204,0.14)', border: '1px solid rgba(0,229,204,0.35)', color: '#00e5cc' }}
-            >
-              {COPY.tag} · 0{active + 1}
-            </span>
           </button>
 
           {/* Thumbnail rail */}

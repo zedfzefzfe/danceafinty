@@ -36,7 +36,6 @@ export const navigationConfig: NavigationConfig = {
   menuLinks: [
     { label: "Home", href: "#hero" },
     { label: "Artists", href: "#artists" },
-    { label: "Schedule", href: "#location" },
     { label: "Bootcamps", href: "#bootcamps" },
     { label: "Program", href: "#program" },
     { label: "Passes", href: "#passes" },

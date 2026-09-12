@@ -6,7 +6,6 @@ type Tri = Record<Lang, string>;
 export const navLabels: Record<string, Tri> = {
   Home:      { en: 'Home',      de: 'Start',      fr: 'Accueil' },
   Artists:   { en: 'Artists',   de: 'Künstler',   fr: 'Artistes' },
-  Schedule:  { en: 'Schedule',  de: 'Programm',   fr: 'Programme' },
   Bootcamps: { en: 'Bootcamps', de: 'Bootcamps',  fr: 'Bootcamps' },
   Program:   { en: 'Program',   de: 'Programm',   fr: 'Programme' },
   Passes:    { en: 'Passes',    de: 'Tickets',    fr: 'Billetterie' },

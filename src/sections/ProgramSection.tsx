@@ -100,6 +100,7 @@ export default function ProgramSection() {
 
   return (
     <section
+      id="program"
       ref={sectionRef}
       aria-label="Program"
       className="relative w-full overflow-hidden"

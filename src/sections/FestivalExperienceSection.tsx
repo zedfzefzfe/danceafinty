@@ -68,7 +68,7 @@ const EXPECT_I18N: Record<Lang, { title: string; text: string }[]> = {
   ],
   fr: [
     { title: '3 SOIRÉES ÉPIQUES', text: 'Trois nuits inoubliables de musique, d’énergie et de danse non-stop jusqu’au petit matin.' },
-    { title: '2 SOCIALS', text: 'Deux socials en après-midi pour pratiquer, échanger et profiter d’une bonne ambiance détendue.' },
+    { title: '2 SOCIALES', text: 'Deux socials en après-midi pour pratiquer, échanger et profiter d’une bonne ambiance.' },
     { title: '7 BOOTCAMPS', text: 'Progresse lors d’entraînements intensifs avec des professeurs internationaux et passe au niveau supérieur.' },
     { title: 'WORKSHOPS', text: 'Des workshops avant les soirées pour t’inspirer, affiner ta technique et te préparer à une nuit exceptionnelle.' },
     { title: 'UNE COMMUNAUTÉ UNIQUE', text: 'Plus qu’un festival, une famille. Partage, grandis et crée des souvenirs pour la vie.' },
@@ -93,7 +93,7 @@ const STAT_I18N: Record<Lang, { primary: string; secondary: string }[]> = {
     { primary: '400+ DANSEURS', secondary: 'venus du monde entier' },
     { primary: '20+ PAYS', secondary: 'une même vibe' },
     { primary: 'UNE AFFINITY', secondary: 'des connexions infinies' },
-    { primary: 'FAIS PARTIE DE', secondary: 'quelque chose d’extraordinaire' },
+    { primary: 'PARTICIPE À', secondary: 'quelque chose d’extraordinaire' },
   ],
 };
 

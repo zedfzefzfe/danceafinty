@@ -55,7 +55,7 @@ const COPY_I18N: Record<Lang, ExpCopy> = {
     headingAccent: 'DANCE AFFINITY',
     subtitle1: 'Quatre jours de connexion, d’apprentissage, de fête et de moments inoubliables.',
     expectLabel: 'AU PROGRAMME',
-    p2: { pre: "Ce n'est pas qu'une question de danse. C'est une question de ", w1: 'personnes', mid1: ", d'", w2: 'énergie', mid2: ' et de ', w3: 'souvenirs', post: " que l'on crée ensemble." },
+    p2: { pre: "Ce n'est pas seulement de la danse. C'est aussi des ", w1: 'personnes', mid1: ', une ', w2: 'énergie', mid2: ' et des ', w3: 'souvenirs', post: " que l'on crée ensemble." },
   },
 };
 
@@ -203,9 +203,9 @@ const EXPECT_I18N: Record<Lang, { line1: string; line2: string }[]> = {
     { line1: 'ÜBERRASCHUNGEN', line2: '& MEHR' },
   ],
   fr: [
-    { line1: 'HAUTE QUALITÉ', line2: 'BOOTCAMPS' },
-    { line1: 'SOCIAL DANCING', line2: 'JOUR & NUIT' },
-    { line1: 'DE CLASSE MONDIALE', line2: 'DJS' },
+    { line1: 'DES BOOTCAMPS', line2: 'DE QUALITÉ' },
+    { line1: 'DES SOCIALES', line2: 'ET DES SOIRÉES' },
+    { line1: 'DES DJS', line2: 'INTERNATIONAUX' },
     { line1: 'UN CADRE SÛR', line2: '& INCLUSIF' },
     { line1: 'PHOTOS & VIDÉOS', line2: 'PROFESSIONNELLES' },
     { line1: 'SURPRISES', line2: '& PLUS ENCORE' },

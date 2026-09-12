@@ -30,7 +30,7 @@ const COPY_I18N: Record<Lang, {
     headingLine1b: 'FESTIVAL.',
     headingLine2: 'UNE COMMUNAUTÉ.',
     intro:
-      "Dance Affinity, c'est bien plus que la danse. C'est un lieu où des personnes du monde entier se réunissent pour apprendre, partager, grandir et célébrer. Une ambiance chaleureuse, des bootcamps de qualité, des soirées inoubliables et une famille que tu n'oublieras jamais.",
+      "Dance Affinity, c'est bien plus que la danse. C'est un lieu où des personnes du monde entier se réunissent pour apprendre, partager, grandir et s'amuser. Une ambiance chaleureuse, des bootcamps de qualité, des soirées inoubliables et une famille que tu n'oublieras jamais.",
   },
 };
 

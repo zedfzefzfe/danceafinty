@@ -35,10 +35,10 @@ const COPY_I18N: Record<Lang, {
     headingLine1: 'RESSENS CE QUE C’EST',
     headingLine2: 'D’Y ÊTRE',
     paragraph1:
-      "Ce ne sont pas de simples images — ce sont quatre jours de connexion, de sueur et de joie condensés en quelques minutes. L'énergie de la piste, la communauté entre les sessions, l'instant où tu arrêtes de penser pour simplement danser.",
+      "Ce ne sont pas de simples images — ce sont quatre jours de connexion, d'émotion et de joie condensés en quelques minutes. L'énergie de la piste, la communauté, l'instant où tu arrêtes de penser pour simplement danser.",
     paragraph2:
       "Regarde-la une fois et tu comprendras pourquoi des gens traversent le monde pour être là chaque année.",
-    ctaText: 'RÉSERVE TA PLACE',
+    ctaText: 'PRENDS TON PASS',
   },
 };
 

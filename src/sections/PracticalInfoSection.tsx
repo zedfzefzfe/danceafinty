@@ -119,7 +119,7 @@ const STATS_I18N: Record<Lang, { primary: string; secondary: string }[]> = {
     { primary: 'WORKSHOPS', secondary: 'Pre-Party-Workshops 21:00 – 23:00' },
   ],
   fr: [
-    { primary: '2 SOCIALS', secondary: 'Samedi & Dimanche' },
+    { primary: '2 SOCIALES', secondary: 'Samedi & dimanche après-midi' },
     { primary: '3 SOIRÉES', secondary: 'Des vibes inoubliables chaque nuit' },
     { primary: 'BOOTCAMPS', secondary: 'Entraînement intensif 10:00 – 16:00' },
     { primary: 'WORKSHOPS', secondary: 'Workshops avant-soirée 21:00 – 23:00' },

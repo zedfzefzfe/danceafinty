@@ -38,6 +38,7 @@ export const navigationConfig: NavigationConfig = {
     { label: "Artists", href: "#artists" },
     { label: "Schedule", href: "#location" },
     { label: "Bootcamps", href: "#bootcamps" },
+    { label: "Program", href: "#program" },
     { label: "Passes", href: "#passes" },
     { label: "Location", href: "#location" },
     { label: "Gallery", href: "#festival" },

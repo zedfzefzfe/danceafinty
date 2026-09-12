@@ -211,7 +211,7 @@ const COPY_I18N: Record<Lang, BcCopy> = {
     hintLimited: 'Chaque bootcamp est limité pour garantir la qualité, un feedback personnalisé et la meilleure expérience.',
     ctaTitle: 'PRÊT À TRANSFORMER TA DANSE ?',
     ctaSubtitle: 'Les places sont limitées. Choisis tes bootcamps et réserve ta place dès aujourd’hui !',
-    ctaButton: 'RÉSERVE TA PLACE',
+    ctaButton: 'PRENDS TON PASS',
     tabKizomba: 'BOOTCAMPS KIZOMBA', tabBachata: 'BOOTCAMPS BACHATA',
     comingSoon: 'BIENTÔT', stayTuned: 'RESTE CONNECTÉ', getNotified: 'Être notifié',
   },

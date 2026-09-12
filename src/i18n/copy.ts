@@ -8,7 +8,8 @@ export const navLabels: Record<string, Tri> = {
   Artists:   { en: 'Artists',   de: 'Künstler',   fr: 'Artistes' },
   Schedule:  { en: 'Schedule',  de: 'Programm',   fr: 'Programme' },
   Bootcamps: { en: 'Bootcamps', de: 'Bootcamps',  fr: 'Bootcamps' },
-  Passes:    { en: 'Passes',    de: 'Tickets',    fr: 'Billets' },
+  Program:   { en: 'Program',   de: 'Programm',   fr: 'Programme' },
+  Passes:    { en: 'Passes',    de: 'Tickets',    fr: 'Billetterie' },
   Location:  { en: 'Location',  de: 'Anfahrt',    fr: 'Lieu' },
   Gallery:   { en: 'Gallery',   de: 'Galerie',    fr: 'Galerie' },
   Contact:   { en: 'Contact',   de: 'Kontakt',    fr: 'Contact' },
@@ -17,7 +18,7 @@ export const navLabels: Record<string, Tri> = {
 };
 
 export const navUI = {
-  buyPass: { en: 'Buy Pass', de: 'Tickets kaufen', fr: 'Billets' } as Tri,
+  buyPass: { en: 'Buy Pass', de: 'Tickets kaufen', fr: 'Billetterie' } as Tri,
   menu:    { en: 'Menu',     de: 'Menü',           fr: 'Menu' } as Tri,
 };
 
@@ -43,7 +44,7 @@ export const heroCopy: Record<Lang, {
   fr: {
     tagline: 'FESTIVAL KIZOMBA & BACHATA',
     dateLocation: 'FRIBOURG-EN-BRISGAU, ALLEMAGNE',
-    ctaPrimary: 'Réserve ta place',
+    ctaPrimary: 'Prends ton pass',
     ctaSecondary: 'Voir la programmation',
   },
 };
@@ -109,7 +110,7 @@ export const finalCtaCopy: Record<Lang, {
     script: 'Ton moment',
     heading: 'T’ATTEND À FRIBOURG',
     dateLine: '30 OCTOBRE – 2 NOVEMBRE 2026',
-    button: 'RÉSERVE TA PLACE',
+    button: 'PRENDS TON PASS',
     note: '100% remboursable · Paiement sécurisé',
   },
 };

@@ -128,35 +128,53 @@ const BOOTCAMPS: Bootcamp[] = [
     maxParticipants: 40,
   },
   {
-    id: 'bachata-1',
-    name: 'BACHATA BOOTCAMP',
+    id: 'develop-your-own-style',
+    name: 'DEVELOP YOUR OWN STYLE',
     category: 'bachata',
     intensity: 'INTENSIVE',
-    teacherNames: [],
-    teacherCount: 0,
-    hours: 3,
-    image: '',
-    comingSoon: true,
-    whatToExpect: [],
-    whoIsItFor: '',
+    teacherNames: ['Willy & Lauriane'],
+    teacherCount: 2,
+    hours: 2,
+    image: '/images/bootcamps/bachata_develop your own style_slide 1.webp',
+    backImage: '/images/bootcamps/bachata_develop your own style_slide 2.webp',
+    whatToExpect: [
+      'Body movement',
+      'Creativity',
+      'Personal expression',
+      'Confidence',
+      'Styling techniques',
+      'Musical interpretation',
+      'Flow & fluidity',
+      'Your signature moves',
+    ],
+    whoIsItFor: 'Bachata dancers who want to find their own style and make it theirs.',
     level: 'TODO',
-    focus: [],
+    focus: ['Styling', 'Musicality', 'Flow', 'Expression'],
     maxParticipants: 40,
   },
   {
-    id: 'bachata-2',
-    name: 'BACHATA BOOTCAMP',
+    id: 'squid-game-musicality',
+    name: 'SQUID GAME MUSICALITY',
     category: 'bachata',
     intensity: 'INTENSIVE',
-    teacherNames: [],
-    teacherCount: 0,
-    hours: 3,
-    image: '',
-    comingSoon: true,
-    whatToExpect: [],
-    whoIsItFor: '',
+    teacherNames: ['Loyal'],
+    teacherCount: 1,
+    hours: 2,
+    image: '/images/bootcamps/bachata_squid game_slide 1.webp',
+    backImage: '/images/bootcamps/bachata_squid game_slide 2.webp',
+    whatToExpect: [
+      'Rhythm & timing',
+      'Reflex & breaks',
+      'Instruments & accents',
+      'Musical memory',
+      'Interactive games',
+      'Musical challenges',
+      'Reaction & creativity',
+      'Surprise missions',
+    ],
+    whoIsItFor: 'Bachata dancers who want to master the music through games and challenges.',
     level: 'TODO',
-    focus: [],
+    focus: ['Musicality', 'Rhythm', 'Creativity'],
     maxParticipants: 40,
   },
 ];
@@ -170,6 +188,7 @@ interface BcCopy {
   ctaTitle: string; ctaSubtitle: string; ctaButton: string;
   tabKizomba: string; tabBachata: string;
   comingSoon: string; stayTuned: string; getNotified: string;
+  bachataLabel: string; hoursWith: string; discover: string;
 }
 
 const COPY_I18N: Record<Lang, BcCopy> = {
@@ -186,6 +205,7 @@ const COPY_I18N: Record<Lang, BcCopy> = {
     ctaButton: 'GET YOUR PASS',
     tabKizomba: 'KIZOMBA BOOTCAMPS', tabBachata: 'BACHATA BOOTCAMPS',
     comingSoon: 'COMING SOON', stayTuned: 'STAY TUNED', getNotified: 'Get notified',
+    bachataLabel: 'BACHATA BOOTCAMP', hoursWith: 'HRS WITH', discover: 'Discover',
   },
   de: {
     badgeLabel: 'PREMIUM BOOTCAMPS',
@@ -200,6 +220,7 @@ const COPY_I18N: Record<Lang, BcCopy> = {
     ctaButton: 'TICKETS SICHERN',
     tabKizomba: 'KIZOMBA BOOTCAMPS', tabBachata: 'BACHATA BOOTCAMPS',
     comingSoon: 'DEMNÄCHST', stayTuned: 'BLEIB DRAN', getNotified: 'Benachrichtigen',
+    bachataLabel: 'BACHATA BOOTCAMP', hoursWith: 'STD. MIT', discover: 'Entdecken',
   },
   fr: {
     badgeLabel: 'BOOTCAMPS PREMIUM',
@@ -214,6 +235,7 @@ const COPY_I18N: Record<Lang, BcCopy> = {
     ctaButton: 'PRENDS TON PASS',
     tabKizomba: 'BOOTCAMPS KIZOMBA', tabBachata: 'BOOTCAMPS BACHATA',
     comingSoon: 'BIENTÔT', stayTuned: 'RESTE CONNECTÉ', getNotified: 'Être notifié',
+    bachataLabel: 'BOOTCAMP BACHATA', hoursWith: 'H AVEC', discover: 'Découvrir',
   },
 };
 
@@ -385,6 +407,42 @@ function ComingSoonCard({ bootcamp, compact = false }: { bootcamp: Bootcamp; com
   );
 }
 
+// ─── Bachata preview card ────────────────────────────────────────────────────
+// Half-height teaser shown in the Kizomba grid; clicking it opens the Bachata tab.
+function BachataPreviewCard({ bootcamp, onOpen }: { bootcamp: Bootcamp; onOpen: () => void }) {
+  const COPY = useCopy(COPY_I18N);
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`${bootcamp.name} — ${COPY.tabBachata}`}
+      className="group relative h-full min-h-0 w-full flex items-stretch text-left rounded-xl overflow-hidden border border-[#8b5cf6]/25 outline-none focus-visible:ring-2 focus-visible:ring-[#c4b5fd]/60 transition-colors duration-300 hover:border-[#c4b5fd]/60"
+      style={{ background: 'linear-gradient(160deg, #2a1155 0%, #1b0f3d 55%, #140b2e 100%)' }}
+    >
+      <img
+        src={encodeURI(bootcamp.image)}
+        alt=""
+        className="h-full aspect-[4/5] shrink-0 object-cover"
+      />
+      <div className="flex-1 min-w-0 flex flex-col justify-center p-4">
+        <p className="font-mono text-[7.5px] tracking-[0.2em] uppercase text-[#c4b5fd]/70">
+          {COPY.bachataLabel}
+        </p>
+        <h3 className="mt-1.5 font-display text-white uppercase leading-[1.05] tracking-[0.03em] text-[17px] md:text-[19px]">
+          {bootcamp.name}
+        </h3>
+        <p className="mt-1.5 font-mono text-[8px] tracking-[0.16em] uppercase text-white/50">
+          {bootcamp.hours} {COPY.hoursWith} {bootcamp.teacherNames.join(' · ')}
+        </p>
+        <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-[8px] tracking-[0.15em] uppercase text-white/85 group-hover:text-white">
+          {COPY.discover}
+          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
+        </span>
+      </div>
+    </button>
+  );
+}
+
 // ─── Main component ──────────────────────────────────────────────────────────
 export default function PremiumBootcampsSection() {
   const COPY = useCopy(COPY_I18N);
@@ -445,7 +503,7 @@ export default function PremiumBootcampsSection() {
 
   const tabs = [
     { key: 'kizomba' as const, icon: PersonStanding, label: `${COPY.tabKizomba} (${kizomba.length})`, soon: false },
-    { key: 'bachata' as const, icon: Heart, label: `${COPY.tabBachata} (${bachata.length})`, soon: true },
+    { key: 'bachata' as const, icon: Heart, label: `${COPY.tabBachata} (${bachata.length})`, soon: false },
   ];
 
   return (
@@ -580,12 +638,16 @@ export default function PremiumBootcampsSection() {
             )
           )}
 
-          {/* The two Bachata teasers share the last cell, stacked — as in the reference */}
+          {/* The two Bachata bootcamps share the last cell, stacked, as previews */}
           {activeCategory === 'kizomba' && (
             <div className="grid grid-rows-2 gap-5 md:gap-6 aspect-[3/4]">
-              {bachata.map((b) => (
-                <ComingSoonCard key={b.id} bootcamp={b} compact />
-              ))}
+              {bachata.map((b) =>
+                b.comingSoon ? (
+                  <ComingSoonCard key={b.id} bootcamp={b} compact />
+                ) : (
+                  <BachataPreviewCard key={b.id} bootcamp={b} onOpen={() => setActiveCategory('bachata')} />
+                )
+              )}
             </div>
           )}
         </div>

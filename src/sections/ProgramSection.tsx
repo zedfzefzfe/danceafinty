@@ -24,9 +24,9 @@ const COPY_I18N: Record<Lang, ProgramCopy> = {
 };
 
 const PROGRAM_IMAGES = [
-  '/images/Friday_bachata.png',
-  '/images/Saturday_bachata.png',
-  '/images/Sunday_bachata.png',
+  '/images/program_friday.png',
+  '/images/program_saturday.webp',
+  '/images/program_sunday.webp',
 ];
 
 // ─── Edit titles to match what each day's program image actually covers ──────

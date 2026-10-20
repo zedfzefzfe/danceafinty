@@ -7,6 +7,7 @@ const MARQUEE_COPY: Record<Lang, {
   headingSerif: string; headingBold: string; tagline: string;
   teachersLabel: string; teachersSub: string; djsLabel: string; djsSub: string;
   hintHover: string; hintTouch: string;
+  lineupLabel: string; lineupSub: string; lineupOpen: string; lineupClose: string;
 }> = {
   en: {
     headingSerif: 'The Artists', headingBold: 'BEHIND THE MAGIC',
@@ -15,6 +16,8 @@ const MARQUEE_COPY: Record<Lang, {
     djsLabel: 'The DJs', djsSub: 'The beats that keep the floor alive all night.',
     hintHover: '— HOVER TO PAUSE · KEEP SCROLLING TO EXPLORE —',
     hintTouch: '— TOUCH TO PAUSE · KEEP SCROLLING TO EXPLORE —',
+    lineupLabel: 'Full Lineup', lineupSub: 'Every teacher and DJ of the 2026 edition, at a glance.',
+    lineupOpen: 'Tap the poster to see it full size', lineupClose: 'Close',
   },
   de: {
     headingSerif: 'Die Artists', headingBold: 'HINTER DER MAGIE',
@@ -23,6 +26,8 @@ const MARQUEE_COPY: Record<Lang, {
     djsLabel: 'Die DJs', djsSub: 'Die Beats, die den Floor die ganze Nacht am Leben halten.',
     hintHover: '— ZUM PAUSIEREN HOVERN · WEITER SCROLLEN ZUM ENTDECKEN —',
     hintTouch: '— ZUM PAUSIEREN TIPPEN · WEITER SCROLLEN ZUM ENTDECKEN —',
+    lineupLabel: 'Das komplette Lineup', lineupSub: 'Alle Teacher und DJs der Ausgabe 2026 auf einen Blick.',
+    lineupOpen: 'Tippe auf das Poster für die volle Größe', lineupClose: 'Schließen',
   },
   fr: {
     headingSerif: 'Les Artistes', headingBold: 'DERRIÈRE LA MAGIE',
@@ -31,6 +36,8 @@ const MARQUEE_COPY: Record<Lang, {
     djsLabel: 'Les DJs', djsSub: 'Les beats qui font vivre le dancefloor toute la nuit.',
     hintHover: '— SURVOLE POUR METTRE EN PAUSE · CONTINUE À FAIRE DÉFILER —',
     hintTouch: '— TOUCHE POUR METTRE EN PAUSE · CONTINUE À FAIRE DÉFILER —',
+    lineupLabel: 'Le Lineup Complet', lineupSub: 'Tous les professeurs et DJs de l’édition 2026, en un coup d’œil.',
+    lineupOpen: 'Touche l’affiche pour l’agrandir', lineupClose: 'Fermer',
   },
 };
 
@@ -71,6 +78,15 @@ const djs: Artist[] = [
   { id: 104, name: 'DJ Galaxy',          label: 'DJ', style: 'BACHATA',         country: 'GERMANY',      image: '/images/artiste/DJ Galaxy.png' },
   { id: 105, name: 'DJ David Ruela',     label: 'DJ', style: 'KIZOMBA / AFRO', country: 'NETHERLANDS',  image: '/images/artiste/DJ David Ruela.png' },
 ];
+// EDIT FULL LINEUP HERE ─────────────────────────────────────────────────────
+// The poster and the names listed beside it, as on the client's lineup poster.
+const LINEUP_POSTER = '/images/lineup_poster.webp';
+const LINEUP_TEACHERS = [
+  'Martina & Lea', 'Daniel & Elina', 'Loyal', 'Vanildo Eyk & Mara',
+  'Andrea & Aurélie', 'Donald & Barbara', 'Joey & Shadia', "Stone's Rock & Martina",
+  'Selim & Anastasia', 'Bilal', 'Antho & Caro', 'Willy & Lauriane',
+];
+const LINEUP_DJS = ['DJ Stompy', 'DJ Le Grand Tiwosh', 'DJ David Ruela', 'DJ Timeline', 'DJ Galaxy'];
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Moody film-still gradients — unique per card, cohesive palette
@@ -250,7 +266,124 @@ export default function ArtistsMarquee() {
       >
         {isMobile ? t.hintTouch : t.hintHover}
       </p>
+
+      {/* ── Full lineup — the client's poster plus every name, in one block ── */}
+      <LineupBlock t={t} visible={vis.marquee} noAnim={noAnim} />
     </section>
+  );
+}
+
+// ── Sub-component: full lineup poster + names, with a full-size view ─────────
+
+function LineupBlock({
+  t,
+  visible,
+  noAnim,
+}: {
+  t: (typeof MARQUEE_COPY)[Lang];
+  visible: boolean;
+  noAnim: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+
+  // Escape closes the full-size view; the page behind it stops scrolling
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  return (
+    <div
+      className="max-w-[1280px] mx-auto mt-16 md:mt-24 px-6 sm:px-10"
+      style={{
+        opacity:    visible ? 1 : 0,
+        transition: noAnim ? 'none' : 'opacity 0.8s ease 0.3s',
+      }}
+    >
+      <div className="am-row-heading-top">
+        <p className="am-row-label">{t.lineupLabel}</p>
+        <span aria-hidden="true" className="am-row-rule" />
+      </div>
+      <p className="am-row-sub">{t.lineupSub}</p>
+
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-[minmax(0,420px)_1fr] gap-8 md:gap-14 items-center">
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label={t.lineupOpen}
+          className="group relative block w-full max-w-[420px] mx-auto md:mx-0 rounded-xl overflow-hidden border border-white/10 outline-none focus-visible:ring-2 focus-visible:ring-[#00e5cc]/60"
+        >
+          <img
+            src={LINEUP_POSTER}
+            alt="Dance Affinity Festival 2026 lineup"
+            loading="lazy"
+            className="w-full h-auto aspect-[4/5] object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+          />
+        </button>
+
+        <div>
+          <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#00e5cc]">{t.teachersLabel}</p>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {LINEUP_TEACHERS.map((name) => (
+              <li
+                key={name}
+                className="px-3 py-1.5 rounded-md border border-white/12 bg-white/[0.04] text-white/85 text-[13px]"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                {name}
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-7 font-mono text-[10px] tracking-[0.2em] uppercase text-[#c4b5fd]">{t.djsLabel}</p>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {LINEUP_DJS.map((name) => (
+              <li
+                key={name}
+                className="px-3 py-1.5 rounded-md border border-[#8b5cf6]/30 bg-[#8b5cf6]/10 text-white/85 text-[13px]"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                {name}
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-7 font-mono text-[9px] tracking-[0.18em] uppercase text-white/40">{t.lineupOpen}</p>
+        </div>
+      </div>
+
+      {open && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={t.lineupLabel}
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
+        >
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="absolute top-4 right-4 px-3 py-2 rounded-md border border-white/25 text-white/85 font-mono text-[10px] tracking-[0.15em] uppercase hover:text-white"
+          >
+            {t.lineupClose} ✕
+          </button>
+          <img
+            src={LINEUP_POSTER}
+            alt="Dance Affinity Festival 2026 lineup"
+            className="max-h-full max-w-full object-contain rounded-lg"
+          />
+        </div>
+      )}
+    </div>
   );
 }
 

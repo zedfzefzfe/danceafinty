@@ -188,6 +188,7 @@ interface BcCopy {
   ctaTitle: string; ctaSubtitle: string; ctaButton: string;
   tabKizomba: string; tabBachata: string;
   comingSoon: string; stayTuned: string; getNotified: string;
+  bachataLabel: string; hoursWith: string; discover: string;
 }
 
 const COPY_I18N: Record<Lang, BcCopy> = {
@@ -204,6 +205,7 @@ const COPY_I18N: Record<Lang, BcCopy> = {
     ctaButton: 'GET YOUR PASS',
     tabKizomba: 'KIZOMBA BOOTCAMPS', tabBachata: 'BACHATA BOOTCAMPS',
     comingSoon: 'COMING SOON', stayTuned: 'STAY TUNED', getNotified: 'Get notified',
+    bachataLabel: 'BACHATA BOOTCAMP', hoursWith: 'HRS WITH', discover: 'Discover',
   },
   de: {
     badgeLabel: 'PREMIUM BOOTCAMPS',
@@ -218,6 +220,7 @@ const COPY_I18N: Record<Lang, BcCopy> = {
     ctaButton: 'TICKETS SICHERN',
     tabKizomba: 'KIZOMBA BOOTCAMPS', tabBachata: 'BACHATA BOOTCAMPS',
     comingSoon: 'DEMNÄCHST', stayTuned: 'BLEIB DRAN', getNotified: 'Benachrichtigen',
+    bachataLabel: 'BACHATA BOOTCAMP', hoursWith: 'STD. MIT', discover: 'Entdecken',
   },
   fr: {
     badgeLabel: 'BOOTCAMPS PREMIUM',
@@ -232,6 +235,7 @@ const COPY_I18N: Record<Lang, BcCopy> = {
     ctaButton: 'PRENDS TON PASS',
     tabKizomba: 'BOOTCAMPS KIZOMBA', tabBachata: 'BOOTCAMPS BACHATA',
     comingSoon: 'BIENTÔT', stayTuned: 'RESTE CONNECTÉ', getNotified: 'Être notifié',
+    bachataLabel: 'BOOTCAMP BACHATA', hoursWith: 'H AVEC', discover: 'Découvrir',
   },
 };
 
@@ -400,6 +404,42 @@ function ComingSoonCard({ bootcamp, compact = false }: { bootcamp: Bootcamp; com
         </button>
       </div>
     </div>
+  );
+}
+
+// ─── Bachata preview card ────────────────────────────────────────────────────
+// Half-height teaser shown in the Kizomba grid; clicking it opens the Bachata tab.
+function BachataPreviewCard({ bootcamp, onOpen }: { bootcamp: Bootcamp; onOpen: () => void }) {
+  const COPY = useCopy(COPY_I18N);
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`${bootcamp.name} — ${COPY.tabBachata}`}
+      className="group relative h-full min-h-0 w-full flex items-stretch text-left rounded-xl overflow-hidden border border-[#8b5cf6]/25 outline-none focus-visible:ring-2 focus-visible:ring-[#c4b5fd]/60 transition-colors duration-300 hover:border-[#c4b5fd]/60"
+      style={{ background: 'linear-gradient(160deg, #2a1155 0%, #1b0f3d 55%, #140b2e 100%)' }}
+    >
+      <img
+        src={encodeURI(bootcamp.image)}
+        alt=""
+        className="h-full aspect-[4/5] shrink-0 object-cover"
+      />
+      <div className="flex-1 min-w-0 flex flex-col justify-center p-4">
+        <p className="font-mono text-[7.5px] tracking-[0.2em] uppercase text-[#c4b5fd]/70">
+          {COPY.bachataLabel}
+        </p>
+        <h3 className="mt-1.5 font-display text-white uppercase leading-[1.05] tracking-[0.03em] text-[17px] md:text-[19px]">
+          {bootcamp.name}
+        </h3>
+        <p className="mt-1.5 font-mono text-[8px] tracking-[0.16em] uppercase text-white/50">
+          {bootcamp.hours} {COPY.hoursWith} {bootcamp.teacherNames.join(' · ')}
+        </p>
+        <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-[8px] tracking-[0.15em] uppercase text-white/85 group-hover:text-white">
+          {COPY.discover}
+          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
+        </span>
+      </div>
+    </button>
   );
 }
 
@@ -582,7 +622,7 @@ export default function PremiumBootcampsSection() {
 
         <div
           ref={gridRef}
-          className="mt-8 md:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 lg:[&>*:last-child:nth-child(3n+1)]:col-start-2"
+          className="mt-8 md:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6"
         >
           {visible.map((bootcamp) =>
             bootcamp.comingSoon ? (
@@ -598,21 +638,33 @@ export default function PremiumBootcampsSection() {
             )
           )}
 
-          {/* The Bachata bootcamps follow the Kizomba ones as full cards too */}
+          {/* Phones: the Bachata bootcamps follow as full cards, whole poster visible */}
           {activeCategory === 'kizomba' &&
             bachata.map((b) =>
-              b.comingSoon ? (
-                <ComingSoonCard key={b.id} bootcamp={b} />
-              ) : (
-                <BootcampCard
-                  key={b.id}
-                  bootcamp={b}
-                  flipped={flippedIds.includes(b.id)}
-                  onToggle={() => toggleFlip(b.id)}
-                  reduceMotion={reduceMotion}
-                />
+              b.comingSoon ? null : (
+                <div key={`full-${b.id}`} className="sm:hidden">
+                  <BootcampCard
+                    bootcamp={b}
+                    flipped={flippedIds.includes(b.id)}
+                    onToggle={() => toggleFlip(b.id)}
+                    reduceMotion={reduceMotion}
+                  />
+                </div>
               )
             )}
+
+          {/* Larger screens: the two Bachata bootcamps share the last cell, stacked, as previews */}
+          {activeCategory === 'kizomba' && (
+            <div className="hidden sm:grid grid-rows-2 gap-5 md:gap-6 aspect-[3/4]">
+              {bachata.map((b) =>
+                b.comingSoon ? (
+                  <ComingSoonCard key={b.id} bootcamp={b} compact />
+                ) : (
+                  <BachataPreviewCard key={b.id} bootcamp={b} onOpen={() => setActiveCategory('bachata')} />
+                )
+              )}
+            </div>
+          )}
         </div>
 
         {/* ── 6) Feature strip ── */}

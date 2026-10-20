@@ -118,7 +118,7 @@ const BOOTCAMPS: Bootcamp[] = [
     teacherNames: ['Selim & Anastasia'],
     teacherCount: 2,
     hours: 3,
-    image: '/images/bootcamps/bootcamp_foundation & evolution4.png',
+    image: '/images/bootcamps/bootcamp_foundation & evolution_v2.webp',
     backImage: '/images/bootcamps/foundation & evolution bootcamp_2slide.png',
     // TODO — back details to be filled in
     whatToExpect: ['TODO — add what to expect'],
